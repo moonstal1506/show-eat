@@ -70,4 +70,6 @@ public class Business extends BaseDateEntity {
 	@OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Statistic> statistics;
 
+	@OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<BusinessMenu> businessMenus;
 }
