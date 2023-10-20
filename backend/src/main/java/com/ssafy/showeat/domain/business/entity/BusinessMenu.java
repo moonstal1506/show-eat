@@ -42,4 +42,12 @@ public class BusinessMenu {
 	@JoinColumn(name = "business_id", nullable = false)
 	private Business business;
 
+	public void setBusiness(Business business){
+		this.business = business;
+	}
+
+	public void addBusinessMenuImage(BusinessMenuImage businessMenuImage){
+		this.businessMenuImages.add(businessMenuImage);
+		businessMenuImage.setBusinessMenu(this);
+	}
 }

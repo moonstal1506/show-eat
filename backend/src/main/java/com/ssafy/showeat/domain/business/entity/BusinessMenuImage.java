@@ -34,4 +34,8 @@ public class BusinessMenuImage {
 	@JoinColumn(name = "business_menu_id", nullable = false)
 	private BusinessMenu businessMenu;
 
+	public void setBusinessMenu(BusinessMenu businessMenu){
+		this.businessMenu = businessMenu;
+	}
+
 }
