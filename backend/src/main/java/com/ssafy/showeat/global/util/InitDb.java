@@ -25,7 +25,7 @@ public class InitDb {
 
 	@PostConstruct
 	public void init() {
-		initService.init();
+		// initService.init();
 	}
 
 	@Component
@@ -46,7 +46,8 @@ public class InitDb {
 
 			User user1 = User.builder()
 				.userNickname("테스트1")
-				.userImgUrl("")
+				.userImgUrl("profileimg")
+				.userAddress("addr")
 				.userBusiness(true)
 				.userMoney(10000)
 				.credential(credential1)
@@ -84,8 +85,6 @@ public class InitDb {
 			businessMenu1.addBusinessMenuImage(businessMenuImage2);
 			businessMenu2.addBusinessMenuImage(businessMenuImage3);
 			businessMenu2.addBusinessMenuImage(businessMenuImage4);
-
-
 
 			// 업체
 			Business business = Business.builder()
