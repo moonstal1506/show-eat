@@ -27,4 +27,11 @@ public class ExceptionController {
 		return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_ACCOUNT_EXCEPTION, err.getMessage());
 	}
 
+	@ExceptionHandler(NotExistCouponException.class)
+	public ResponseResult NotExistCouponException(NotExistCouponException err) {
+		log.info("Error : {}", err.getClass());
+		log.info("Error Message : {}", err.getMessage());
+		return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_COUPON_EXCEPTION, err.getMessage());
+	}
+
 }
