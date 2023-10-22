@@ -57,4 +57,8 @@ public class Coupon extends BaseTimeEntity {
 			.funding(funding)
 			.build();
 	}
+
+	public void updateState(CouponState couponState) {
+		this.couponState = couponState;
+	}
 }
