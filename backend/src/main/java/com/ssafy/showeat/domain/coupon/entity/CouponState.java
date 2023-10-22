@@ -1,8 +1,12 @@
 package com.ssafy.showeat.domain.coupon.entity;
 
 public enum CouponState {
-	
-	ACTIVE, // 사용되지 않음
+	// 사용되지 않음
+	ACTIVE,
 
-	EXPIRED // 사용됨
+	// 사용됨
+	USED,
+
+	// 기한만료
+	EXPIRED,
 }
