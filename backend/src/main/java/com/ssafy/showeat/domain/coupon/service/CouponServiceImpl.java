@@ -28,7 +28,7 @@ public class CouponServiceImpl implements CouponService {
 
 	@Override
 	public List<CouponResponseDto> getCouponListByUserId(Long userId) {
-		log.info("CouponService_getCouponLIstByUserid -> 유저의 모든 쿠포 조회");
+		log.info("CouponService_getCouponLIstByUserid -> 유저의 모든 쿠폰 조회");
 		User user = userRepository.findById(userId).orElseThrow(NotExistAccountException::new);
 		List<Coupon> couponList = couponRepository.findByUser(user);
 		return couponList.stream().map(Coupon::toCouponResponseDto).collect(Collectors.toList());
