@@ -35,7 +35,7 @@ public class BusinessController {
 
 	private final BusinessService businessService;
 
-	@ApiOperation(value = "업체 메뉴 등록" , notes = "업주가 메뉴를 등록합니다.")
+	@ApiOperation(value = "업체 메뉴 등록", notes = "업주가 메뉴를 등록합니다.")
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "메뉴 등록 성공"),
 		@ApiResponse(code = 400, message = "메뉴 등록 실패"),
@@ -45,11 +45,11 @@ public class BusinessController {
 		@RequestPart RegistMenuRequestDto registMenuRequestDto,
 		@RequestPart List<MultipartFile> multipartFiles
 	) throws IOException {
-		businessService.registMenu(registMenuRequestDto,multipartFiles);
+		businessService.registMenu(registMenuRequestDto, multipartFiles);
 		return ResponseResult.successResponse;
 	}
 
-	@ApiOperation(value = "업체 메뉴 조회" , notes = "업주가 메뉴를 조회합니다.")
+	@ApiOperation(value = "업체 메뉴 조회", notes = "업주가 메뉴를 조회합니다.")
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "메뉴 조회 성공"),
 		@ApiResponse(code = 400, message = "메뉴 조회 실패"),
@@ -59,7 +59,7 @@ public class BusinessController {
 		return new SingleResponseResult<>(businessService.getMenuInfo(menuId));
 	}
 
-	@ApiOperation(value = "업체 메뉴 리스트 조회" , notes = "업주가 업체의 메뉴리스트를 조회합니다.")
+	@ApiOperation(value = "업체 메뉴 리스트 조회", notes = "업주가 업체의 메뉴리스트를 조회합니다.")
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "메뉴 조회 성공"),
 		@ApiResponse(code = 400, message = "메뉴 조회 실패"),
@@ -67,5 +67,15 @@ public class BusinessController {
 	@GetMapping("/menu")
 	public ResponseResult getMenuList() {
 		return new ListResponseResult<>(businessService.getMenuList());
+	}
+
+	@ApiOperation(value = "월간 통계 조회", notes = "업주가 업체의 월간 통계를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "메뉴 조회 성공"),
+		@ApiResponse(code = 400, message = "메뉴 조회 실패"),
+	})
+	@GetMapping("/monthlystat/{businessId}")
+	public ResponseResult getMonthlyStatList() {
+		return new ListResponseResult<>(businessService.getMonthlyStatList());
 	}
 }
