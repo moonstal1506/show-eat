@@ -62,4 +62,10 @@ public class ExceptionController {
 		return ResponseResult.exceptionResponse(ExceptionCode.INACTIVE_FUNDING_EXCEPTION, err.getMessage());
 	}
 
+	@ExceptionHandler(DuplicationApplyFundingException.class)
+	public ResponseResult DuplicationApplyFundingException(DuplicationApplyFundingException err) {
+		log.info("Error : {}", err.getClass());
+		log.info("Error Message : {}", err.getMessage());
+		return ResponseResult.exceptionResponse(ExceptionCode.DUPLICATION_APPLY_FUNDING_EXCEPTION, err.getMessage());
+	}
 }

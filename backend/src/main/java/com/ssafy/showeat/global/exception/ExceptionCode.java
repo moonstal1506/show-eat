@@ -12,6 +12,7 @@ public enum ExceptionCode {
 	NOT_EXIST_FUNDING_EXCEPTION(470,"펀딩을 찾을 수 없습니다."),
 	INACTIVE_FUNDING_EXCEPTION(471,"이미 종료된 펀딩입니다."),
 	IMPOSSIBLE_APPLY_FUNDING_EXCEPTION(472,"펀딩 참여 가능한 자리가 없습니다."),
+	DUPLICATION_APPLY_FUNDING_EXCEPTION(473,"펀딩 중복 참여는 불가능합니다."),
 	SERVER_EXCEPTION(500, "서버에서 예측하지 못한 에러가 발생했습니다.");
 	private final int errorCode;
 	private final String errorMessage;
