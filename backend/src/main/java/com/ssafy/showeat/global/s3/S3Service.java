@@ -30,7 +30,6 @@ public class S3Service {
 
 		for (MultipartFile menuImage : menuImages) {
 			String originalName = menuImage.getOriginalFilename(); // 파일 이름
-			log.info("파일 이름 : {}",originalName);
 			long size = menuImage.getSize(); // 파일 크기
 
 			ObjectMetadata objectMetaData = new ObjectMetadata();
