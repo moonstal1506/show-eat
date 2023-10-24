@@ -32,6 +32,12 @@ public class BookMarkServiceImpl implements BookmarkService{
 			bookmarkRepository.delete(bookmarkRepository.findByUserAndFunding(loginUser,funding));
 		else
 			bookmarkRepository.save(Bookmark.builder().user(loginUser).funding(funding).build());
+	}
 
+	@Override
+	public boolean isBookmark(User user, Funding funding) {
+		if(bookmarkRepository.existsByUserAndFunding(user,funding))
+			return true;
+		return false;
 	}
 }
