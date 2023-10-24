@@ -67,10 +67,8 @@ public class BusinessServiceImpl implements BusinessService{
 	}
 
 	@Override
-	public List<BusinessMonthlyStatResponseDto> getMonthlyStatList() {
+	public List<BusinessMonthlyStatResponseDto> getMonthlyStatList(Long businessId) {
 		log.info("BusinessServiceImpl_getMonthlyStatList || 업체 월간 통계 조회");
-		User loginUser = userRepository.findById(1L).orElseThrow(NotExistUserException::new);
-		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
-
+		return fundingRepository.findMonthlyStatListById(businessId);
 	}
 }

@@ -13,5 +13,5 @@ public interface BusinessService {
 	void registMenu(RegistMenuRequestDto registMenuRequestDto , List<MultipartFile> multipartFiles) throws IOException;
 	BusinessMenuResponseDto getMenuInfo(Long menuId);
 	List<BusinessMenuResponseDto> getMenuList();
-	List<BusinessMonthlyStatResponseDto> getMonthlyStatList();
+	List<BusinessMonthlyStatResponseDto> getMonthlyStatList(Long businessId);
 }

@@ -20,7 +20,15 @@ public class BusinessMonthlyStatResponseDto {
 	@ApiModelProperty(value = "월", example = "7")
 	private int month;
 
-	@ApiModelProperty(value = "매출", example = "100000")
+	@ApiModelProperty(value = "매출액", example = "100000")
 	private int revenue;
 
+	@ApiModelProperty(value = "성공 펀딩 수", example = "10")
+	private Long successFundingCnt;
+
+	@ApiModelProperty(value = "펀딩 참여자 수", example = "1000")
+	private int fundingParticipantsCnt;
+
+	@ApiModelProperty(value = "실패 펀딩 수", example = "100000")
+	private Long failFundingCnt;
 }

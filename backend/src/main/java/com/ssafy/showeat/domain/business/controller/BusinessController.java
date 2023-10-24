@@ -75,7 +75,7 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "메뉴 조회 실패"),
 	})
 	@GetMapping("/monthlystat/{businessId}")
-	public ResponseResult getMonthlyStatList() {
-		return new ListResponseResult<>(businessService.getMonthlyStatList());
+	public ResponseResult getMonthlyStatList(@PathVariable Long businessId) {
+		return new ListResponseResult<>(businessService.getMonthlyStatList(businessId));
 	}
 }
