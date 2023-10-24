@@ -76,7 +76,9 @@ public class KakaoAuthService {
         log.info("grantType = {}", tokenDto.getGrantType());
         log.info("accessToken = {}", tokenDto.getAccessToken());
         log.info("refreshToken = {}", tokenDto.getRefreshToken());
-//        user.updateAddress("서울특별시 강남구");
+
+        //관심 주소 초기값 설정
+        user.updateAddress("서울특별시 강남구");
 
         return LoginResponseDto.builder()
                 .tokenDto(tokenDto)
