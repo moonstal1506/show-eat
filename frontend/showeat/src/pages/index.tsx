@@ -19,8 +19,8 @@ function Home() {
             <main>
                 구본웅, 그는 신인가!
                 <MenuButton
-                    width="8vw"
-                    height="8vw"
+                    width="7vw"
+                    height="7vw"
                     onClick={handleMenuButton}
                     // imageURL={}
                     // menuName={}

@@ -1,28 +1,10 @@
+/* Import */
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { ButtonProps } from "@/types/commonProps";
+import { useTheme } from "@emotion/react";
 
-const MenuButtonContainer = styled("div")`
-    display: flex;
-    flex-direction: column;
-    justify-content: "center";
-    align-items: center;
-    text-align: center;
-`;
-
-const ImageWrapper = styled("div")<ButtonProps>`
-    width: ${(props) => props.width};
-    height: ${(props) => props.height};
-    min-width: 80px;
-    min-height: 80px;
-    position: relative;
-`;
-
-const TextWrapper = styled("span")`
-    padding-top: 10px;
-    font-size: 16px;
-    font-weight: 700;
-`;
+// ----------------------------------------------------------------------------------------------------
 
 function MenuButton({
     width,
@@ -34,17 +16,69 @@ function MenuButton({
     // imageURL: string;
     menuName: string;
 }) {
+    const theme = useTheme();
+
+    const ImageWrapper = styled("div")<ButtonProps>`
+        width: ${(props) => props.width};
+        height: ${(props) => props.height};
+        min-width: 80px;
+        min-height: 80px;
+        position: relative;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        & > img {
+            border-radius: 20px;
+        }
+    `;
+
+    const TextWrapper = styled("span")`
+        padding-top: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+    `;
+
+    const MenuButtonContainer = styled("div")<ButtonProps>`
+        width: ${(props) => props.width};
+        display: flex;
+        flex-direction: column;
+        justify-content: "center";
+        align-items: center;
+        text-align: center;
+
+        &:hover {
+            > div > img {
+                filter: brightness(0.8) saturate(1.5);
+                box-shadow: 0px 0px 4px 2px ${theme.colors.gray4};
+                cursor: pointer;
+            }
+            > span {
+                font-weight: 700;
+            }
+        }
+        &:active {
+            > div > img {
+                filter: brightness(0.5) saturate(2);
+                box-shadow: 0px 0px 4px 2px ${theme.colors.gray5};
+                cursor: pointer;
+            }
+        }
+    `;
+
     return (
-        <MenuButtonContainer onClick={onClick}>
-            <ImageWrapper width={width} height={height}>
+        <MenuButtonContainer width={width} onClick={onClick}>
+            <ImageWrapper width={width} height={height} draggable="false">
                 <Image
                     src="/assets/images/핥짝.jpg"
                     // src={imageURL}
                     alt="Menu Button Image"
                     fill
-                    style={{
-                        borderRadius: "20px",
-                    }}
+                    draggable="false"
                 />
             </ImageWrapper>
             <TextWrapper>{menuName}</TextWrapper>
@@ -52,4 +86,7 @@ function MenuButton({
     );
 }
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
 export default MenuButton;
