@@ -1,7 +1,6 @@
 package com.ssafy.showeat.domain.funding.repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
+import com.ssafy.showeat.domain.business.dto.response.BusinessTotalStatResponseDto;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
 import com.ssafy.showeat.domain.funding.entity.QFunding;
 
@@ -78,5 +77,57 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 			.fetch();
 
 		return monthlyStatResponseDto;
+	}
+
+	@Override
+	public BusinessTotalStatResponseDto findTotalStatById(Long businessId) {
+		LocalDate currentDate = LocalDate.now();
+
+		List<BusinessTotalStatResponseDto> totalStatResponseDto = jpaQueryFactory
+			.select(
+				Projections.constructor(
+					BusinessTotalStatResponseDto.class,
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
+							.then(funding.fundingCurCount.multiply(funding.fundingDiscountPrice))
+							.otherwise(0)
+							.sum()
+						, "totalRevenue"
+					),
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
+							.then(1)
+							.otherwise(0)
+							.sum()
+						, "totalSuccessFundingCnt"
+					),
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
+							.then(funding.fundingCurCount)
+							.otherwise(0)
+							.sum()
+						, "totalFundingParticipantsCnt"
+					),
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.FAIL))
+							.then(1)
+							.otherwise(0)
+							.sum()
+						, "totalFailFundingCnt"
+					)
+				)
+			)
+			.from(funding)
+			.where(
+				funding.business.businessId.eq(businessId),
+				funding.fundingEndDate.before(currentDate)
+			)
+			.fetch();
+
+		return totalStatResponseDto.get(0);
 	}
 }

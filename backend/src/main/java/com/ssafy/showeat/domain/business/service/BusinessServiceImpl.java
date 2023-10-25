@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMenuResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
+import com.ssafy.showeat.domain.business.dto.response.BusinessTotalStatResponseDto;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
 import com.ssafy.showeat.domain.business.repository.BusinessMenuRepository;
@@ -29,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BusinessServiceImpl implements BusinessService{
+public class BusinessServiceImpl implements BusinessService {
 
 	private final UserRepository userRepository;
 	private final BusinessRepository businessRepository;
@@ -40,8 +42,8 @@ public class BusinessServiceImpl implements BusinessService{
 	@Override
 	@Transactional
 	public void registerBusinessUser(BusinessUserRequestDto businessUserRequestDto,
-									 MultipartFile businessRegistration,
-									 MultipartFile bankBook) throws IOException {
+		MultipartFile businessRegistration,
+		MultipartFile bankBook) throws IOException {
 		log.info("BusinessServiceImpl_registerBusinessUser || 업체 등록");
 		//todo 회원 Id 가져오기
 		User loginUser = userRepository.findById(1L).get();
@@ -74,14 +76,20 @@ public class BusinessServiceImpl implements BusinessService{
 		User loginUser = userRepository.findById(1L).get();
 		Business business = businessRepository.findByUser(loginUser).get();
 		return business.getBusinessMenus()
-						.stream()
-						.map(businessMenu -> businessMenu.toBusinessMenuResponseDto())
-						.collect(Collectors.toList());
+			.stream()
+			.map(businessMenu -> businessMenu.toBusinessMenuResponseDto())
+			.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<BusinessMonthlyStatResponseDto> getMonthlyStatList(Long businessId) {
 		log.info("BusinessServiceImpl_getMonthlyStatList || 업체 월간 통계 조회");
 		return fundingRepository.findMonthlyStatListById(businessId);
+	}
+
+	@Override
+	public BusinessTotalStatResponseDto getTotalStatList(Long businessId) {
+		log.info("BusinessServiceImpl_getTotalStatList || 업체 누적 통계 조회");
+		return fundingRepository.findTotalStatById(businessId);
 	}
 }
