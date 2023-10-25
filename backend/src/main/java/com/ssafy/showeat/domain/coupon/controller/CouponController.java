@@ -12,6 +12,7 @@ import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.service.CouponService;
 import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
+import com.ssafy.showeat.global.response.SingleResponseResult;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -59,6 +60,18 @@ public class CouponController {
 		log.info("CouponController_getExpiredCouponListByUserId || 해당 유저의 기한만료 쿠폰 리스트 조회");
 		return new ListResponseResult<>(couponService.getExpiredCouponListByUserId(userId));
 	}
+
+	@ApiOperation(value = "쿠폰 상세 조회", notes = "쿠폰의 상세정보를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "쿠폰 상세 조회 성공"),
+		@ApiResponse(code = 400, message = "쿠폰 상세 조회 실패"),
+	})
+	@PatchMapping("/{couponId}")
+	public ResponseResult getCouponDetailByCouponId(@PathVariable Long couponId) {
+		log.info("CouponController_getCouponDetailByCouponId || 해당 쿠폰의 상세 정보 조회");
+		return new SingleResponseResult<>(couponService.getCouponDetailByCouponId(couponId));
+	}
+
 
 	@ApiOperation(value = "쿠폰 상태 변경", notes = "쿠폰의 상태를 변경합니다.")
 	@ApiResponses(value = {

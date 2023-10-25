@@ -51,6 +51,13 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
+	public CouponResponseDto getCouponDetailByCouponId(Long couponId) {
+		log.info("CouponService_getCouponDetailByCouponId || 해당 쿠폰의 상세 정보 조회");
+		Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotExistCouponException::new);
+		return coupon.toCouponResponseDto();
+	}
+
+	@Override
 	@Transactional
 	public void updateCouponStatus(UpdateCouponStatusRequestDto updateCouponStatusRequestDto) {
 		log.info("CouponService_updateCouponStatus || 해당 쿠폰 사용 처리");
