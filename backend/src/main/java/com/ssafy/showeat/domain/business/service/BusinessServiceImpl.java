@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +14,6 @@ import com.ssafy.showeat.domain.business.dto.response.BusinessMenuResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
-import com.ssafy.showeat.domain.business.entity.BusinessMenuImage;
 import com.ssafy.showeat.domain.business.repository.BusinessMenuRepository;
 import com.ssafy.showeat.domain.business.repository.BusinessRepository;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
@@ -36,6 +36,19 @@ public class BusinessServiceImpl implements BusinessService{
 	private final BusinessMenuRepository businessMenuRepository;
 	private final FundingRepository fundingRepository;
 	private final S3Service s3Service;
+
+	@Override
+	@Transactional
+	public void registerBusinessUser(BusinessUserRequestDto businessUserRequestDto,
+									 MultipartFile businessRegistration,
+									 MultipartFile bankBook) throws IOException {
+		log.info("BusinessServiceImpl_registerBusinessUser || 업체 등록");
+		//todo 회원 Id 가져오기
+		User loginUser = userRepository.findById(1L).get();
+		String businessRegistrationUrl = s3Service.uploadImageToS3(businessRegistration);
+		String bankBookUrl = s3Service.uploadImageToS3(bankBook);
+		businessRepository.save(businessUserRequestDto.toEntity(businessRegistrationUrl, bankBookUrl, loginUser));
+	}
 
 	@Override
 	@Transactional
