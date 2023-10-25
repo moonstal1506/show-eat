@@ -33,8 +33,8 @@ public class CouponController {
 		@ApiResponse(code = 400, message = "사용가능 쿠폰 리스트 조회 실패"),
 	})
 	@GetMapping("/active/{userId}")
-	public ResponseResult getActvieCouponListByUserId(@PathVariable Long userId) {
-		log.info("CouponController_getCouponListByUserId -> 해당 유저의 사용가능 쿠폰 리스트 조회");
+	public ResponseResult getActiveCouponListByUserId(@PathVariable Long userId) {
+		log.info("CouponController_getActiveCouponListByUserId -> 해당 유저의 사용가능 쿠폰 리스트 조회");
 		return new ListResponseResult<>(couponService.getActiveCouponListByUserId(userId));
 	}
 
@@ -45,8 +45,19 @@ public class CouponController {
 	})
 	@GetMapping("/used/{userId}")
 	public ResponseResult getUsedCouponListByUserId(@PathVariable Long userId) {
-		log.info("CouponController_getCouponListByUserId -> 해당 유저의 사용완료 쿠폰 리스트 조회");
+		log.info("CouponController_getUsedCouponListByUserId || 해당 유저의 사용완료 쿠폰 리스트 조회");
 		return new ListResponseResult<>(couponService.getUsedCouponListByUserId(userId));
+	}
+
+	@ApiOperation(value = "기한만료 쿠폰 리스트 조회", notes = "유저의 기한만료 쿠폰 리스트를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "기한만료 쿠폰 리스트 조회 성공"),
+		@ApiResponse(code = 400, message = "기한만료 쿠폰 리스트 조회 실패"),
+	})
+	@GetMapping("/expired/{userId}")
+	public ResponseResult getExpiredCouponListByUserId(@PathVariable Long userId) {
+		log.info("CouponController_getExpiredCouponListByUserId || 해당 유저의 기한만료 쿠폰 리스트 조회");
+		return new ListResponseResult<>(couponService.getExpiredCouponListByUserId(userId));
 	}
 
 	@ApiOperation(value = "쿠폰 상태 변경", notes = "쿠폰의 상태를 변경합니다.")
@@ -56,7 +67,7 @@ public class CouponController {
 	})
 	@PatchMapping("/CouponStatus")
 	public ResponseResult updateCouponStatus(@RequestBody UpdateCouponStatusRequestDto updateCouponStatusRequestDto) {
-		log.info("CouponController_updateCouponStatusUsed -> 해당 쿠폰의 상태를 변경");
+		log.info("CouponController_updateCouponStatus || 해당 쿠폰의 상태를 변경");
 		couponService.updateCouponStatus(updateCouponStatusRequestDto);
 		return ResponseResult.successResponse;
 	}

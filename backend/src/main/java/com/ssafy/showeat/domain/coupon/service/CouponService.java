@@ -11,5 +11,7 @@ public interface CouponService {
 
 	List<CouponResponseDto> getUsedCouponListByUserId(Long userId);
 
+	List<CouponResponseDto> getExpiredCouponListByUserId(Long userId);
+
 	void updateCouponStatus(UpdateCouponStatusRequestDto updateCouponStatusRequestDto);
 }

@@ -16,8 +16,11 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 	List<Coupon> findByUser(User user);
 
 	@Query("SELECT c FROM Coupon c WHERE c.user = :user AND c.couponStatus = 'ACTIVE'")
-	List<Coupon> findCouponByUserAndActive(@Param("user") User user);
+	List<Coupon> findActiveCouponByUser(@Param("user") User user);
 
 	@Query("SELECT c FROM Coupon c WHERE c.user = :user AND c.couponStatus = 'USED'")
-	List<Coupon> findCouponByUserAndUsed(@Param("user") User user);
+	List<Coupon> findUsedCouponByUser(@Param("user") User user);
+
+	@Query("SELECT c FROM Coupon c WHERE c.user = :user AND c.couponStatus = 'EXPIRED'")
+	List<Coupon> findExpiredCouponByUser(@Param("user") User user);
 }

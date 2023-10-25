@@ -28,17 +28,25 @@ public class CouponServiceImpl implements CouponService {
 
 	@Override
 	public List<CouponResponseDto> getActiveCouponListByUserId(Long userId) {
-		log.info("CouponService_getCouponLIstByUserid || 유저의 사용가능 쿠폰 조회");
+		log.info("CouponService_getActiveCouponLIstByUserid || 유저의 사용가능 쿠폰 조회");
 		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
-		List<Coupon> couponList = couponRepository.findCouponByUserAndActive(user);
+		List<Coupon> couponList = couponRepository.findActiveCouponByUser(user);
 		return couponList.stream().map(Coupon::toCouponResponseDto).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<CouponResponseDto> getUsedCouponListByUserId(Long userId) {
-		log.info("CouponService_getCouponLIstByUserid || 유저의 사용완료 쿠폰 조회");
+		log.info("CouponService_getUsedCouponLIstByUserid || 유저의 사용완료 쿠폰 조회");
 		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
-		List<Coupon> couponList = couponRepository.findCouponByUserAndUsed(user);
+		List<Coupon> couponList = couponRepository.findUsedCouponByUser(user);
+		return couponList.stream().map(Coupon::toCouponResponseDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CouponResponseDto> getExpiredCouponListByUserId(Long userId) {
+		log.info("CouponService_getExpiredCouponLIstByUserid || 유저의 사용완료 쿠폰 조회");
+		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
+		List<Coupon> couponList = couponRepository.findExpiredCouponByUser(user);
 		return couponList.stream().map(Coupon::toCouponResponseDto).collect(Collectors.toList());
 	}
 
