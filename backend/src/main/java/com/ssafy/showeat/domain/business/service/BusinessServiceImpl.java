@@ -5,15 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
-import com.ssafy.showeat.domain.business.dto.response.SellerResponseDto;
+import com.ssafy.showeat.domain.business.dto.response.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
-import com.ssafy.showeat.domain.business.dto.response.BusinessMenuResponseDto;
-import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
-import com.ssafy.showeat.domain.business.dto.response.BusinessTotalStatResponseDto;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
 import com.ssafy.showeat.domain.business.repository.BusinessMenuRepository;
@@ -21,8 +18,6 @@ import com.ssafy.showeat.domain.business.repository.BusinessRepository;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
-import com.ssafy.showeat.global.exception.NotExistBusinessException;
-import com.ssafy.showeat.global.exception.NotExistUserException;
 import com.ssafy.showeat.global.s3.S3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +45,12 @@ public class BusinessServiceImpl implements BusinessService {
 		String businessRegistrationUrl = s3Service.uploadImageToS3(businessRegistration);
 		String bankBookUrl = s3Service.uploadImageToS3(bankBook);
 		businessRepository.save(businessUserRequestDto.toEntity(businessRegistrationUrl, bankBookUrl, loginUser));
+	}
+
+	@Override
+	public RegistrationResponseDto getRegistrationInfo(Long businessId) {
+		log.info("BusinessServiceImpl_getSellerInfo || 사업자 정보 조회");
+		return businessRepository.findById(businessId).get().toRegistrationResponseDto();
 	}
 
 	@Override

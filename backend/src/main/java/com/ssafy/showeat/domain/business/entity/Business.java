@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ssafy.showeat.domain.business.dto.response.RegistrationResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.SellerResponseDto;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.global.entity.BaseDateEntity;
@@ -112,6 +113,20 @@ public class Business extends BaseDateEntity {
 								.map(businessMenu -> businessMenu.toSellerMenuResponseDto())
 								.collect(Collectors.toList())
 				)
+				.build();
+	}
+
+	public RegistrationResponseDto toRegistrationResponseDto() {
+		return RegistrationResponseDto.builder()
+				.businessId(businessId)
+				.businessName(businessName)
+				.businessNumber(businessNumber)
+				.businessAddress(businessAddress)
+				.businessPhone(businessPhone)
+				.businessCeo(businessCeo)
+				.businessEmail(businessEmail)
+				.businessAccountHolder(businessAccountHolder)
+				.businessAccount(businessAccount)
 				.build();
 	}
 }
