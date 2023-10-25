@@ -4,12 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.showeat.domain.coupon.entity.Coupon;
+import com.ssafy.showeat.domain.coupon.entity.CouponState;
 import com.ssafy.showeat.domain.coupon.repository.CouponRepository;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.review.dto.request.ReviewRequestDto;
 import com.ssafy.showeat.domain.review.repository.ReviewRepository;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
+import com.ssafy.showeat.global.exception.ImpossibleReviewException;
 import com.ssafy.showeat.global.exception.NotExistCouponException;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,8 @@ public class ReviewServiceImpl implements ReviewService{
 		Coupon coupon = couponRepository.findById(reviewRequestDto.getCouponId())
 			.orElseThrow(NotExistCouponException::new);
 
-		// TODO : 쿠폰 사용 상태가 USED에 대한 쿠폰만 댓글 리뷰가 가능
+		if(!CouponState.USED.equals(coupon.getCouponState()))
+			throw new ImpossibleReviewException();
 
 		reviewRepository.save(reviewRequestDto.toEntity(loginUser,coupon.getFunding()));
 	}
