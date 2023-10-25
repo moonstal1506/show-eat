@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { ButtonProps } from "@/types/commonProps";
-import { useTheme } from "@emotion/react";
+import { keyframes, useTheme } from "@emotion/react";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -17,6 +17,15 @@ function MenuButton({
     menuName: string;
 }) {
     const theme = useTheme();
+
+    const clickAnimation = keyframes`
+      from {
+        transform: scale(1)
+      }
+      to {
+        transform: scale(0.97)
+      }
+    `;
 
     const ImageWrapper = styled("div")<ButtonProps>`
         width: ${(props) => props.width};
@@ -66,6 +75,7 @@ function MenuButton({
                 filter: brightness(0.5) saturate(2);
                 box-shadow: 0px 0px 4px 2px ${theme.colors.gray5};
                 cursor: pointer;
+                animation: ${clickAnimation} 0.1s linear forwards;
             }
         }
     `;
