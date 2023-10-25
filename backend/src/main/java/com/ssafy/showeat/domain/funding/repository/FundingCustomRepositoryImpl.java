@@ -28,7 +28,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 	public List<BusinessMonthlyStatResponseDto> findMonthlyStatListById(Long businessId) {
 		LocalDate currentDate = LocalDate.now();
 
-		List<BusinessMonthlyStatResponseDto> monthlyStatResponseDtos = jpaQueryFactory
+		List<BusinessMonthlyStatResponseDto> monthlyStatResponseDto = jpaQueryFactory
 			.select(
 				Projections.constructor(
 					BusinessMonthlyStatResponseDto.class,
@@ -42,9 +42,30 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 							.sum()
 						, "revenue"
 					),
-					funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS).count().as("successFundingCnt"),
-					funding.fundingCurCount.sum().as("fundingParticipantsCnt"),
-					funding.fundingIsSuccess.eq(FundingIsSuccess.FAIL).count().as("failFundingCnt")
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
+							.then(1)
+							.otherwise(0)
+							.sum()
+						, "successFundingCnt"
+					),
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
+							.then(funding.fundingCurCount)
+							.otherwise(0)
+							.sum()
+						, "fundingParticipantsCnt"
+					),
+					ExpressionUtils.as(
+						new CaseBuilder()
+							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.FAIL))
+							.then(1)
+							.otherwise(0)
+							.sum()
+						, "failFundingCnt"
+					)
 				)
 			)
 			.from(funding)
@@ -56,6 +77,6 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 			.orderBy(funding.fundingEndDate.year().asc(), funding.fundingEndDate.month().asc())
 			.fetch();
 
-		return monthlyStatResponseDtos;
+		return monthlyStatResponseDto;
 	}
 }

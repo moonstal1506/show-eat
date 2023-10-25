@@ -24,11 +24,11 @@ public class BusinessMonthlyStatResponseDto {
 	private int revenue;
 
 	@ApiModelProperty(value = "성공 펀딩 수", example = "10")
-	private Long successFundingCnt;
+	private int successFundingCnt;
 
 	@ApiModelProperty(value = "펀딩 참여자 수", example = "1000")
 	private int fundingParticipantsCnt;
 
 	@ApiModelProperty(value = "실패 펀딩 수", example = "100000")
-	private Long failFundingCnt;
+	private int failFundingCnt;
 }
