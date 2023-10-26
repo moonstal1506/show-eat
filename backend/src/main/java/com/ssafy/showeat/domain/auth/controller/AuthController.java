@@ -58,26 +58,9 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseResult reissue(HttpServletRequest request, HttpServletResponse response) {
         log.info("AuthController_reissue -> AccessToken 재발행");
-        String refreshToken = request.getHeader("refresh-token");
-
-        // refreshToken 해독
-        Claims refreshTokenClaims = jwtProvider.parseClaims(refreshToken);
-        String email = refreshTokenClaims.getSubject();
-
-        log.info("해독해서 뽑은 이메일"+email);
-        String findRefreshToken = redisService.getValues(email+"_refreshToken");
-
-        if (findRefreshToken != null) {
-            TokenDto newAccessToken = jwtProvider.generateTokenDto(findRefreshToken);
-            // 엑세스 토큰 재발행
-            response.setHeader("access-token", newAccessToken.getAccessToken());
-            return ResponseEntity.status(HttpStatus.OK).body(newAccessToken.getAccessToken());
-
-        } else {
-            // 유효하지 않거나 만료된 리프레시 토큰
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않거나 만료된 리프레시 토큰");
-        }
+        authService.reissueToken(request, response);
+        return ResponseResult.successResponse;
     }
 }
