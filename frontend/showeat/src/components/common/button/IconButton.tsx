@@ -57,7 +57,7 @@ const ImageWrapper = styled("div")`
 /* Icon Button Component */
 function IconButton(props: IconButtonProps) {
     // States and Variables
-    const { width, height = Number(width), source, alternative, onClick } = props;
+    const { width, height = Number(width), onClick, source, alternative } = props;
 
     return (
         <ButtonContainer
