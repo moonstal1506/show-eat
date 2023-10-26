@@ -48,7 +48,7 @@ const ImageWrapper = styled("div")`
     position: relative;
 
     // Box Model Attribute
-    min-width: 50px;
+    max-width: 50px;
     max-height: 50px;
 `;
 
