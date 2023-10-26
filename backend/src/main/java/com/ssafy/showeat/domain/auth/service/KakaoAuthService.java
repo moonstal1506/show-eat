@@ -71,6 +71,8 @@ public class KakaoAuthService {
 
         Long userId = user.getUserId();
         user = userRepository.findByUserId(userId).orElseThrow(NotExistUserException::new);
+        Credential credential = credentialRepository.findByCredentialId(
+                user.getCredential().getCredentialId()).orElseThrow(NotExistUserException::new);
 
         log.info("[login] 계정 확인 완료" + user.getUserNickname() + "로그인 성공!");
         log.info("grantType = {}", tokenDto.getGrantType());
@@ -81,7 +83,7 @@ public class KakaoAuthService {
         user.updateAddress("서울특별시 강남구");
 
         //refreshToken을 Redis에 저장
-        redisService.setValues("userId_"+user.getUserId()+"_refreshToken", tokenDto.getRefreshToken());
+        redisService.setValues(credential.getEmail()+"_refreshToken", tokenDto.getRefreshToken());
 
         return LoginResponseDto.builder()
                 .tokenDto(tokenDto)
@@ -179,13 +181,13 @@ public class KakaoAuthService {
 
         if (credential != null) {
             log.info("이미 존재하는 email입니다. 바로 유저 정보를 반환합니다.");
-            credential.updateRefreshToken(tokenDto.getRefreshToken());
+//            credential.updateRefreshToken(tokenDto.getRefreshToken());
             return userRepository.findByCredential(credential).orElse(null);
         }
 
         credential = Credential.builder()
                 .email(email)
-                .refreshToken(tokenDto.getRefreshToken())
+//                .refreshToken(tokenDto.getRefreshToken())
                 .credentialId(UUID.randomUUID().toString())
                 .credentialRole(CredentialRole.USER)
                 .credentialSocialPlatform("kakao")
