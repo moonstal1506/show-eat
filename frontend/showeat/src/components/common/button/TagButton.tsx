@@ -1,5 +1,5 @@
 /* Import */
-import { ButtonProps } from "@customTypes/commonProps";
+import { ButtonProps } from "@/customTypes/commonProps";
 import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
@@ -16,14 +16,14 @@ interface TagButtonProps extends ButtonProps {
 
 /* Style */
 const TagButtonWrapper = styled("div")<ButtonProps & { buttonColor: string }>`
+    display: inline-block;
+
     max-width: ${(props) => props.width};
     min-width: 50px;
     height: ${(props) => props.height};
-
-    display: inline-block;
+    padding: 5px 10px;
     border-radius: 10px;
     background-color: ${(props) => props.buttonColor};
-    padding: 5px 10px;
 
     text-align: center;
     white-space: nowrap;
@@ -41,6 +41,9 @@ const TagText = styled("span")<{ textColor: string }>`
     text-overflow: ellipsis;
 `;
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Tag Button Component */
 function TagButton({
     width,
     height,
