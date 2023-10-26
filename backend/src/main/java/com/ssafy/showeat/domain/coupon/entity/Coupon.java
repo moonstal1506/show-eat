@@ -55,38 +55,29 @@ public class Coupon extends BaseTimeEntity {
 	private Funding funding;
 
 	public CouponDetailResponseDto toCouponDetailResponseDto() {
-		LocalDate currentDate = LocalDate.now();
-
 		return CouponDetailResponseDto.builder()
 			.couponId(couponId)
-			.couponPrice(couponPrice)
 			.couponStatus(couponStatus)
+			.couponPrice(couponPrice)
 			.expirationDate(couponExpirationDate)	// TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
-			.businessImgUrl(funding.getBusiness().getBusinessImgUrl())
 			.fundingTitle(funding.getFundingTitle())
 			.fundingMenu(funding.getFundingMenu())
 			.fundingDiscountPrice(funding.getFundingDiscountPrice())
 			.fundingPrice(funding.getFundingPrice())
-			.fundingImgUrl(funding.getFundingImages().get(0).getFundingImgUrl())
-			.remainingDays(ChronoUnit.DAYS.between(currentDate, couponExpirationDate)) // TODO: 만료 날짜 - 현재 날짜 반환
 			.build();
 	}
 
 	public CouponListResponseDto toCouponListResponseDto() {
 		LocalDate currentDate = LocalDate.now();
 
-		return CouponDetailResponseDto.builder()
+		return CouponListResponseDto.builder()
 			.couponId(couponId)
-			.couponPrice(couponPrice)
 			.couponStatus(couponStatus)
 			.expirationDate(couponExpirationDate)	// TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
 			.businessImgUrl(funding.getBusiness().getBusinessImgUrl())
-			.fundingTitle(funding.getFundingTitle())
 			.fundingMenu(funding.getFundingMenu())
-			.fundingDiscountPrice(funding.getFundingDiscountPrice())
-			.fundingPrice(funding.getFundingPrice())
 			.fundingImgUrl(funding.getFundingImages().get(0).getFundingImgUrl())
 			.remainingDays(ChronoUnit.DAYS.between(currentDate, couponExpirationDate)) // TODO: 만료 날짜 - 현재 날짜 반환
 			.build();
