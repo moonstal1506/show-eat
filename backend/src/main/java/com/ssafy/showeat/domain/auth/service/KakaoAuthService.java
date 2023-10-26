@@ -18,6 +18,7 @@ import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.exception.NotExistUserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -50,10 +51,11 @@ public class KakaoAuthService {
     
     private String KAKAO_DEFAULT_IMAGE = "https://showeat.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
+    @Autowired
+    private final RedisService redisService;
     private final JwtProvider jwtProvider;
     private final CredentialRepository credentialRepository;
     private final UserRepository userRepository;
-
     private TokenDto tokenDto;
 
     @Transactional
@@ -63,6 +65,7 @@ public class KakaoAuthService {
         User existUser = userRepository.findByUserId(user.getUserId()).orElse(null);
         System.out.println("refreshToken ======="+tokenDto.getRefreshToken());
         System.out.println("accessToken ======== "+tokenDto.getAccessToken());
+
         if (existUser == null) {
             log.info("존재하지 않는 회원정보입니다. 새로 저장합니다.");
             userRepository.save(user);
@@ -80,6 +83,9 @@ public class KakaoAuthService {
         //관심 주소 초기값 설정
         user.updateAddress("서울특별시 강남구");
 
+        //refreshToken을 Redis에 저장
+        redisService.setValues("refreshToken:" + tokenDto.getRefreshToken(), tokenDto.getRefreshToken());
+
         return LoginResponseDto.builder()
                 .tokenDto(tokenDto)
                 .userResDto(UserResDto.builder()
@@ -91,6 +97,7 @@ public class KakaoAuthService {
                         .credentialRole(user.getCredential().getCredentialRole())
                         .createdDate(user.getCreatedDate())
                         .modifiedDate(user.getModifiedDate())
+                        .tokenDto(tokenDto)
                         .build())
                 .build();
     }
