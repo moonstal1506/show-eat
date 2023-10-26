@@ -47,9 +47,11 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+
         httpSecurity
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/auth/reissue").permitAll()
                 .antMatchers("/auth/login/**").permitAll()
                 .anyRequest().authenticated();
 
