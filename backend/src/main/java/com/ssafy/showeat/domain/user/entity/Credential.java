@@ -23,9 +23,6 @@ public class Credential extends BaseTimeEntity {
 	@Column(length = 128)
 	private String credentialId;
 
-	@Column(length = 512)
-	private String refreshToken;
-
 	@Column(length = 128)
 	private String email;
 
@@ -35,10 +32,6 @@ public class Credential extends BaseTimeEntity {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private CredentialRole credentialRole;
-
-	public void updateRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
 
 	public String getRoleKey() {
 		return this.credentialRole.getCode();
