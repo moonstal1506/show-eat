@@ -20,11 +20,11 @@ public class ExceptionController {
 		return ResponseResult.exceptionResponse(ExceptionCode.SERVER_EXCEPTION, err.getMessage());
 	}
 
-	@ExceptionHandler(NotExistAccountException.class)
-	public ResponseResult NotExistAccountException(NotExistAccountException err) {
+	@ExceptionHandler(NotExistBusinessException.class)
+	public ResponseResult NotExistBusinessException(NotExistBusinessException err) {
 		log.info("Error : {}", err.getClass());
 		log.info("Error Message : {}", err.getMessage());
-		return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_ACCOUNT_EXCEPTION, err.getMessage());
+		return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_BUSINESS_EXCEPTION, err.getMessage());
 	}
 
 	@ExceptionHandler(NotExistCouponException.class)
@@ -81,5 +81,12 @@ public class ExceptionController {
 		log.info("Error : {}", err.getClass());
 		log.info("Error Message : {}", err.getMessage());
 		return ResponseResult.exceptionResponse(ExceptionCode.IMPOSSIBLE_CANCEL_FUNDING_EXCEPTION, err.getMessage());
+	}
+
+	@ExceptionHandler(ImpossibleReviewException.class)
+	public ResponseResult ImpossibleReviewException(ImpossibleReviewException err) {
+		log.info("Error : {}", err.getClass());
+		log.info("Error Message : {}", err.getMessage());
+		return ResponseResult.exceptionResponse(ExceptionCode.IMPOSSIBLE_REVIEW_EXCEPTION, err.getMessage());
 	}
 }
