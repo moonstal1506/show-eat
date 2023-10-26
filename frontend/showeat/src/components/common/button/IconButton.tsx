@@ -27,6 +27,9 @@ const ButtonContainer = styled("div")<{ width: number; height: number }>`
     // Interaction Attribute
     cursor: pointer;
     user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
     transition: all 0.3s ease;
     &:hover {
         img {
