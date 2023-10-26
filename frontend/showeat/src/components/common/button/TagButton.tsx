@@ -1,5 +1,5 @@
 /* Import */
-import { ButtonProps } from "@/customTypes/commonProps";
+import { ButtonProps } from "@customTypes/commonProps";
 import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
@@ -7,7 +7,8 @@ import styled from "@emotion/styled";
 /* Type */
 interface TagButtonProps extends ButtonProps {
     tagDescription: string;
-    buttonColor: string;
+    // eslint-disable-next-line react/require-default-props
+    buttonColor?: string;
     // eslint-disable-next-line react/require-default-props
     textColor?: string;
 }
@@ -21,9 +22,14 @@ const TagButtonWrapper = styled("div")<ButtonProps & { buttonColor: string }>`
     max-width: ${(props) => props.width};
     min-width: 50px;
     height: ${(props) => props.height};
+
     padding: 5px 10px;
     border-radius: 10px;
-    background-color: ${(props) => props.buttonColor};
+    border: ${(props) =>
+        props.buttonColor && props.buttonColor !== "white"
+            ? "none"
+            : `1px solid ${props.theme.colors.gray2}`};
+    background-color: ${(props) => (props.buttonColor ? props.buttonColor : "none")};
 
     text-align: center;
     white-space: nowrap;
@@ -48,7 +54,7 @@ function TagButton({
     width,
     height,
     tagDescription,
-    buttonColor,
+    buttonColor = "",
     textColor = "black",
 }: TagButtonProps) {
     // ...텍스트... 처럼 ... 사이에 있는 텍스트들을 찾아서 font-weight를 바꾼 span태그로 만들어줌.
