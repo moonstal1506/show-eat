@@ -1,8 +1,8 @@
 package com.ssafy.showeat.domain.business.entity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ssafy.showeat.domain.business.dto.response.RegistrationResponseDto;
+import com.ssafy.showeat.domain.business.dto.response.SellerResponseDto;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.global.entity.BaseDateEntity;
 
@@ -37,9 +39,6 @@ public class Business extends BaseDateEntity {
 	private String businessName;
 
 	@Column(nullable = false, length = 1000)
-	private String businessBio;
-
-	@Column(nullable = false, length = 100)
 	private String businessImgUrl;
 
 	@Column(nullable = false, length = 20)
@@ -63,6 +62,30 @@ public class Business extends BaseDateEntity {
 	@Column(nullable = false, length = 100)
 	private String businessAddress;
 
+	@Column(nullable = false, length = 10)
+	private String businessAccountHolder;
+
+	@Column(nullable = false, length = 100)
+	private String businessAccount;
+
+	@Column(nullable = false)
+	private int businessNumber;
+
+	@Column(nullable = false, length = 1000)
+	private String businessRegistrationUrl;
+
+	@Column(nullable = false, length = 1000)
+	private String bankBookUrl;
+
+	@Column
+	private String businessBio;
+
+	@Column
+	private String businessOperatingTime;
+
+	@Column
+	private String businessClosedDays;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -70,4 +93,40 @@ public class Business extends BaseDateEntity {
 	@OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Statistic> statistics;
 
+	@OneToMany(mappedBy = "business", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<BusinessMenu> businessMenus;
+
+	public void addBusinessMenu(BusinessMenu businessMenu){
+		this.businessMenus.add(businessMenu);
+		businessMenu.setBusiness(this);
+	}
+
+	public SellerResponseDto toSellerResponseDto() {
+		return SellerResponseDto.builder()
+				.businessId(businessId)
+				.businessImgUrl(businessImgUrl)
+				.businessBio(businessBio)
+				.businessOperatingTime(businessOperatingTime)
+				.businessClosedDays(businessClosedDays)
+				.sellerMenuResponseDtos(
+						businessMenus.stream()
+								.map(businessMenu -> businessMenu.toSellerMenuResponseDto())
+								.collect(Collectors.toList())
+				)
+				.build();
+	}
+
+	public RegistrationResponseDto toRegistrationResponseDto() {
+		return RegistrationResponseDto.builder()
+				.businessId(businessId)
+				.businessName(businessName)
+				.businessNumber(businessNumber)
+				.businessAddress(businessAddress)
+				.businessPhone(businessPhone)
+				.businessCeo(businessCeo)
+				.businessEmail(businessEmail)
+				.businessAccountHolder(businessAccountHolder)
+				.businessAccount(businessAccount)
+				.build();
+	}
 }
