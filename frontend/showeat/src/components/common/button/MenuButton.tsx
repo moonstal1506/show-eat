@@ -8,12 +8,11 @@ import { keyframes, useTheme } from "@emotion/react";
 
 function MenuButton({
     width,
-    height,
     onClick,
-    // imageURL,
+    imageURL,
     menuName,
 }: ButtonProps & {
-    // imageURL: string;
+    imageURL: string;
     menuName: string;
 }) {
     const theme = useTheme();
@@ -23,42 +22,51 @@ function MenuButton({
         transform: scale(1)
       }
       to {
-        transform: scale(1.02)
+        transform: scale(1.04)
       }
     `;
 
     const ImageWrapper = styled("div")<ButtonProps>`
         width: ${(props) => props.width};
         height: ${(props) => props.height};
-        min-width: 80px;
-        min-height: 80px;
+        /* max-height: 100px;
+        max-width: 100px; */
+        min-width: 70px;
+        min-height: 70px;
+
         position: relative;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        & > img {
+
+        img {
             border-radius: 20px;
         }
     `;
 
     const TextWrapper = styled("span")`
         padding-top: 10px;
+
         font-size: 16px;
         font-weight: 500;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+
         cursor: pointer;
     `;
 
     const MenuButtonContainer = styled("div")<ButtonProps>`
         width: ${(props) => props.width};
+
         display: flex;
         flex-direction: column;
         justify-content: "center";
         align-items: center;
+
         text-align: center;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover {
             > div > img {
@@ -82,13 +90,13 @@ function MenuButton({
 
     return (
         <MenuButtonContainer width={width} onClick={onClick}>
-            <ImageWrapper width={width} height={height} draggable="false">
+            <ImageWrapper width={width} height={width} draggable="false">
                 <Image
-                    src="/assets/images/핥짝.jpg"
-                    // src={imageURL}
+                    src={imageURL}
                     alt="Menu Button Image"
                     fill
                     draggable="false"
+                    objectFit="cover"
                 />
             </ImageWrapper>
             <TextWrapper>{menuName}</TextWrapper>
