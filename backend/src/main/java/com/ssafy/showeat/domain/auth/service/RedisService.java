@@ -25,7 +25,7 @@ public class RedisService {
 		redisTemplate.expire(key, 14, TimeUnit.DAYS);
 	}
 
-	public void expireValues(String key) {
-		redisTemplate.expire(key, 0, TimeUnit.SECONDS);
+	public void delValues(Long key){
+		redisTemplate.delete("userId_"+key+"_refreshToken");
 	}
 }

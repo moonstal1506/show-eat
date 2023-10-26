@@ -48,7 +48,6 @@ public class KakaoAuthService {
     private String KAKAO_USER_INFO_URI;
     @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
     private String KAKAO_GRANT_TYPE;
-    
     private String KAKAO_DEFAULT_IMAGE = "https://showeat.s3.ap-northeast-2.amazonaws.com/profile.jpg";
 
     @Autowired
@@ -63,8 +62,6 @@ public class KakaoAuthService {
         KakaoTokenDto kakaoTokenDto = getKakaoAccessToken(code);
         User user = getKakaoUserInfo(kakaoTokenDto);
         User existUser = userRepository.findByUserId(user.getUserId()).orElse(null);
-        System.out.println("refreshToken ======="+tokenDto.getRefreshToken());
-        System.out.println("accessToken ======== "+tokenDto.getAccessToken());
 
         if (existUser == null) {
             log.info("존재하지 않는 회원정보입니다. 새로 저장합니다.");
@@ -84,7 +81,7 @@ public class KakaoAuthService {
         user.updateAddress("서울특별시 강남구");
 
         //refreshToken을 Redis에 저장
-        redisService.setValues("refreshToken:" + tokenDto.getRefreshToken(), tokenDto.getRefreshToken());
+        redisService.setValues("userId_"+user.getUserId()+"_refreshToken", tokenDto.getRefreshToken());
 
         return LoginResponseDto.builder()
                 .tokenDto(tokenDto)

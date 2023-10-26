@@ -1,5 +1,6 @@
 package com.ssafy.showeat.domain.auth.service;
 
+import com.ssafy.showeat.domain.auth.dto.TokenDto;
 import com.ssafy.showeat.domain.auth.dto.request.LogoutReqDto;
 import com.ssafy.showeat.domain.auth.dto.request.UserDeleteReqDto;
 import com.ssafy.showeat.domain.user.entity.Credential;
@@ -19,6 +20,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final CredentialRepository credentialRepository;
+    private final RedisService redisService;
 
     @Transactional
     public void logout(LogoutReqDto logoutReqDto){
@@ -27,10 +29,12 @@ public class AuthService {
 
         Credential credential = credentialRepository.findByCredentialId(
                 user.getCredential().getCredentialId()).orElseThrow(NotExistUserException::new);// TODO : 예외처리
-        System.out.println(logoutReqDto.getAccessToken());
-        System.out.println(logoutReqDto.getUserId());
-        System.out.println("===================");
+
         credential.updateRefreshToken(null);
+
+        //redis 에서 refreshToken 삭제
+        redisService.delValues(user.getUserId());
+
         log.info("{} 님의 로그아웃 요청이 정상적으로 처리되었습니다.", user.getUserNickname());
     }
 
