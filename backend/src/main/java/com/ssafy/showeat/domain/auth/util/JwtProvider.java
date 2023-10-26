@@ -53,6 +53,7 @@ public class JwtProvider {
         .compact();
 
     String refreshToken = Jwts.builder()
+        .setSubject(email)
         .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
         .signWith(key, SignatureAlgorithm.HS512)
         .compact();
@@ -109,7 +110,7 @@ public class JwtProvider {
     return false;
   }
 
-  private Claims parseClaims(String accessToken) {
+  public Claims parseClaims(String accessToken) {
     try {
       return Jwts.parserBuilder()
           .setSigningKey(key)
