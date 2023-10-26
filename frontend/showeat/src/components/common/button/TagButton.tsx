@@ -1,37 +1,53 @@
 /* Import */
-import { ButtonProps } from "@/types/commonProps";
+import { ButtonProps } from "@customTypes/commonProps";
 import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
+
+/* Type */
+interface TagButtonProps extends ButtonProps {
+    tagDescription: string;
+    buttonColor: string;
+    // eslint-disable-next-line react/require-default-props
+    textColor?: string;
+}
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Style */
+const TagButtonWrapper = styled("div")<ButtonProps & { buttonColor: string }>`
+    max-width: ${(props) => props.width};
+    min-width: 50px;
+    height: ${(props) => props.height};
+
+    display: inline-block;
+    border-radius: 10px;
+    background-color: ${(props) => props.buttonColor};
+    padding: 5px 10px;
+
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const TagText = styled("span")<{ textColor: string }>`
+    max-width: 100%;
+
+    font-size: 14px;
+    color: ${(props) => props.textColor};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
 
 function TagButton({
     width,
     height,
     tagDescription,
     buttonColor,
-}: ButtonProps & { tagDescription: string; buttonColor: string }) {
-    const TagButtonWrapper = styled("div")<ButtonProps>`
-        max-width: ${(props) => props.width};
-        height: ${(props) => props.height};
-        min-width: 50px;
-        text-align: center;
-        display: inline-block;
-        border-radius: 10px;
-        padding: 5px 10px;
-        background-color: ${buttonColor};
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    `;
-
-    const TagText = styled("span")`
-        max-width: 100%;
-        font-size: 14px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    `;
-
+    textColor = "black",
+}: TagButtonProps) {
     // ...텍스트... 처럼 ... 사이에 있는 텍스트들을 찾아서 font-weight를 바꾼 span태그로 만들어줌.
     // ...사이에 있는건 fw 700, --- 사이에 있는건 fw 300
     const thinText = tagDescription.match(/---(.*?)---/g);
@@ -64,8 +80,8 @@ function TagButton({
     }
 
     return (
-        <TagButtonWrapper width={width} height={height}>
-            <TagText dangerouslySetInnerHTML={{ __html: fixedDescription }} />
+        <TagButtonWrapper width={width} height={height} buttonColor={buttonColor}>
+            <TagText dangerouslySetInnerHTML={{ __html: fixedDescription }} textColor={textColor} />
         </TagButtonWrapper>
     );
 }
