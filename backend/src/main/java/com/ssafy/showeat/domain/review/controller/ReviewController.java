@@ -36,4 +36,15 @@ public class ReviewController {
 		reviewService.createReview(reviewRequestDto);
 		return ResponseResult.successResponse;
 	}
+
+	@ApiOperation(value = "리뷰 조회" , notes = "고객이 펀딩에 대한 리뷰를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "리뷰 조회 성공"),
+		@ApiResponse(code = 400, message = "리뷰 조회 실패"),
+	})
+	@PostMapping
+	public ResponseResult getReviewByFundingId(){
+
+		return ResponseResult.successResponse;
+	}
 }
