@@ -33,8 +33,8 @@ public class JwtProvider {
   private String BEARER_TYPE;
   @Value("${jwt.bearer.prefix}")
   private String BEARER_PREFIX;
-  private long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L * 30L;
-  private long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60L * 60L * 24L * 7L;
+  private long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L * 30L; //30분
+  private long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60L * 60L * 24L * 7L; //7일
 
   public JwtProvider(@Value("${jwt.secret}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
