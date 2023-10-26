@@ -51,8 +51,8 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/auth/reissue").permitAll()
-                .antMatchers("/auth/login/**").permitAll()
+                .antMatchers("/api/auth/reissue").permitAll()
+                .antMatchers("/api/auth/login/**").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity

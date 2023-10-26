@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final KakaoAuthService kakaoAuthService;
@@ -56,7 +56,6 @@ public class AuthController {
         return ResponseResult.successResponse;
     }
 
-    //토큰 재발행
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         log.info("AuthController_reissue -> AccessToken 재발행");
