@@ -23,7 +23,7 @@ function MenuButton({
         transform: scale(1)
       }
       to {
-        transform: scale(0.97)
+        transform: scale(1.02)
       }
     `;
 
