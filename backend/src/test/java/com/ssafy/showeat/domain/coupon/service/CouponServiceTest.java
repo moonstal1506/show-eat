@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,44 +35,45 @@ public class CouponServiceTest {
 	@Mock
 	private UserRepository userRepository;
 
+	@DisplayName("사용가능한 쿠폰 리스트 조회 테스트")
 	@Test
 	public void testGetActiveCouponListByUserId() {
-		// 1. given
-		// Mock 데이터 생성
+		// Given
 		Long userId = 1L;
-		User user = new User(); // 유저 객체 생성
-		List<Coupon> mockCouponList = new ArrayList<>();
-		Coupon coupon1 = new Coupon(1L, 10, ACTIVE, LocalDate.now(), user, new Funding());
-		Coupon coupon2 = new Coupon(2L, 20, EXPIRED, LocalDate.now(), user, new Funding());
-		Coupon coupon3 = new Coupon(3L, 30, USED, LocalDate.now(), user, new Funding());
-		Coupon coupon4 = new Coupon(4L, 40, ACTIVE, LocalDate.now(), user, new Funding());
-		mockCouponList.add(coupon1);
-		mockCouponList.add(coupon2);
-		mockCouponList.add(coupon3);
-		mockCouponList.add(coupon4);
+		User user = new User(); // Mock User 객체
+		Coupon coupon1 = new Coupon(1L, 100, ACTIVE, LocalDate.now().plusDays(60), user, new Funding());
+		Coupon coupon2= new Coupon(2L, 200, ACTIVE, LocalDate.now().plusDays(90), user, new Funding());
+		Coupon coupon3= new Coupon(3L, 300, EXPIRED, LocalDate.now().plusDays(90), user, new Funding());
+		Coupon coupon4= new Coupon(4L, 400, USED, LocalDate.now().plusDays(90), user, new Funding());
 
-		// 2. when
-		// UserRepository findById 메서드 Mock 설정
+		couponRepository.save(coupon1);
+		couponRepository.save(coupon2);
+		couponRepository.save(coupon3);
+		couponRepository.save(coupon4);
+
+
+		// When
+		// Mock UserRepository의 동작 설정
 		when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-		// CouponRepository findByUser 메서드 Mock 설정
-		when(couponRepository.findActiveCouponByUser(user)).thenReturn(mockCouponList);
+		// Mock CouponRepository의 동작 설정
+		List<Coupon> couponList = couponRepository.findActiveCouponByUser(user);
 
-		// 3. then
-		// getActiveCouponListByUserId 메서드 호출
-		List<CouponListResponseDto> couponList = couponService.getActiveCouponListByUserId(userId);
+		// 테스트 대상 메서드 호출
+		List<CouponListResponseDto> result = couponService.getActiveCouponListByUserId(userId);
 
-		// 4. assert
-		assertNotNull(couponList);
-		assertEquals(2, couponList.size());
+		// then
+		assertEquals(2, result.size());
+		Coupon resultCoupon1 = couponList.get(0);
+		Coupon resultCoupon2 = couponList.get(1);
 
-		CouponListResponseDto firstCoupon = couponList.get(0);
-		assertEquals(1L, firstCoupon.getCouponId());
-		assertEquals(CouponStatus.ACTIVE, firstCoupon.getCouponStatus());
+		assertEquals(1L, resultCoupon1.getCouponId());
+		assertEquals(CouponStatus.ACTIVE, resultCoupon1.getCouponStatus());
+		assertEquals(100, resultCoupon1.getCouponPrice());
 
-		CouponListResponseDto secondCoupon = couponList.get(1);
-		assertEquals(4L, secondCoupon.getCouponId());
-		assertEquals(CouponStatus.ACTIVE, secondCoupon.getCouponStatus());
+		assertEquals(2L, resultCoupon2.getCouponId());
+		assertEquals(CouponStatus.ACTIVE, resultCoupon2.getCouponStatus());
+		assertEquals(200, resultCoupon2.getCouponPrice());
 	}
 
 	@Test
