@@ -70,6 +70,7 @@ public class FundingServiceImpl implements FundingService {
 		funding.addUserFunding(funding,loginUser);
 		loginUser.spendMoney(funding.getFundingDiscountPrice());
 		funding.addMoneyForApply();
+		funding.addCountForApply();
 
 		if(!funding.isMaxLimit()) return;
 		funding.changeFundingStatusByMaxApply();

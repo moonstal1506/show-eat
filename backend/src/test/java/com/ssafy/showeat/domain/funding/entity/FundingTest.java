@@ -36,6 +36,19 @@ class FundingTest {
 		assertThat(isApply).isFalse();
 	}
 
+	@Test
+	@DisplayName("펀딩에 참여시 참여수가 증가한다.")
+	void 펀딩참여시_참여수증가() {
+		// given
+		Funding funding = createFundingForCheckMaxLimit(0,10);
+
+		// when
+		funding.addCountForApply();
+
+		// then
+		assertThat(funding.getFundingCurCount()).isEqualTo(1);
+	}
+
 	private Funding createFundingForCheckMaxLimit(
 		int curCount,
 		int maxLimit

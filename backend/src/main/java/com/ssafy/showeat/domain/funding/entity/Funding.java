@@ -137,6 +137,10 @@ public class Funding extends BaseTimeEntity {
 		this.fundingTotalAmount += this.fundingDiscountPrice;
 	}
 
+	public void addCountForApply() {
+		this.fundingCurCount += 1;
+	}
+
 	public void cancelFunding(){
 		this.fundingTotalAmount -= this.fundingDiscountPrice;
 		this.fundingCurCount -= 1;
@@ -177,4 +181,5 @@ public class Funding extends BaseTimeEntity {
 			)
 			.build();
 	}
+
 }
