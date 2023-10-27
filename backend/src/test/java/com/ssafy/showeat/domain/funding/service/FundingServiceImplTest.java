@@ -22,8 +22,6 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 	@DisplayName("설명")
 	void 메서드명(){
 	    // given
-		CreateFundingRequestDto.builder()
-
 
 	    // when
 
