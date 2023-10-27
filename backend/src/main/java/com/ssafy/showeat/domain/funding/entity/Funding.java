@@ -133,7 +133,7 @@ public class Funding extends BaseTimeEntity {
 		return false;
 	}
 
-	public void addMoney(){
+	public void addMoneyForApply(){
 		this.fundingTotalAmount += this.fundingDiscountPrice;
 	}
 
