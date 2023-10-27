@@ -14,7 +14,7 @@ class FundingTest {
 	@DisplayName("펀딩 참여자가 늘어날시 펀딩 참여금액이 discountPrice만큼 증가한다.")
 	void 펀딩참여시_펀딩참여금액증가() {
 	    // given
-		Funding funding = createFunding();
+		Funding funding = createFundingForCheckTotalAmount(0,7000);
 
 	    // when
 		funding.addMoneyForApply();
@@ -23,18 +23,54 @@ class FundingTest {
 		assertThat(funding.getFundingTotalAmount()).isEqualTo(7000);
 	}
 
-	private Funding createFunding(){
+	@Test
+	@DisplayName("펀딩의 참여가 최대참여갯수제한에 도달할시 더이상 펀딩에 참여할 수 없습니다.")
+	void 펀딩최대참여_제한확인() {
+	    // given
+		Funding funding = createFundingForCheckMaxLimit(10,10);
+
+	    // when
+		boolean isApply = funding.isApply();
+
+		// then
+		assertThat(isApply).isFalse();
+	}
+
+	private Funding createFundingForCheckMaxLimit(
+		int curCount,
+		int maxLimit
+	){
 		return Funding.builder()
-			.fundingId(1L)
 			.fundingTitle("맛있는 과자에요")
-			.fundingMaxLimit(150)
-			.fundingMinLimit(50)
-			.fundingCurCount(100)
+			.fundingMaxLimit(maxLimit)
+			.fundingMinLimit(0)
+			.fundingCurCount(curCount)
 			.fundingDiscountPrice(7000)
 			.fundingDiscountRate(10)
 			.fundingMenu("과자")
 			.fundingPrice(10000)
 			.fundingTotalAmount(0)
+			.fundingEndDate(LocalDate.now())
+			.fundingIsActive(FundingIsActive.ACTIVE)
+			.fundingIsSuccess(FundingIsSuccess.SUCCESS)
+			.business(null)
+			.build();
+	}
+
+	private Funding createFundingForCheckTotalAmount(
+		int totalAmount,
+		int discountPrice
+	){
+		return Funding.builder()
+			.fundingTitle("맛있는 과자에요")
+			.fundingMaxLimit(150)
+			.fundingMinLimit(50)
+			.fundingCurCount(100)
+			.fundingDiscountPrice(discountPrice)
+			.fundingDiscountRate(10)
+			.fundingMenu("과자")
+			.fundingPrice(10000)
+			.fundingTotalAmount(totalAmount)
 			.fundingEndDate(LocalDate.now())
 			.fundingIsActive(FundingIsActive.ACTIVE)
 			.fundingIsSuccess(FundingIsSuccess.SUCCESS)
