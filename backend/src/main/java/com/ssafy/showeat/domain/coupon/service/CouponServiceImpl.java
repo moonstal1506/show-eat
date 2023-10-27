@@ -11,6 +11,7 @@ import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponListResponseDto;
 import com.ssafy.showeat.domain.coupon.entity.Coupon;
+import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
 import com.ssafy.showeat.domain.coupon.repository.CouponRepository;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
@@ -26,6 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 public class CouponServiceImpl implements CouponService {
 	private final CouponRepository couponRepository;
 	private final UserRepository userRepository;
+
+	@Override
+	public List<CouponListResponseDto> getCouponListByUserIdAndStatus(Long userId, CouponStatus status) {
+		log.info("CouponService_getCouponListByUserIdAndStatus || 유저의 상태별 쿠폰 조회");
+		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
+		List<Coupon> couponList = couponRepository.findCouponListByUserAndStatus(user, status);
+		return couponList.stream().map(Coupon::toCouponListResponseDto).collect(Collectors.toList());
+	}
 
 	@Override
 	public List<CouponListResponseDto> getActiveCouponListByUserId(Long userId) {

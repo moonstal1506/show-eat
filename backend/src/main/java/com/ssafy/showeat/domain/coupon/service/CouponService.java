@@ -5,8 +5,11 @@ import java.util.List;
 import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponListResponseDto;
+import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
 
 public interface CouponService {
+	List<CouponListResponseDto> getCouponListByUserIdAndStatus(Long userId, CouponStatus status);
+
 	List<CouponListResponseDto> getActiveCouponListByUserId(Long userId);
 
 	List<CouponListResponseDto> getUsedCouponListByUserId(Long userId);
