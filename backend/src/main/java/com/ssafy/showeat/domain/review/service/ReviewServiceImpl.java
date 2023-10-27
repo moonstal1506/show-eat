@@ -55,13 +55,6 @@ public class ReviewServiceImpl implements ReviewService{
 	public FundingReviewResponseDto getReviewByFundingId(Long fundingId , int page) {
 		log.info("ReviewServiceImpl_getReviewByFundingId || 리뷰 조회");
 		Page<Review> reviewInFunding = reviewRepository.findReviewInFunding(PageRequest.of(page, 5), fundingId);
-		return  FundingReviewResponseDto.builder()
-					.reviewResponseDtos(reviewInFunding.getContent().stream().map(review -> review.toReviewResponseDto()).collect(Collectors.toList()))
-					.pageNumber(reviewInFunding.getNumber())
-					.pageSize(reviewInFunding.getSize())
-					.totalElements(reviewInFunding.getTotalElements())
-					.totalPages(reviewInFunding.getTotalPages())
-					.last(reviewInFunding.isLast())
-					.build();
+		return FundingReviewResponseDto.createFundingReviewResponseDto(reviewInFunding);
 	}
 }

@@ -2,15 +2,18 @@ package com.ssafy.showeat.domain.review.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.review.dto.request.ReviewRequestDto;
 import com.ssafy.showeat.domain.review.service.ReviewService;
 import com.ssafy.showeat.global.response.ResponseResult;
+import com.ssafy.showeat.global.response.SingleResponseResult;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -42,9 +45,11 @@ public class ReviewController {
 		@ApiResponse(code = 200, message = "리뷰 조회 성공"),
 		@ApiResponse(code = 400, message = "리뷰 조회 실패"),
 	})
-	@PostMapping
-	public ResponseResult getReviewByFundingId(){
-
-		return ResponseResult.successResponse;
+	@GetMapping
+	public ResponseResult getReviewByFundingId(
+		@RequestParam Long fundingId,
+		@RequestParam int page
+	){
+		return new SingleResponseResult<>(reviewService.getReviewByFundingId(fundingId,page));
 	}
 }
