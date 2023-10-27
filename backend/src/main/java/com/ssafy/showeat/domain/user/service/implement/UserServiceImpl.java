@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.showeat.domain.auth.util.JwtProvider;
 import com.ssafy.showeat.domain.user.entity.Credential;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
+import com.ssafy.showeat.domain.user.dto.request.UpdateInfoRequestDto;
 import com.ssafy.showeat.global.s3.dto.S3FileDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateAddressRequestDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateNicknameRequestDto;
@@ -102,6 +103,14 @@ public class UserServiceImpl implements UserService {
         return s3files;
     }
 
+    @Override
+    @Transactional
+    public void deleteuserImgUrl(Long userId) {
+        log.info("UserServiceImpl_deleteuserImgUrl -> 사용자 프로필 사진 삭제 시도");
+        User user = userRepository.findByUserId(userId).orElseThrow(NotExistUserException::new);
+        user.updateuserImgUrl(DEFAULT_IMAGE);
+    }
+
     public String getUuidFileName(String fileName) {
         String name = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + name;
@@ -125,5 +134,13 @@ public class UserServiceImpl implements UserService {
         String userEmail = accessTokenClaims.getSubject();
 
         return userRepository.findByCredential(credentialRepository.findByEmail(userEmail).get()).get();
+
+    @Override
+    @Transactional
+    public void updateInfo(UpdateInfoRequestDto updateInfoRequestDto) {
+        log.info("UserServiceImpl_updateInfo -> 사용자 초기 설정 등록 시도");
+        User user = userRepository.findByUserId(updateInfoRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
+        user.updateuserNickname(updateInfoRequestDto.getUserNickname());
+        user.updateAddress(updateInfoRequestDto.getUserAddress());
     }
 }
