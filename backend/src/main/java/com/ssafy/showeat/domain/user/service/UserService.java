@@ -1,10 +1,7 @@
 package com.ssafy.showeat.domain.user.service;
 
-<<<<<<< backend/src/main/java/com/ssafy/showeat/domain/user/service/UserService.java
 import com.ssafy.showeat.domain.user.entity.User;
-=======
 import com.ssafy.showeat.domain.user.dto.request.UpdateInfoRequestDto;
->>>>>>> backend/src/main/java/com/ssafy/showeat/domain/user/service/UserService.java
 import com.ssafy.showeat.global.s3.dto.S3FileDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateAddressRequestDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateNicknameRequestDto;

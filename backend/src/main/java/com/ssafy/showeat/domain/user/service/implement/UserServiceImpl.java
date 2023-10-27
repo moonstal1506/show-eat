@@ -134,6 +134,7 @@ public class UserServiceImpl implements UserService {
         String userEmail = accessTokenClaims.getSubject();
 
         return userRepository.findByCredential(credentialRepository.findByEmail(userEmail).get()).get();
+    }
 
     @Override
     @Transactional
