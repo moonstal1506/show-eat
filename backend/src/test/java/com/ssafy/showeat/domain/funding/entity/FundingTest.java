@@ -49,6 +49,21 @@ class FundingTest {
 		assertThat(funding.getFundingCurCount()).isEqualTo(1);
 	}
 
+	@Test
+	@DisplayName("펀딩이 종료될시 펀딩상태가 변경된다.")
+	void 펀딩최대참여도달시_펀딩종료() {
+		// given
+		Funding funding = createFundingForCheckMaxLimit(9,10);
+
+		// when
+		funding.addCountForApply();
+		if(funding.isMaxLimit())
+			funding.changeFundingStatusByMaxApply();
+
+		// then
+		assertThat(funding.getFundingIsActive()).isEqualTo(FundingIsActive.INACTIVE);
+	}
+
 	private Funding createFundingForCheckMaxLimit(
 		int curCount,
 		int maxLimit
