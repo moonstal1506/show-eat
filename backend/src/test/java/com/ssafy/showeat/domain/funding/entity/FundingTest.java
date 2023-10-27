@@ -24,15 +24,18 @@ class FundingTest {
 	}
 
 	@Test
-	@DisplayName("펀딩의 참여가 최대참여갯수제한에 도달할시 더이상 펀딩에 참여할 수 없습니다.")
+	@DisplayName("펀딩이 최대제한갯수에 도달시 더이상 펀딩에 참여할 수 없습니다.")
 	void 펀딩최대참여_제한확인() {
 	    // given
-		Funding funding = createFundingForCheckMaxLimit(10,10);
+		Funding funding = createFundingForCheckMaxLimit(9,10);
+		boolean prevFundingIsApply = funding.isApply();
 
 	    // when
+		funding.addCountForApply();
 		boolean isApply = funding.isApply();
 
 		// then
+		assertThat(prevFundingIsApply).isEqualTo(true);
 		assertThat(isApply).isFalse();
 	}
 
@@ -50,7 +53,7 @@ class FundingTest {
 	}
 
 	@Test
-	@DisplayName("펀딩이 종료될시 펀딩상태가 변경된다.")
+	@DisplayName("펀딩이 종료될시 펀딩상태가 INACTIVE로 변경된다.")
 	void 펀딩최대참여도달시_펀딩종료() {
 		// given
 		Funding funding = createFundingForCheckMaxLimit(9,10);

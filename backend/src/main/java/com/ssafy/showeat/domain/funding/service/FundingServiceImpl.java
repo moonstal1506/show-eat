@@ -72,7 +72,8 @@ public class FundingServiceImpl implements FundingService {
 		funding.addMoneyForApply();
 		funding.addCountForApply();
 
-		if(!funding.isMaxLimit()) return;
+		if(!funding.isMaxLimit())
+			throw new ImpossibleApplyFundingException();
 		funding.changeFundingStatusByMaxApply();
 		// TODO : 쿠폰 발급
 		// TODO : HISTORY 생성
