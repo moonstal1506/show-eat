@@ -64,6 +64,19 @@ class FundingTest {
 		assertThat(funding.getFundingIsActive()).isEqualTo(FundingIsActive.INACTIVE);
 	}
 
+	@Test
+	@DisplayName("펀딩취소시 펀딩참여수가 감소한다.")
+	void 펀딩취소() {
+	    // given
+		Funding funding = createFundingForCheckMaxLimit(1,10);
+
+	    // when
+		funding.cancelFunding();
+
+	    // then
+		assertThat(funding.getFundingCurCount()).isEqualTo(0);
+	}
+
 	private Funding createFundingForCheckMaxLimit(
 		int curCount,
 		int maxLimit
