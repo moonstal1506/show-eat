@@ -2,6 +2,7 @@
 import { ButtonProps } from "@customTypes/commonProps";
 import styled from "@emotion/styled";
 import React from "react";
+import parseNumber from "@utils/format";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ const ButtonContainer = styled("div")<ButtonContainerType>`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3%;
+    gap: 5px;
 
     // Box Model Attribute
     width: ${(props) => props.width};
@@ -36,6 +37,9 @@ const ButtonContainer = styled("div")<ButtonContainerType>`
 
     // Style Attribute
     border-radius: ${(props) => (props.curve === "curved" ? "20px" : props.height)};
+    path {
+        fill: ${(props) => (props.colorType === "secondary" ? "white" : "black")};
+    }
 
     // Text Attribute
     color: ${(props) => (props.colorType === "secondary" ? "white" : "black")};
@@ -48,10 +52,10 @@ const ButtonContainer = styled("div")<ButtonContainerType>`
     -webkit-user-select: none;
     transition: all 0.3s ease;
     &:hover {
-        transform: scale(1.02);
+        transform: scale(1.03);
     }
     &:active {
-        transform: scale(0.98);
+        transform: scale(0.97);
     }
 
     // Positive Fill Attribute
@@ -62,6 +66,9 @@ const ButtonContainer = styled("div")<ButtonContainerType>`
         &:hover {
             background-color: ${(props) => props.theme.colors[`${props.colorType}4`]};
             color: white;
+            path {
+                fill: white;
+            }
         }
     }
 
@@ -70,12 +77,18 @@ const ButtonContainer = styled("div")<ButtonContainerType>`
         background-color: transparent;
         box-shadow: 0 0 0 3px ${(props) => props.theme.colors[`${props.colorType}3`]} inset;
         color: ${(props) => props.theme.colors[`${props.colorType}3`]};
+        path {
+            fill: ${(props) => props.theme.colors[`${props.colorType}3`]};
+        }
         &:hover {
             border-color: ${(props) => props.theme.colors[`${props.colorType}4`]};
             background-color: ${(props) => props.theme.colors[`${props.colorType}4`]};
             box-shadow: 0 0 0 3px ${(props) => props.theme.colors[`${props.colorType}4`]} inset;
             color: white;
             font-weight: 700;
+            path {
+                fill: white;
+            }
         }
     }
 `;
@@ -85,8 +98,10 @@ const TextWrapper = styled("div")<{ fontSize: number }>`
     font-size: ${(props) => props.fontSize}px;
 `;
 
-const ImageWrapper = styled("div")`
+const ImageWrapper = styled("div")<{ height: string }>`
     // Box Model Attribute
+    width: ${(props) => parseNumber(props.height) * 0.6}px;
+    height: ${(props) => parseNumber(props.height) * 0.6}px;
     max-width: 30px;
     max-height: 30px;
 `;
@@ -95,6 +110,7 @@ const ImageWrapper = styled("div")`
 
 /* Text Button Component */
 function TextButton(props: TextButtonProps) {
+    // States and Variables
     const {
         width,
         height = "50px",
@@ -116,7 +132,7 @@ function TextButton(props: TextButtonProps) {
             className={fill}
             curve={curve}
         >
-            <ImageWrapper>{icon}</ImageWrapper>
+            {icon && <ImageWrapper height={height}>{icon}</ImageWrapper>}
             <TextWrapper fontSize={fontSize}>{text}</TextWrapper>
         </ButtonContainer>
     );
