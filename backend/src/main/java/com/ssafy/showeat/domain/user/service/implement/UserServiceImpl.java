@@ -3,6 +3,9 @@ package com.ssafy.showeat.domain.user.service.implement;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ssafy.showeat.domain.auth.util.JwtProvider;
+import com.ssafy.showeat.domain.user.entity.Credential;
+import com.ssafy.showeat.domain.user.repository.CredentialRepository;
 import com.ssafy.showeat.global.s3.dto.S3FileDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateAddressRequestDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateNicknameRequestDto;
@@ -11,6 +14,8 @@ import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.exception.NotExistUserException;
+
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +41,9 @@ public class UserServiceImpl implements UserService {
     private String bucketName = "showeat/user";
     private final AmazonS3Client amazonS3Client;
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final CredentialRepository credentialRepository;
+
     @Override
     public UserResponseDto getUserById(Long userId) {
         log.info("UserServiceImpl_getUserById -> 사용자 정보 조회 시도");
@@ -103,5 +113,17 @@ public class UserServiceImpl implements UserService {
         log.info("UserServiceImpl_updateAddress -> 사용자 관심 지역 수정 시도");
         User user = userRepository.findByUserId(updateAddressRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
         user.updateAddress(updateAddressRequestDto.getUserAddress());
+    }
+
+    @Override
+    public User getUserFromRequest(HttpServletRequest request) {
+        log.info("UserServiceImpl_getUserFromRequest | Request의 토큰 값을 바탕으로 유저를 찾아옴");
+        String accessToken = request.getHeader("Authorization").split(" ")[1];
+        System.out.println("accessToken = " + accessToken);
+        jwtProvider.parseClaims(accessToken);
+        Claims accessTokenClaims = jwtProvider.parseClaims(accessToken);
+        String userEmail = accessTokenClaims.getSubject();
+
+        return userRepository.findByCredential(credentialRepository.findByEmail(userEmail).get()).get();
     }
 }
