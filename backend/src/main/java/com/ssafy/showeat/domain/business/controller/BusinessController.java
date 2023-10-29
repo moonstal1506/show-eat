@@ -83,6 +83,17 @@ public class BusinessController {
         return ResponseResult.successResponse;
     }
 
+    @ApiOperation(value = "셀러 휴무일 수정", notes = "셀러 휴무일을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "셀러 휴무일 수정 성공"),
+            @ApiResponse(code = 400, message = "셀러 휴무일 수정 실패"),
+    })
+    @PatchMapping("/seller/closed-days")
+    public ResponseResult updateBusinessClosedDays(@RequestBody String businessClosedDays) {
+        businessService.updateBusinessClosedDays(businessClosedDays);
+        return ResponseResult.successResponse;
+    }
+
     @ApiOperation(value = "사업자 정보 조회", notes = "사업자 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "사업자 조회 성공"),

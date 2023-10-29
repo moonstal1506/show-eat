@@ -36,4 +36,6 @@ public interface BusinessService {
 	void updateBusinessBio(String businessBio);
 
 	void updateBusinessOperatingTime(String operatingTime);
+
+	void updateBusinessClosedDays(String businessClosedDays);
 }

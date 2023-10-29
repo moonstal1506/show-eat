@@ -130,4 +130,8 @@ public class Business extends BaseDateEntity {
     public void updateOperatingTime(String operatingTime) {
         this.businessOperatingTime = operatingTime;
     }
+
+    public void updateClosedDays(String businessClosedDays) {
+        this.businessClosedDays = businessClosedDays;
+    }
 }

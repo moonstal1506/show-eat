@@ -92,6 +92,16 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
+	public void updateBusinessClosedDays(String businessClosedDays) {
+		log.info("BusinessServiceImpl_updateBusinessClosedDays || 셀러 휴무일 변경");
+		//todo 회원 Id 가져오기
+		User loginUser = userRepository.findById(1L).get();
+		Business business = businessRepository.findByUser(loginUser).get();
+		business.updateClosedDays(businessClosedDays);
+	}
+
+	@Override
+	@Transactional
 	public void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles) throws
 		IOException {
 		log.info("BusinessServiceImpl_registMenu || 업체 메뉴 등록");
