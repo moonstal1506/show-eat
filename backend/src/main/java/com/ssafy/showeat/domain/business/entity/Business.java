@@ -129,4 +129,8 @@ public class Business extends BaseDateEntity {
 				.businessAccount(businessAccount)
 				.build();
 	}
+
+    public void updateImgUrl(String businessImgUrl) {
+		this.businessImgUrl=businessImgUrl;
+    }
 }

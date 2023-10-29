@@ -61,6 +61,17 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
+	public void updateBusinessImg(MultipartFile businessImg) throws IOException {
+		log.info("BusinessServiceImpl_updateBusinessImg || 셀러 프로필 변경");
+		//todo 회원 Id 가져오기
+		User loginUser = userRepository.findById(1L).get();
+		Business business = businessRepository.findByUser(loginUser).get();
+		String businessImgUrl = s3Service.uploadImageToS3(businessImg);
+		business.updateImgUrl(businessImgUrl);
+	}
+
+	@Override
+	@Transactional
 	public void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles) throws
 		IOException {
 		log.info("BusinessServiceImpl_registMenu || 업체 메뉴 등록");
