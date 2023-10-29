@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.*;
+import com.ssafy.showeat.global.exception.ImpossibleDeleteMenuException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -127,6 +128,23 @@ public class BusinessServiceImpl implements BusinessService {
 			.stream()
 			.map(businessMenu -> businessMenu.toBusinessMenuResponseDto())
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public void deleteMenu(Long menuId) {
+		log.info("BusinessServiceImpl_deleteMenu || 업체 메뉴 삭제");
+		User loginUser = userRepository.findById(1L).get();
+		Business business = businessRepository.findByUser(loginUser).get();
+		BusinessMenu businessMenu = businessMenuRepository.findById(menuId).get();
+
+		//본인이면 삭제
+		if(businessMenu.getBusiness().equals(business)){
+			businessMenuRepository.delete(businessMenu);
+			return;
+		}
+
+		throw new ImpossibleDeleteMenuException();
 	}
 
 	@Override

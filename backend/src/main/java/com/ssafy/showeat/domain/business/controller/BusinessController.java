@@ -138,6 +138,17 @@ public class BusinessController {
         return new ListResponseResult<>(businessService.getMenuList());
     }
 
+    @ApiOperation(value = "업체 메뉴 삭제", notes = "업주가 메뉴를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "메뉴 삭제 성공"),
+            @ApiResponse(code = 400, message = "메뉴 삭제 실패"),
+    })
+    @DeleteMapping("/menu/{menuId}")
+    public ResponseResult deleteMenu(@PathVariable Long menuId) {
+        businessService.deleteMenu(menuId);
+        return ResponseResult.successResponse;
+    }
+
     @ApiOperation(value = "월간 통계 조회", notes = "업주가 업체의 월간 통계를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "월간 통계 조회 성공"),

@@ -24,6 +24,8 @@ public interface BusinessService {
 
 	SellerResponseDto getSellerInfo(Long businessId);
 
+	void deleteMenu(Long menuId);
+
 	List<BusinessMonthlyStatResponseDto> getMonthlyStatList(Long businessId);
 
 	BusinessTotalStatResponseDto getTotalStatList(Long businessId);
@@ -38,4 +40,5 @@ public interface BusinessService {
 	void updateBusinessOperatingTime(String operatingTime);
 
 	void updateBusinessClosedDays(String businessClosedDays);
+
 }
