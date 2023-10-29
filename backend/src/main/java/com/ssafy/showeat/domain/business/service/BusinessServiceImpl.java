@@ -72,6 +72,16 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
+	public void updateBusinessBio(String businessBio) {
+		log.info("BusinessServiceImpl_updateBusinessBio || 셀러 소개 변경");
+		//todo 회원 Id 가져오기
+		User loginUser = userRepository.findById(1L).get();
+		Business business = businessRepository.findByUser(loginUser).get();
+		business.updateBio(businessBio);
+	}
+
+	@Override
+	@Transactional
 	public void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles) throws
 		IOException {
 		log.info("BusinessServiceImpl_registMenu || 업체 메뉴 등록");

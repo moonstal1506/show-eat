@@ -32,4 +32,6 @@ public interface BusinessService {
 		MultipartFile bankBook) throws IOException;
 
 	RegistrationResponseDto getRegistrationInfo(Long businessId);
+
+	void updateBusinessBio(String businessBio);
 }
