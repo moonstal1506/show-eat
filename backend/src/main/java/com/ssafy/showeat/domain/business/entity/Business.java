@@ -126,4 +126,8 @@ public class Business extends BaseDateEntity {
     public void updateBio(String businessBio) {
         this.businessBio = businessBio;
     }
+
+    public void updateOperatingTime(String operatingTime) {
+        this.businessOperatingTime = operatingTime;
+    }
 }

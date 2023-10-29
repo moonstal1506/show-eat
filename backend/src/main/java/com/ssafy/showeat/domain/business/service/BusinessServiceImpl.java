@@ -82,6 +82,16 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
+	public void updateBusinessOperatingTime(String operatingTime) {
+		log.info("BusinessServiceImpl_updateBusinessOperatingTime || 셀러 운영시간 변경");
+		//todo 회원 Id 가져오기
+		User loginUser = userRepository.findById(1L).get();
+		Business business = businessRepository.findByUser(loginUser).get();
+		business.updateOperatingTime(operatingTime);
+	}
+
+	@Override
+	@Transactional
 	public void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles) throws
 		IOException {
 		log.info("BusinessServiceImpl_registMenu || 업체 메뉴 등록");

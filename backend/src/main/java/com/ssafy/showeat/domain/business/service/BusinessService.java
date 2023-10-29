@@ -34,4 +34,6 @@ public interface BusinessService {
 	RegistrationResponseDto getRegistrationInfo(Long businessId);
 
 	void updateBusinessBio(String businessBio);
+
+	void updateBusinessOperatingTime(String operatingTime);
 }

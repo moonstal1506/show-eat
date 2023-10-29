@@ -72,6 +72,17 @@ public class BusinessController {
         return ResponseResult.successResponse;
     }
 
+    @ApiOperation(value = "셀러 운영시간 수정", notes = "셀러 운영시간을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "셀러 운영시간 수정 성공"),
+            @ApiResponse(code = 400, message = "셀러 운영시간 수정 실패"),
+    })
+    @PatchMapping("/seller/operating-time")
+    public ResponseResult updateBusinessOperatingTime(@RequestBody String operatingTime) {
+        businessService.updateBusinessOperatingTime(operatingTime);
+        return ResponseResult.successResponse;
+    }
+
     @ApiOperation(value = "사업자 정보 조회", notes = "사업자 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "사업자 조회 성공"),
