@@ -9,7 +9,7 @@ const ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT;
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Function for fetching GET method */
+/* Function for Fetching GET Method */
 async function fetchGet(props: FetchProps) {
     const {
         url,
@@ -58,7 +58,7 @@ async function fetchGet(props: FetchProps) {
     }
 }
 
-/* Function for fetching POST, PATCH, DELETE method */
+/* Function for Fetching POST, PATCH, DELETE Method */
 async function fetchModify(props: FetchProps) {
     const {
         url,

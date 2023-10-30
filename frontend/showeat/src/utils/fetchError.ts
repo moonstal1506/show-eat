@@ -1,4 +1,4 @@
-/* Function for handling error */
+/* Function for Handling Error */
 function handleFetchError(statusCode: number) {
     switch (statusCode) {
         case 430:
