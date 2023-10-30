@@ -16,4 +16,9 @@ public interface FundingRepository extends JpaRepository<Funding,Long>, FundingC
 	@Lock(value = LockModeType.PESSIMISTIC_WRITE)
 	@Query("select f from Funding f where f.fundingId=:fundingId")
 	Optional<Funding> findByIdWithLock(@Param("fundingId") Long fundingId);
+
+	@Lock(value = LockModeType.OPTIMISTIC)
+	@Query("select f from Funding f where f.fundingId=:fundingId")
+	Optional<Funding> findByIdWithOptimisticLock(@Param("fundingId") Long fundingId);
+
 }
