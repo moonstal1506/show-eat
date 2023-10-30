@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,11 +26,14 @@ import com.ssafy.showeat.domain.business.repository.BusinessRepository;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.MenuRequestDto;
 import com.ssafy.showeat.domain.funding.entity.Funding;
+import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
+import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.user.entity.Credential;
 import com.ssafy.showeat.domain.user.entity.CredentialRole;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
+import com.ssafy.showeat.domain.user.repository.UserRepository;
 
 class FundingServiceImplTest extends IntegrationTestSupport {
 
@@ -39,6 +45,9 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 	@Autowired
 	private BusinessRepository businessRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private CredentialRepository credentialRepository;
@@ -92,7 +101,84 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			.containsExactlyInAnyOrder("img1","img2");
 	}
 
-	private Business SaveBusinessMenu(){
+	@Test
+	@DisplayName("펀딩에 동시에 100명이 참여하는경우 동시성 문제가 발생하지 않는다.")
+	void 동시에_100명이_참여() throws InterruptedException {
+	    // given
+		Funding funding = createFunding();
+		fundingRepository.save(funding);
+		createUsers();
+		int threadCount = 100;
+
+		//멀티 쓰레드를 사용하기 위함, 비동기 작업을 단순화 해줌
+		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		//다른쓰레드의 작업이 끝날때까지 기다림
+		CountDownLatch latch = new CountDownLatch(threadCount);
+
+		// when
+		for (int i = 1; i <= threadCount; i++) {
+			int finalI = i;
+			executorService.submit(() -> {
+				try {
+					User user = userRepository.findById((long)finalI).get();
+					fundingService.applyFunding(1L,user);
+				} finally {
+					latch.countDown();
+				}
+			});
+		}
+
+		latch.await();
+		Funding resultFunding = fundingRepository.findById(1L).get();
+
+		// then
+		assertThat(resultFunding.getFundingCurCount()).isEqualTo(100);
+	}
+
+	private Funding createFunding(){
+		Business business = SaveBusinessMenu();
+		System.out.println("aaa");
+		return Funding.builder()
+			.fundingTitle("맛있는 과자에요")
+			.fundingMaxLimit(100)
+			.fundingMinLimit(10)
+			.fundingCurCount(0)
+			.fundingDiscountPrice(3000)
+			.fundingDiscountRate(10)
+			.fundingMenu("과자")
+			.fundingPrice(10000)
+			.fundingTotalAmount(0)
+			.fundingCategory("한식")
+			.fundingDescription("설명")
+			.fundingEndDate(LocalDate.now())
+			.fundingIsActive(FundingIsActive.ACTIVE)
+			.fundingIsSuccess(FundingIsSuccess.SUCCESS)
+			.business(business)
+			.build();
+	}
+
+	private void createUsers(){
+		Credential credential1 =
+			Credential.builder()
+				.credentialId("qqq")
+				.email("qwe@qwe.com")
+				.credentialRole(CredentialRole.USER)
+				.credentialSocialPlatform("kakao")
+				.build();
+
+		for (int i = 0; i < 100; i++) {
+			userRepository.save(User.builder()
+				.userNickname("테스트1")
+				.userImgUrl("profileimg")
+				.userAddress("addr")
+				.userBusiness(true)
+				.userMoney(10000)
+				.credential(credential1)
+				.build());
+		}
+	}
+
+	private User createUser(){
 		Credential credential1 =
 			Credential.builder()
 				.credentialId("qqq")
@@ -109,6 +195,13 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			.userMoney(10000)
 			.credential(credential1)
 			.build();
+
+		credentialRepository.save(credential1);
+		return userRepository.save(user1);
+	}
+
+	private Business SaveBusinessMenu(){
+		User user1 = createUser();
 
 		BusinessMenuImage businessMenuImage1 = BusinessMenuImage.builder()
 			.businessMenuImageUrl("img1")
@@ -167,7 +260,6 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		business.addBusinessMenu(businessMenu1);
 		business.addBusinessMenu(businessMenu2);
 
-		credentialRepository.save(credential1);
 		return businessRepository.save(business);
 	}
 
