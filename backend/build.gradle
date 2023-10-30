@@ -80,6 +80,9 @@ dependencies {
     // test db -> h2
     runtimeOnly 'com.h2database:h2'
     testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
+    // Redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 }
 
 // QueryDSL 빌드 옵션
