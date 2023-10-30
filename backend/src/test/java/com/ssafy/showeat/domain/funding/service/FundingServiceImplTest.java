@@ -135,14 +135,35 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		assertThat(resultFunding.getFundingCurCount()).isEqualTo(100);
 	}
 
+	@Test
+	@Transactional
+	@DisplayName("고객이 펀딩참여시 펀딩금액만큼 소지금이 차감됩니다. 또한 펀딩 참여액이 그만큼 증가합니다.")
+	void 펀딩참여_고객소지금_차감_펀딩참여액_증가() {
+	    // given
+		Funding funding = createFunding();
+		fundingRepository.save(funding);
+		User user = createUser();
+		int prevMoney = user.getUserMoney();
+		int prevFundingTotalAmount = funding.getFundingTotalAmount();
+
+		// when
+		fundingService.applyFunding(1L,user);
+		Funding resultFunding = fundingRepository.findById(1L).get();
+
+		// then
+		assertThat(prevFundingTotalAmount).isEqualTo(0);
+		assertThat(resultFunding.getFundingTotalAmount()).isEqualTo(resultFunding.getFundingDiscountPrice());
+		assertThat(user.getUserMoney()).isEqualTo(prevMoney - funding.getFundingDiscountPrice());
+	}
+
 	private Funding createFunding(){
 		Business business = SaveBusinessMenu();
-		System.out.println("aaa");
 		return Funding.builder()
 			.fundingTitle("맛있는 과자에요")
 			.fundingMaxLimit(100)
 			.fundingMinLimit(10)
 			.fundingCurCount(0)
+			.userFundings(new ArrayList<>())
 			.fundingDiscountPrice(3000)
 			.fundingDiscountRate(10)
 			.fundingMenu("과자")

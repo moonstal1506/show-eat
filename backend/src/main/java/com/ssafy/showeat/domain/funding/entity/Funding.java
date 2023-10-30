@@ -120,7 +120,6 @@ public class Funding extends BaseTimeEntity {
 
 		this.userFundings.add(userFunding);
 		userFunding.setFunding(funding);
-		this.fundingCurCount += 1;
 	}
 
 	public boolean isApply(){
