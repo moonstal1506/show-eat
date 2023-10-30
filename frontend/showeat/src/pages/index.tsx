@@ -45,7 +45,7 @@ function Home() {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <DropDown
                         buttonComponent={<ButtonYaho isOpen={isOpen} setIsOpen={setIsOpen} />}
-                        childComponent={<Yaho />}
+                        dropDownComponent={<Yaho />}
                         isOpen={isOpen}
                     />
                 </div>
