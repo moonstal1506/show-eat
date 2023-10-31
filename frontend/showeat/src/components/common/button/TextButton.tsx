@@ -2,7 +2,7 @@
 import { ButtonProps } from "@customTypes/commonProps";
 import styled from "@emotion/styled";
 import React from "react";
-import parseNumber from "@utils/format";
+import { parseNumber } from "@utils/format";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -16,15 +16,10 @@ interface TextButtonProps extends ButtonProps {
     icon?: React.ReactElement;
 }
 
-interface ButtonContainerType extends ButtonProps {
-    colorType: "primary" | "secondary" | "gray";
-    curve: "curved" | "round";
-}
-
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
-const ButtonContainer = styled("div")<ButtonContainerType>`
+const ButtonContainer = styled("div")<Partial<TextButtonProps>>`
     // Layout Attribute
     display: flex;
     align-items: center;
