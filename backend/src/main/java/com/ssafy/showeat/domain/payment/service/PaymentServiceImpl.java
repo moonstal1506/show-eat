@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import net.minidev.json.JSONObject;
 
 import com.ssafy.showeat.domain.payment.dto.request.PaymentRequestDto;
+import com.ssafy.showeat.domain.payment.dto.response.PaymentFailResponseDto;
 import com.ssafy.showeat.domain.payment.dto.response.PaymentSuccessResponseDto;
 import com.ssafy.showeat.domain.payment.dto.response.PaymentResponseDto;
 import com.ssafy.showeat.domain.payment.entity.Payment;
@@ -124,5 +125,16 @@ public class PaymentServiceImpl implements PaymentService {
 			new HttpEntity<>(param, headers),
 			PaymentSuccessResponseDto.class
 		).getBody();
+	}
+
+	@Override
+	@Transactional
+	public PaymentFailResponseDto requestPaymentFail(String errorCode, String errorMsg, String orderId) {
+		return PaymentFailResponseDto
+			.builder()
+			.orderId(orderId)
+			.errorCode(errorCode)
+			.errorMsg(errorMsg)
+			.build();
 	}
 }
