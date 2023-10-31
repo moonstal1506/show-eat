@@ -35,7 +35,8 @@ public class CouponController {
 		@ApiResponse(code = 400, message = "상태별 쿠폰 리스트 조회 실패"),
 	})
 	@GetMapping("/{userId}/{status}")
-	public ResponseResult getCouponListByUserIdAndStatus(@PathVariable Long userId, CouponStatus status) {
+	public ResponseResult getCouponListByUserIdAndStatus(@PathVariable Long userId,
+		@PathVariable CouponStatus status) {
 		log.info("CouponController_getCouponListByUserIdAndStatus -> 해당 유저의 상태별 쿠폰 리스트 조회");
 		return new ListResponseResult<>(couponService.getCouponListByUserIdAndStatus(userId, status));
 	}

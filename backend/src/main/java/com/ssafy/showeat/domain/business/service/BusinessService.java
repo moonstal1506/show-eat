@@ -20,9 +20,9 @@ public interface BusinessService {
 
 	SellerResponseDto getSellerInfo(Long businessId);
 
-	List<BusinessMonthlyStatResponseDto> getMonthlyStatList(Long businessId);
+	List<BusinessMonthlyStatResponseDto> getMonthlyStatistic(Long businessId);
 
-	BusinessTotalStatResponseDto getTotalStatList(Long businessId);
+	BusinessTotalStatResponseDto getTotalStatistic(Long businessId);
 
 	void registerBusinessUser(BusinessUserRequestDto businessUserRequestDto, MultipartFile businessRegistration,
 		MultipartFile bankBook) throws IOException;
