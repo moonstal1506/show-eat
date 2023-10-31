@@ -153,4 +153,11 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.INVALID_CATEGORY_TYPE_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(BlankSearchKeywordException.class)
+    public ResponseResult BlankSearchKeywordException(BlankSearchKeywordException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.BLANK_SEARCH_KEYWORD_EXCEPTION, err.getMessage());
+    }
+
 }
