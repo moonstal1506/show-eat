@@ -41,4 +41,5 @@ public interface BusinessService {
 
 	void updateBusinessClosedDays(String businessClosedDays);
 
+	boolean verifyBusiness(MultipartFile businessRegistration);
 }

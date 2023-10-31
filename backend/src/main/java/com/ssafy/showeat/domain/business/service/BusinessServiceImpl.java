@@ -158,4 +158,9 @@ public class BusinessServiceImpl implements BusinessService {
 		log.info("BusinessServiceImpl_getTotalStatList || 업체 누적 통계 조회");
 		return fundingRepository.findTotalStatById(businessId);
 	}
+
+	@Override
+	public boolean verifyBusiness(MultipartFile businessRegistration) {
+		return false;
+	}
 }
