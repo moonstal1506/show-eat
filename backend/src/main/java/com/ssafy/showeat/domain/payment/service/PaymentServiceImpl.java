@@ -1,5 +1,7 @@
 package com.ssafy.showeat.domain.payment.service;
 
+import static com.ssafy.showeat.global.config.TossPaymentConfig.*;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
@@ -49,9 +51,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Value("${payments.toss.fail_url}")
 	private String failCallBackUrl;
-
-	@Value("${payments.toss.toss_origin_url")
-	private String tossOriginUrl;
 
 	@Override
 	@Transactional
@@ -121,7 +120,7 @@ public class PaymentServiceImpl implements PaymentService {
 		param.put("amount", amount);
 
 		return restTemplate.postForEntity(
-			tossOriginUrl + "confirm",
+			TossOriginUrl + "confirm",
 			new HttpEntity<>(param, headers),
 			PaymentSuccessResponseDto.class
 		).getBody();
@@ -152,7 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
 		param.put("cancelReason", cancelReason);
 
 		return restTemplate.postForEntity(
-			tossOriginUrl + paymentKey + "/cancel",
+			TossOriginUrl + paymentKey + "/cancel",
 			new HttpEntity<>(param, headers),
 			PaymentSuccessResponseDto.class
 		).getBody();
