@@ -117,7 +117,7 @@ public class FundingServiceImpl implements FundingService {
 		if(userFundingRepository.existsByUserAndFunding(loginUser,funding))
 			throw new DuplicationApplyFundingException();
 
-		if(!loginUser.haveMoney(funding.getFundingPrice()))
+		if(!loginUser.haveMoney(funding.getFundingDiscountPrice()))
 			throw new LackPointUserFundingException();
 	}
 }

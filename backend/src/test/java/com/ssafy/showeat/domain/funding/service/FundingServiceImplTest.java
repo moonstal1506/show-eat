@@ -38,6 +38,7 @@ import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.exception.DuplicationApplyFundingException;
 import com.ssafy.showeat.global.exception.ImpossibleApplyFundingException;
 import com.ssafy.showeat.global.exception.InactiveFundingException;
+import com.ssafy.showeat.global.exception.LackPointUserFundingException;
 
 class FundingServiceImplTest extends IntegrationTestSupport {
 
@@ -189,6 +190,21 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 	    // when // then
 		assertThrows(InactiveFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
+	}
+
+	@Test
+	@DisplayName("사용자의 포인트가 부족할 시 펀딩에 참여할 수 없습니다.")
+	void 포인트_부족한_유저의_펀딩참여() {
+	    // given
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+
+		// 돈을 차감함으로서 현재 유저의 소지금은 0원
+		user.spendMoney(10000);
+
+	    // when // then
+		assertThrows(LackPointUserFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
 	}
 
 	private Funding createFunding(FundingIsActive fundingIsActive){
