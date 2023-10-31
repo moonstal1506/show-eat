@@ -1,40 +1,56 @@
+/* Import */
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/css";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
 interface DropDownProps {
-    buttonComponent: React.ReactNode;
     dropDownList: string[];
-    isOpen: boolean;
     color: "primary" | "secondary" | "gray";
+    placeHolder?: string;
     maxWidth?: string;
     maxHeight?: string;
     fontSize?: string;
     onClick?: (content: string) => void;
 }
 
+interface IsOpenTypes extends DropDownProps {
+    isOpen: boolean;
+}
+
 interface DropDownLiTypes {
     idx: number;
     listLength: number;
     fontSize: string;
+    maxWidth: string;
     color: "primary" | "secondary" | "gray";
 }
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const dropDownFadein = keyframes`
         from {
             opacity: 0;
+            transform: translateY(-10px);
         }
         to {
             opacity: 1;
+            transform: translateY(0px);
         }
 `;
 
 const dropDownFadeOut = keyframes`
         from {
             opacity: 1;
+            transform: translateY(0px);
         }
         to {
             opacity: 0;
+            transform: translateY(-10px);
         }
 `;
 
@@ -47,20 +63,64 @@ const DropDownContainer = styled("div")`
     user-select: none;
 `;
 
-const DropDownButtonWrapper = styled("div")`
-    position: "relative";
+const DropDownButtonContainer = styled("div")<Partial<IsOpenTypes>>`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    min-height: 20px;
+
+    min-width: ${(props) => props.maxWidth};
+    max-width: ${(props) => props.maxWidth};
+
+    border: 1px solid ${(props) => props.theme.colors[`${props.color}3`]};
+    border-radius: 10px;
+    box-shadow: ${(props) =>
+        props.isOpen ? `0px 0px 5px 1px ${props.theme.colors[`${props.color}3`]}` : "none"};
+
+    background-color: white;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}2`]};
+        background-color: ${(props) => props.theme.colors[`${props.color}1`]};
+    }
+
+    &:active {
+        box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}3`]};
+        background-color: ${(props) => props.theme.colors[`${props.color}2`]};
+    }
+`;
+
+const DropDownButtonTextWrapper = styled("span")<{ maxWidth: string; fontSize: string }>`
+    max-width: calc(${(props) => props.maxWidth} - 20px);
+
+    padding: 5px 10px;
+
+    font-size: ${(props) => props.fontSize};
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const DropDownButtonIconWrapper = styled(Image)`
+    padding: 5px 10px;
 `;
 
 const DropDownInnerWrapper = styled("div")<Partial<DropDownProps>>`
-    min-width: 100px;
-    min-height: 100px;
     max-width: ${(props) => props.maxWidth};
     max-height: ${(props) => props.maxHeight};
 
     overflow-y: ${(props) => (props.maxHeight ? "scroll" : "visible")};
 `;
 
-const DropDownOuterWrapper = styled("div")<Partial<DropDownProps>>`
+const DropDownOuterWrapper = styled("div")<Partial<IsOpenTypes>>`
     position: absolute;
 
     display: flex;
@@ -71,7 +131,15 @@ const DropDownOuterWrapper = styled("div")<Partial<DropDownProps>>`
     border-radius: 10px;
     box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}2`]};
 
+    background-color: white;
+
     margin-top: 5px;
+
+    z-index: 1000;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.3s ease-in-out
         forwards;
@@ -82,9 +150,16 @@ const DropDownLiContainer = styled("ul")`
 `;
 
 const DropDownLiWrapper = styled("li")<DropDownLiTypes>`
+    max-width: calc(${(props) => props.maxWidth} - 10px);
+    max-width: calc(${(props) => props.maxWidth} - 10px);
+
     padding: 5px 10px;
 
     font-size: ${(props) => props.fontSize};
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     cursor: pointer;
 
@@ -111,17 +186,22 @@ const DropDownLiWrapper = styled("li")<DropDownLiTypes>`
     }
 `;
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Drop Down Component */
 function DropDown({
-    buttonComponent,
     dropDownList,
-    isOpen,
     color,
-    maxWidth,
+    placeHolder = "-",
+    maxWidth = "500px",
     maxHeight,
     fontSize = "14px",
     onClick,
 }: DropDownProps) {
-    const [isHidden, setIsHidden] = useState(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isHidden, setIsHidden] = useState<boolean>(false);
+
+    const [isSeletedText, setIsSelectedText] = useState<string>("");
 
     useEffect(() => {
         if (!isOpen) {
@@ -138,9 +218,32 @@ function DropDown({
         return undefined;
     }, [isOpen]);
 
+    useEffect(() => {
+        setIsSelectedText(placeHolder);
+    }, [placeHolder]);
+
+    const handleLiContent = (content: string) => {
+        setIsSelectedText(content);
+    };
+
     return (
         <DropDownContainer>
-            <DropDownButtonWrapper>{buttonComponent}</DropDownButtonWrapper>
+            <DropDownButtonContainer
+                onClick={() => setIsOpen(!isOpen)}
+                color={color}
+                maxWidth={maxWidth}
+                isOpen={isOpen}
+            >
+                <DropDownButtonTextWrapper maxWidth={maxWidth} fontSize={fontSize}>
+                    {isSeletedText}
+                </DropDownButtonTextWrapper>
+                <DropDownButtonIconWrapper
+                    src="/assets/icons/down-arrow-icon.svg"
+                    alt="drop-down-down-icon"
+                    width={20}
+                    height={20}
+                />
+            </DropDownButtonContainer>
             {!isHidden && (
                 <DropDownOuterWrapper isOpen={isOpen} color={color}>
                     <DropDownInnerWrapper maxWidth={maxWidth} maxHeight={maxHeight}>
@@ -151,8 +254,14 @@ function DropDown({
                                     idx={idx}
                                     listLength={dropDownList.length}
                                     fontSize={fontSize}
+                                    maxWidth={maxWidth}
                                     color={color}
-                                    onClick={() => onClick && onClick(content)}
+                                    onClick={() => {
+                                        if (onClick) {
+                                            onClick(content);
+                                            handleLiContent(content);
+                                        }
+                                    }}
                                 >
                                     {content}
                                 </DropDownLiWrapper>
@@ -165,4 +274,7 @@ function DropDown({
     );
 }
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
 export default DropDown;
