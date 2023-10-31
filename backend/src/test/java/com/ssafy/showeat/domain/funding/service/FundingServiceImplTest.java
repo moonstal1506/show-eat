@@ -226,6 +226,18 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		assertThat(user.getUserMoney()).isEqualTo(10000);
 	}
 
+	@Test
+	@DisplayName("비활성화된 펀딩에 대해서는 펀딩을 취소할 수 없다.")
+	void 비활성화된_펀딩_취소() {
+	    // given
+		Funding funding = createFunding(FundingIsActive.INACTIVE);
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+
+	    // when // then
+		assertThrows(InactiveFundingException.class,() -> fundingService.cancelFunding(save.getFundingId(),user));
+	}
+
 	private Funding createFunding(FundingIsActive fundingIsActive){
 		Business business = SaveBusinessMenu();
 		return Funding.builder()
