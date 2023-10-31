@@ -1,41 +1,51 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Store from "./store";
-import Review from "./review";
+// import Store from "./store";
+// import Review from "./review";
+import Link from "next/link";
+import FundingLayout from "@/layouts/FundingLayout";
 
 function Fundings() {
     const router = useRouter();
     const { query } = router;
-    const [activeTab, setActiveTab] = useState("store");
+    // const [activeTab, setActiveTab] = useState("store");
 
-    useEffect(() => {
-        window.history.replaceState(null, "", `/fundings/${query.fundingId}/store`);
-    }, [query.fundingId]);
+    // useEffect(() => {
+    //     window.history.replaceState(null, "", `/fundings/${query.fundingId}/store`);
+    // }, [query.fundingId]);
 
-    const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
+    // const handleTabChange = (tab: string) => {
+    //     setActiveTab(tab);
 
-        // URL을 업데이트하되 페이지를 이동하지 않습니다. replaceState를 사용하여 현재 URL 상태를 업데이트합니다.
-        window.history.replaceState(null, "", `/fundings/${query.fundingId}/${tab}`);
-    };
+    //     // URL을 업데이트하되 페이지를 이동하지 않습니다. replaceState를 사용하여 현재 URL 상태를 업데이트합니다.
+    //     window.history.replaceState(null, "", `/fundings/${query.fundingId}/${tab}`);
+    // };
 
     return (
-        <div>
-            <div>
-                <button type="button" onClick={() => handleTabChange("store")}>
-                    Tab store
-                </button>
-                <button type="button" onClick={() => handleTabChange("review")}>
-                    Tab review
-                </button>
-            </div>
+        // <div>
+        //     <div>
+        //         <button type="button" onClick={() => handleTabChange("store")}>
+        //             Tab store
+        //         </button>
+        //         <button type="button" onClick={() => handleTabChange("review")}>
+        //             Tab review
+        //         </button>
+        //     </div>
 
-            <div>
-                {activeTab === "store" && <Store />}
-                {activeTab === "review" && <Review />}
-            </div>
-        </div>
+        //     <div>
+        //         {activeTab === "store" && <Store />}
+        //         {activeTab === "review" && <Review />}
+        //     </div>
+        // </div>
+        <>
+            <Link href={`/fundings/${query.fundingId}/review`}>이꾸욧</Link>
+            <div>여기가 바뀝니당</div>
+        </>
     );
 }
 
 export default Fundings;
+
+Fundings.getLayout = function getLayout(page: React.ReactElement) {
+    return <FundingLayout>{page}</FundingLayout>;
+};
