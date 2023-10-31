@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import com.ssafy.showeat.domain.bookmark.entity.Bookmark;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.coupon.entity.Coupon;
+import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingResponseDto;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.global.entity.BaseTimeEntity;
@@ -120,7 +121,6 @@ public class Funding extends BaseTimeEntity {
 
 		this.userFundings.add(userFunding);
 		userFunding.setFunding(funding);
-		this.fundingCurCount += 1;
 	}
 
 	public boolean isApply(){
@@ -133,8 +133,12 @@ public class Funding extends BaseTimeEntity {
 		return false;
 	}
 
-	public void addMoney(){
+	public void addMoneyForApply(){
 		this.fundingTotalAmount += this.fundingDiscountPrice;
+	}
+
+	public void addCountForApply() {
+		this.fundingCurCount += 1;
 	}
 
 	public void cancelFunding(){
@@ -174,6 +178,32 @@ public class Funding extends BaseTimeEntity {
 						.stream()
 						.map(fundingImage -> fundingImage.toFundingImageResponseDto())
 						.collect(Collectors.toList())
+			)
+			.build();
+	}
+
+	public FundingListResponseDto toFundingListResponseDto(boolean isBookmark) {
+		return FundingListResponseDto.builder()
+			.fundingId(fundingId)
+			.title(fundingTitle)
+			.category(fundingCategory)
+			.maxLimit(fundingMaxLimit)
+			.minLimit(fundingMinLimit)
+			.curCount(fundingCurCount)
+			.menu(fundingMenu)
+			.price(fundingPrice)
+			.discountPrice(fundingDiscountPrice)
+			.discountRate(fundingDiscountRate)
+			.startDate(LocalDate.from(this.getCreatedDate()))
+			.endDate(fundingEndDate)
+			.fundingIsActive(fundingIsActive)
+			.fundingIsSuccess(fundingIsSuccess)
+			.fundingIsBookmark(isBookmark)
+			.fundingImageResponseDtos(
+				this.fundingImages
+					.stream()
+					.map(fundingImage -> fundingImage.toFundingImageResponseDto())
+					.collect(Collectors.toList())
 			)
 			.build();
 	}

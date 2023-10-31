@@ -3,6 +3,10 @@ package com.ssafy.showeat.domain.user.service.implement;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ssafy.showeat.domain.auth.util.JwtProvider;
+import com.ssafy.showeat.domain.user.entity.Credential;
+import com.ssafy.showeat.domain.user.repository.CredentialRepository;
+import com.ssafy.showeat.domain.user.dto.request.UpdateInfoRequestDto;
 import com.ssafy.showeat.global.s3.dto.S3FileDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateAddressRequestDto;
 import com.ssafy.showeat.domain.user.dto.request.UpdateNicknameRequestDto;
@@ -11,6 +15,8 @@ import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.exception.NotExistUserException;
+
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +42,9 @@ public class UserServiceImpl implements UserService {
     private String bucketName = "showeat/user";
     private final AmazonS3Client amazonS3Client;
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final CredentialRepository credentialRepository;
+
     @Override
     public UserResponseDto getUserById(Long userId) {
         log.info("UserServiceImpl_getUserById -> 사용자 정보 조회 시도");
@@ -41,7 +52,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(NotExistUserException::new);
         return new UserResponseDto(user.getUserId(),user.getUserNickname(),
-                user.getUserImgUrl(),user.getUserAddress(),user.getUserMoney());
+                user.getUserImgUrl(),user.getUserAddress(),user.isUserBusiness(),user.getUserMoney(),user.isVisited());
     }
 
     @Override
@@ -92,6 +103,14 @@ public class UserServiceImpl implements UserService {
         return s3files;
     }
 
+    @Override
+    @Transactional
+    public void deleteuserImgUrl(Long userId) {
+        log.info("UserServiceImpl_deleteuserImgUrl -> 사용자 프로필 사진 삭제 시도");
+        User user = userRepository.findByUserId(userId).orElseThrow(NotExistUserException::new);
+        user.updateuserImgUrl(DEFAULT_IMAGE);
+    }
+
     public String getUuidFileName(String fileName) {
         String name = fileName.substring(fileName.indexOf(".") + 1);
         return UUID.randomUUID().toString() + "." + name;
@@ -103,5 +122,27 @@ public class UserServiceImpl implements UserService {
         log.info("UserServiceImpl_updateAddress -> 사용자 관심 지역 수정 시도");
         User user = userRepository.findByUserId(updateAddressRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
         user.updateAddress(updateAddressRequestDto.getUserAddress());
+    }
+
+    @Override
+    @Transactional
+    public User getUserFromRequest(HttpServletRequest request) {
+        log.info("UserServiceImpl_getUserFromRequest | Request의 토큰 값을 바탕으로 유저를 찾아옴");
+        String accessToken = request.getHeader("Authorization").split(" ")[1];
+        jwtProvider.parseClaims(accessToken);
+        Claims accessTokenClaims = jwtProvider.parseClaims(accessToken);
+        String userEmail = accessTokenClaims.getSubject();
+
+        return userRepository.findByCredential(credentialRepository.findByEmail(userEmail).get()).get();
+    }
+
+    @Override
+    @Transactional
+    public void updateInfo(UpdateInfoRequestDto updateInfoRequestDto) {
+        log.info("UserServiceImpl_updateInfo -> 사용자 초기 설정 등록 시도");
+        User user = userRepository.findByUserId(updateInfoRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
+        user.updateuserNickname(updateInfoRequestDto.getUserNickname());
+        user.updateAddress(updateInfoRequestDto.getUserAddress());
+        user.setVisited(true);
     }
 }

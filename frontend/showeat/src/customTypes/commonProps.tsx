@@ -10,6 +10,24 @@ export interface ButtonProps {
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
+export interface InputProps {
+    width: string;
+    height?: string;
+    id: string;
+    name?: string;
+}
+
+export interface OverlayProps {
+    zIndex: number;
+    children: React.ReactNode;
+}
+
+export interface TableProps {
+    headerWidth?: string;
+    headers: string[];
+    contents: (string | number)[];
+}
+
 export interface TextInputProps {
     width: string;
     id: string;
