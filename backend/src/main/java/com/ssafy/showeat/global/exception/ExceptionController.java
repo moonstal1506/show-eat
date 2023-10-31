@@ -139,4 +139,18 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SEARCH_TYPE_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(InvalidSortTypeException.class)
+    public ResponseResult InvalidSortTypeException(InvalidSortTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SORT_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCategoryTypeException.class)
+    public ResponseResult InvalidCategoryTypeException(InvalidCategoryTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_CATEGORY_TYPE_EXCEPTION, err.getMessage());
+    }
+
 }
