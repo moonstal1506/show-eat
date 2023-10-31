@@ -37,6 +37,7 @@ import com.ssafy.showeat.domain.user.repository.CredentialRepository;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.exception.DuplicationApplyFundingException;
 import com.ssafy.showeat.global.exception.ImpossibleApplyFundingException;
+import com.ssafy.showeat.global.exception.ImpossibleCancelFundingException;
 import com.ssafy.showeat.global.exception.InactiveFundingException;
 import com.ssafy.showeat.global.exception.LackPointUserFundingException;
 
@@ -236,6 +237,18 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 	    // when // then
 		assertThrows(InactiveFundingException.class,() -> fundingService.cancelFunding(save.getFundingId(),user));
+	}
+
+	@Test
+	@DisplayName("참여하지 않은 펀딩에 대해서는 펀딩을 취소할 수 없다.")
+	void 참여하지_않은_펀딩_취소() {
+	    // given
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+
+	    // when // then
+		assertThrows(ImpossibleCancelFundingException.class,() -> fundingService.cancelFunding(save.getFundingId(),user));
 	}
 
 	private Funding createFunding(FundingIsActive fundingIsActive){
