@@ -37,6 +37,7 @@ import com.ssafy.showeat.global.exception.InactiveFundingException;
 import com.ssafy.showeat.global.exception.LackPointUserFundingException;
 import com.ssafy.showeat.global.exception.NotExistBusinessException;
 import com.ssafy.showeat.global.exception.NotExistFundingException;
+import com.ssafy.showeat.global.exception.NotExistPageFundingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -144,6 +145,9 @@ public class FundingServiceImpl implements FundingService {
 					Funding funding = userFunding.getFunding();
 					return funding.toFundingListResponseDto(bookmarkService.isBookmark(user, funding));
 				}).collect(Collectors.toList());
+
+		if(userFundings.getTotalPages() <= page)
+			throw new NotExistPageFundingException();
 
 		return new PageImpl<>(result, pageable, userFundings.getTotalElements());
 	}
