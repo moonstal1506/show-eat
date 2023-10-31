@@ -2,43 +2,43 @@ package com.ssafy.showeat.domain.payment.dto.request;
 
 import java.util.UUID;
 
-import com.ssafy.showeat.domain.payment.entity.PayType;
 import com.ssafy.showeat.domain.payment.entity.Payment;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class PaymentRequestDto {
 
-	@ApiModelProperty(value = "결제 타입 정보", example = "일반결제")
-	private PayType payType;
+	@ApiModelProperty(value = "지불 방법", example = "카드")
+	private String payType;
 
-	@ApiModelProperty(value = "결제 타입 정보", example = "일반결제")
+	@ApiModelProperty(value = "지불 금액", example = "10000")
 	private Long amount;
 
-	@ApiModelProperty(value = "결제 타입 정보", example = "일반결제")
+	@ApiModelProperty(value = "주문 상품 이름", example = "카우카우 금액권")
 	private String orderName;
 
-	private String yourSuccessUrl;
-	private String yourFailUrl;
+	@ApiModelProperty(value = "구매자 이메일", example = "example@gmail.com")
+	private String userEmail;
 
+	@ApiModelProperty(value = "구매자 닉네임", example = "쇼쇼")
+	private String userNickname;
 
 	public Payment toEntity() {
 		return Payment.builder()
 			.payType(payType)
 			.amount(amount)
-			.orderName(orderName)
 			.orderId(UUID.randomUUID().toString())
-			.paySuccessYN(false)
+			.orderName(orderName)
+			.userEmail(userEmail)
+			.userNickname(userNickname)
 			.build();
 	}
 
