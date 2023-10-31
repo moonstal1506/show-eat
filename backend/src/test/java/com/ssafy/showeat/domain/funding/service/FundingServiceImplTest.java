@@ -36,6 +36,8 @@ import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.exception.DuplicationApplyFundingException;
+import com.ssafy.showeat.global.exception.ImpossibleApplyFundingException;
+import com.ssafy.showeat.global.exception.InactiveFundingException;
 
 class FundingServiceImplTest extends IntegrationTestSupport {
 
@@ -113,7 +115,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 	@DisplayName("펀딩에 동시에 100명이 참여하는경우 동시성 문제가 발생하지 않는다.")
 	void 동시에_100명이_참여() throws InterruptedException {
 	    // given
-		Funding funding = createFunding();
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
 		Funding save = fundingRepository.save(funding);
 		createUsers();
 		int threadCount = 100;
@@ -148,7 +150,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 	@DisplayName("고객이 펀딩참여시 펀딩금액만큼 소지금이 차감됩니다. 또한 펀딩 참여액이 그만큼 증가합니다.")
 	void 펀딩참여_고객소지금_차감_펀딩참여액_증가() {
 	    // given
-		Funding funding = createFunding();
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
 		Funding save = fundingRepository.save(funding);
 		User user = createUser();
 		int prevMoney = user.getUserMoney();
@@ -166,9 +168,9 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 	@Test
 	@DisplayName("사용자는 동일한 펀딩에 두 번 이상 참여할 수 없다. 중복 참여시 예외가 발생한다.")
-	void 펀딩중복참여() {
+	void 펀딩_중복_참여() {
 	    // given
-		Funding funding = createFunding();
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
 		Funding save = fundingRepository.save(funding);
 		User user = createUser();
 		fundingService.applyFunding(save.getFundingId(),user);
@@ -177,7 +179,19 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		assertThrows(DuplicationApplyFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
 	}
 
-	private Funding createFunding(){
+	@Test
+	@DisplayName("비활성화된 펀딩에 대해서는 참여할 수 없습니다. 참여시 예외가 발생합니다.")
+	void 비활성화_펀딩참여() {
+	    // given
+		Funding funding = createFunding(FundingIsActive.INACTIVE);
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+
+	    // when // then
+		assertThrows(InactiveFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
+	}
+
+	private Funding createFunding(FundingIsActive fundingIsActive){
 		Business business = SaveBusinessMenu();
 		return Funding.builder()
 			.fundingTitle("맛있는 과자에요")
@@ -193,7 +207,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			.fundingCategory("한식")
 			.fundingDescription("설명")
 			.fundingEndDate(LocalDate.now())
-			.fundingIsActive(FundingIsActive.ACTIVE)
+			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(FundingIsSuccess.SUCCESS)
 			.business(business)
 			.build();
