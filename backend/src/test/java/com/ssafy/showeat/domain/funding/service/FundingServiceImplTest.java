@@ -207,6 +207,25 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		assertThrows(LackPointUserFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
 	}
 
+	@Test
+	@DisplayName("사용자는 펀딩을 취소할 수 있다.취소시 펀딩참여 count,모금액 등이 감소한다.")
+	void 사용자_참여_펀딩_취소() {
+	    // given
+		Funding funding = createFunding(FundingIsActive.ACTIVE);
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+		fundingService.applyFunding(save.getFundingId(),user);
+
+	    // when
+		fundingService.cancelFunding(save.getFundingId(),user);
+
+	    // then
+		Funding resultFunding = fundingRepository.findById(save.getFundingId()).get();
+		assertThat(resultFunding.getFundingCurCount()).isEqualTo(0);
+		assertThat(resultFunding.getFundingTotalAmount()).isEqualTo(0);
+		assertThat(user.getUserMoney()).isEqualTo(10000);
+	}
+
 	private Funding createFunding(FundingIsActive fundingIsActive){
 		Business business = SaveBusinessMenu();
 		return Funding.builder()
