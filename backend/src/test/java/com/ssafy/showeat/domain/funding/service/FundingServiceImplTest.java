@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import com.ssafy.showeat.domain.user.entity.CredentialRole;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
+import com.ssafy.showeat.global.exception.DuplicationApplyFundingException;
 
 class FundingServiceImplTest extends IntegrationTestSupport {
 
@@ -54,6 +56,13 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 	@Autowired
 	private BusinessMenuRepository businessMenuRepository;
+
+	@AfterEach
+	void reset() {
+		fundingRepository.deleteAll();
+		businessRepository.deleteAll();
+		userRepository.deleteAll();
+	}
 
 	@Test
 	@Transactional
@@ -83,10 +92,9 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			.build();
 
 		Business business = SaveBusinessMenu();
-		BusinessMenu businessMenu = businessMenuRepository.findById(1L).get();
 
 		// when
-		Funding save = fundingRepository.save(dto.createFunding(business, businessMenu, menuDto1.getDiscountPrice()));
+		Funding save = fundingRepository.save(dto.createFunding(business, business.getBusinessMenus().get(0), menuDto1.getDiscountPrice()));
 
 		// then
 		assertThat(save.getFundingTitle()).isEqualTo("테스트");
@@ -106,7 +114,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 	void 동시에_100명이_참여() throws InterruptedException {
 	    // given
 		Funding funding = createFunding();
-		fundingRepository.save(funding);
+		Funding save = fundingRepository.save(funding);
 		createUsers();
 		int threadCount = 100;
 
@@ -121,7 +129,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			executorService.submit(() -> {
 				try {
 					User user = userRepository.findById((long)finalI).get();
-					fundingService.applyFunding(1L,user);
+					fundingService.applyFunding(save.getFundingId(),user);
 				} finally {
 					latch.countDown();
 				}
@@ -129,7 +137,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 		}
 
 		latch.await();
-		Funding resultFunding = fundingRepository.findById(1L).get();
+		Funding resultFunding = fundingRepository.findById(save.getFundingId()).get();
 
 		// then
 		assertThat(resultFunding.getFundingCurCount()).isEqualTo(100);
@@ -141,19 +149,32 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 	void 펀딩참여_고객소지금_차감_펀딩참여액_증가() {
 	    // given
 		Funding funding = createFunding();
-		fundingRepository.save(funding);
+		Funding save = fundingRepository.save(funding);
 		User user = createUser();
 		int prevMoney = user.getUserMoney();
 		int prevFundingTotalAmount = funding.getFundingTotalAmount();
 
 		// when
-		fundingService.applyFunding(1L,user);
-		Funding resultFunding = fundingRepository.findById(1L).get();
+		fundingService.applyFunding(save.getFundingId(),user);
+		Funding resultFunding = fundingRepository.findById(save.getFundingId()).get();
 
 		// then
 		assertThat(prevFundingTotalAmount).isEqualTo(0);
 		assertThat(resultFunding.getFundingTotalAmount()).isEqualTo(resultFunding.getFundingDiscountPrice());
 		assertThat(user.getUserMoney()).isEqualTo(prevMoney - funding.getFundingDiscountPrice());
+	}
+
+	@Test
+	@DisplayName("사용자는 동일한 펀딩에 두 번 이상 참여할 수 없다. 중복 참여시 예외가 발생한다.")
+	void 펀딩중복참여() {
+	    // given
+		Funding funding = createFunding();
+		Funding save = fundingRepository.save(funding);
+		User user = createUser();
+		fundingService.applyFunding(save.getFundingId(),user);
+
+	    // when // then
+		assertThrows(DuplicationApplyFundingException.class,() -> fundingService.applyFunding(save.getFundingId(),user));
 	}
 
 	private Funding createFunding(){

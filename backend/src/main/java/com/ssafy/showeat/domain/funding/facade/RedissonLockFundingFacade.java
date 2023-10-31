@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RedissonLockFundingRepository {
+public class RedissonLockFundingFacade {
 
 	private final FundingService fundingService;
 	private final RedissonClient redissonClient;
