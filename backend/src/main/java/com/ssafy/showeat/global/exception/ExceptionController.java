@@ -132,4 +132,11 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_PAGE_FUNDING_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(InvalidSearchTypeException.class)
+    public ResponseResult InvalidSearchTypeException(InvalidSearchTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SEARCH_TYPE_EXCEPTION, err.getMessage());
+    }
+
 }

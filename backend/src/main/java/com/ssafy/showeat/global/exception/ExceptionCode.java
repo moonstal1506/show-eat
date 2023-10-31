@@ -6,6 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExceptionCode {
+	INVALID_SEARCH_TYPE_EXCEPTION(420,"유효하지 않은 검색 조건입니다."),
+	INVALID_SORT_TYPE_EXCEPTION(421,"유효하지 않은 정렬 조건입니다."),
+	INVALID_CATEGORY_TYPE_EXCEPTION(422,"유효하지 않은 카테고리 조건입니다."),
+	BLANK_SEARCH_KEYWORD_EXCEPTION(423,"검색어를 입력해 주세요."),
 	INVALID_REFRESH_TOKEN_EXCEPTION(430,"유효하지 않은 토큰입니다."),
 	EXPIRED_TOKEN_EXCEPTION(431,"만료된 토큰입니다."),
 	UNAUTHORIZED_ACCESS_EXCEPTION(432,"접근 권한이 없습니다."),
