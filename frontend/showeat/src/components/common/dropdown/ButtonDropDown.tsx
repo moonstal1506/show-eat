@@ -60,7 +60,7 @@ const ButtonDropDownInnerWrapper = styled("div")<Partial<ButtonDropDownProps>>`
 
     overflow-y: ${(props) => (props.maxHeight ? "scroll" : "visible")};
 
-    padding: 10px 20px;
+    padding: 0.5em 1em;
 
     border-left: 2px solid ${(props) => props.theme.colors.gray1};
     border-right: 2px solid ${(props) => props.theme.colors.gray1};
@@ -80,11 +80,11 @@ const ButtonDropDownOuterWrapper = styled("div")<Partial<ButtonDropDownProps>>`
     background-color: white;
 
     margin-top: 5px;
-    padding: 20px;
+    padding: 1em;
 
     z-index: 1000;
 
-    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.3s ease-in-out
+    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.2s ease-in-out
         forwards;
 `;
 

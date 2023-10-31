@@ -100,7 +100,7 @@ const DropDownButtonContainer = styled("div")<Partial<IsOpenTypes>>`
 const DropDownButtonTextWrapper = styled("span")<{ maxWidth: string; fontSize: string }>`
     max-width: calc(${(props) => props.maxWidth} - 20px);
 
-    padding: 5px 10px;
+    padding: 0.5em 1em;
 
     font-size: ${(props) => props.fontSize};
 
@@ -110,7 +110,7 @@ const DropDownButtonTextWrapper = styled("span")<{ maxWidth: string; fontSize: s
 `;
 
 const DropDownButtonIconWrapper = styled(Image)`
-    padding: 5px 10px;
+    padding: 0.5em 1em;
 `;
 
 const DropDownInnerWrapper = styled("div")<Partial<DropDownProps>>`
@@ -141,7 +141,7 @@ const DropDownOuterWrapper = styled("div")<Partial<IsOpenTypes>>`
     overflow: hidden;
     text-overflow: ellipsis;
 
-    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.3s ease-in-out
+    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.2s ease-in-out
         forwards;
 `;
 
@@ -153,7 +153,7 @@ const DropDownLiWrapper = styled("li")<DropDownLiTypes>`
     max-width: calc(${(props) => props.maxWidth} - 10px);
     max-width: calc(${(props) => props.maxWidth} - 10px);
 
-    padding: 5px 10px;
+    padding: 0.5em 1em;
 
     font-size: ${(props) => props.fontSize};
 
