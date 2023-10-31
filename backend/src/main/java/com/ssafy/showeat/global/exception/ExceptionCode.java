@@ -6,6 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExceptionCode {
+	PAYMENT_INVALID_PRICE_EXCEPTION(420, "유효하지 않은 가격입니다."),
+	PAYMENT_INVALID_PAY_TYPE_EXCEPTION(421, "유효하지 않은 결제수단입니다."),
 	INVALID_REFRESH_TOKEN_EXCEPTION(430,"유효하지 않은 토큰입니다."),
 	EXPIRED_TOKEN_EXCEPTION(431,"만료된 토큰입니다."),
 	UNAUTHORIZED_ACCESS_EXCEPTION(432,"접근 권한이 없습니다."),

@@ -125,4 +125,18 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.IMPOSSIBLE_DELETE_MENU_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(PaymentInvalidPriceException.class)
+    public ResponseResult PaymentInvalidPriceException(PaymentInvalidPriceException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_PRICE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(PaymentInvalidPayTypeException.class)
+    public ResponseResult PaymentInvalidPayTypeException(PaymentInvalidPayTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_PAY_TYPE_EXCEPTION, err.getMessage());
+    }
+
 }
