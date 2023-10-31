@@ -76,12 +76,16 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    // Redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+
     // Elastic Search
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    compile 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.6'
-    compile 'org.elasticsearch.client:elasticsearch-rest-client:8.4.1'
-    compile 'org.elasticsearch:elasticsearch:8.4.1'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+//    compile 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+//    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.6'
+//    compile 'org.elasticsearch.client:elasticsearch-rest-client:8.4.1'
+//    compile 'org.elasticsearch:elasticsearch:8.4.1'
+
 }
 
 // QueryDSL 빌드 옵션
