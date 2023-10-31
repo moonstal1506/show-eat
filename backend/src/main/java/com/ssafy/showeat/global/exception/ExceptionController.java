@@ -150,6 +150,7 @@ public class ExceptionController {
         log.info("Error : {}", err.getClass());
         log.info("Error Message : {}", err.getMessage());
         return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_PAYMENT_EXCEPTION, err.getMessage());
+    }
 
     @ExceptionHandler(NotExistPageFundingException.class)
     public ResponseResult NotExistPageFundingException(NotExistPageFundingException err) {
