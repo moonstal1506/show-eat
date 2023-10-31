@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.ssafy.showeat.domain.payment.dto.response.PaymentResponseDto;
@@ -57,6 +58,7 @@ public class Payment extends BaseTimeEntity {
 	private String cancelReason;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	public PaymentResponseDto toPaymentResponseDto() {
