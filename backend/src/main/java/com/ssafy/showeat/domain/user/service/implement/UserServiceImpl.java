@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(NotExistUserException::new);
         return new UserResponseDto(user.getUserId(),user.getUserNickname(),
-                user.getUserImgUrl(),user.getUserAddress(),user.getUserMoney());
+                user.getUserImgUrl(),user.getUserAddress(),user.isUserBusiness(),user.getUserMoney(),user.isVisited());
     }
 
     @Override
@@ -125,10 +125,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User getUserFromRequest(HttpServletRequest request) {
         log.info("UserServiceImpl_getUserFromRequest | Request의 토큰 값을 바탕으로 유저를 찾아옴");
         String accessToken = request.getHeader("Authorization").split(" ")[1];
-        System.out.println("accessToken = " + accessToken);
         jwtProvider.parseClaims(accessToken);
         Claims accessTokenClaims = jwtProvider.parseClaims(accessToken);
         String userEmail = accessTokenClaims.getSubject();
@@ -143,5 +143,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(updateInfoRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
         user.updateuserNickname(updateInfoRequestDto.getUserNickname());
         user.updateAddress(updateInfoRequestDto.getUserAddress());
+        user.setVisited(true);
     }
 }

@@ -1,12 +1,20 @@
 package com.ssafy.showeat.domain.funding.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.showeat.domain.bookmark.entity.Bookmark;
 import com.ssafy.showeat.domain.bookmark.service.BookmarkService;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
@@ -18,6 +26,7 @@ import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingResponseDto;
 import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
+import com.ssafy.showeat.domain.funding.entity.UserFunding;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.funding.repository.UserFundingRepository;
 import com.ssafy.showeat.domain.user.entity.User;
@@ -27,7 +36,9 @@ import com.ssafy.showeat.global.exception.ImpossibleApplyFundingException;
 import com.ssafy.showeat.global.exception.ImpossibleCancelFundingException;
 import com.ssafy.showeat.global.exception.InactiveFundingException;
 import com.ssafy.showeat.global.exception.LackPointUserFundingException;
+import com.ssafy.showeat.global.exception.NotExistBusinessException;
 import com.ssafy.showeat.global.exception.NotExistFundingException;
+import com.ssafy.showeat.global.exception.NotExistPageFundingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FundingServiceImpl implements FundingService {
 
-	private final UserService userService;
 	private final UserFundingRepository userFundingRepository;
 	private final FundingRepository fundingRepository;
 	private final BusinessRepository businessRepository;
@@ -46,12 +56,11 @@ public class FundingServiceImpl implements FundingService {
 
 	@Override
 	@Transactional
-	public void createFunding(CreateFundingRequestDto createFundingRequestDto , HttpServletRequest request) {
+	public void createFunding(CreateFundingRequestDto createFundingRequestDto , User loginUser) {
 		log.info("FundingServiceImpl_createFunding || 업주가 펀딩을 생성");
 
-		User loginUser = userService.getUserFromRequest(request);
 		// TODO : 업주가 아닌 사람이 펀딩을 생성하려고 하면 예외처리를 해줘야함 -> 이 부분은 security 단위에서 처리
-		Business business = businessRepository.findByUser(loginUser).get();
+		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 
 		// TODO : 각 메뉴ID에 대해서 정보 가지고 오기
 		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
@@ -62,18 +71,19 @@ public class FundingServiceImpl implements FundingService {
 
 	@Override
 	@Transactional
-	public void applyFunding(Long fundingId , HttpServletRequest request) {
+	public void applyFunding(Long fundingId ,User loginUser) {
 		log.info("FundingServiceImpl_applyFunding ||  펀딩 참여");
-		User loginUser = userService.getUserFromRequest(request);
-		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
-
+		Funding funding = fundingRepository.findByIdWithLock(fundingId).orElseThrow(NotExistFundingException::new);
 		fundingValidation(funding,loginUser);
 
 		funding.addUserFunding(funding,loginUser);
 		loginUser.spendMoney(funding.getFundingDiscountPrice());
-		funding.addMoney();
+		funding.addMoneyForApply();
+		funding.addCountForApply();
 
-		if(!funding.isMaxLimit()) return;
+		if(!funding.isMaxLimit())
+			return;
+
 		funding.changeFundingStatusByMaxApply();
 		// TODO : 쿠폰 발급
 		// TODO : HISTORY 생성
@@ -81,9 +91,9 @@ public class FundingServiceImpl implements FundingService {
 
 	@Override
 	@Transactional
-	public void cancelFunding(Long fundingId , HttpServletRequest request) {
+	public void cancelFunding(Long fundingId , User loginUser) {
 		log.info("FundingServiceImpl_cancelFunding ||  펀딩 참여 취소");
-		User loginUser = userService.getUserFromRequest(request);
+
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
 
 		if(funding.getFundingIsActive().equals(FundingIsActive.INACTIVE))
@@ -98,13 +108,12 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public FundingResponseDto getFunding(Long fundingId , HttpServletRequest request) {
+	public FundingResponseDto getFunding(Long fundingId , User loginUser) {
 		log.info("FundingServiceImpl_getFunding ||  펀딩 조회");
 
-		User loginUser = userService.getUserFromRequest(request);
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
-		// TODO : 로그인 한 유저가 존재하지 않는다면 isBookmark = false
-		boolean isBookmark = bookmarkService.isBookmark(loginUser,funding);
+
+		boolean isBookmark = loginUser == null ? false : bookmarkService.isBookmark(loginUser,funding);
 		int bookmarkCount = bookmarkService.getBookmarkCountByFundingId(fundingId);
 
 		return funding.toFundingResponseDto(bookmarkCount , isBookmark);
@@ -120,8 +129,47 @@ public class FundingServiceImpl implements FundingService {
 		if(userFundingRepository.existsByUserAndFunding(loginUser,funding))
 			throw new DuplicationApplyFundingException();
 
-		if(!loginUser.haveMoney(funding.getFundingPrice()))
+		if(!loginUser.haveMoney(funding.getFundingDiscountPrice()))
 			throw new LackPointUserFundingException();
+	}
+
+	@Override
+	public Page<FundingListResponseDto> getUserFundingList(User user, int page) {
+		log.info("FundingServiceImpl_getUserFundingList ||  유저가 참여한 펀딩 리스트 조회");
+		Pageable pageable = PageRequest.of(page, 6 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Page<UserFunding> userFundings = userFundingRepository.findByUser(user, pageable);
+
+		List<FundingListResponseDto> result =
+				userFundings.getContent()
+				.stream()
+				.map(userFunding -> {
+					Funding funding = userFunding.getFunding();
+					return funding.toFundingListResponseDto(bookmarkService.isBookmark(user, funding));
+				}).collect(Collectors.toList());
+
+		if(userFundings.getTotalPages() <= page)
+			throw new NotExistPageFundingException();
+
+		return new PageImpl<>(result, pageable, userFundings.getTotalElements());
+	}
+
+	@Override
+	public Page<FundingListResponseDto> getUserFundingListByBookmark(User user, int page) {
+		log.info("FundingServiceImpl_getUserFundingListByBookmark ||  유저가 좋아요한 펀딩 리스트 조회");
+		Pageable pageable = PageRequest.of(page, 6 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Page<Bookmark> userBookmarkFundingList = bookmarkService.getUserBookmarkFundingList(user, page, pageable);
+
+		List<FundingListResponseDto> result = userBookmarkFundingList.getContent()
+			.stream()
+			.map(bookmark -> {
+				Funding funding = bookmark.getFunding();
+				return funding.toFundingListResponseDto(true);
+			}).collect(Collectors.toList());
+
+		if(userBookmarkFundingList.getTotalPages() <= page)
+			throw new NotExistPageFundingException();
+
+		return new PageImpl<>(result, pageable, userBookmarkFundingList.getTotalElements());
 	}
 
 	@Override
@@ -129,9 +177,8 @@ public class FundingServiceImpl implements FundingService {
 		Long businessId,
 		FundingIsActive state,
 		int page,
-		HttpServletRequest request
+		User loginUser
 	) {
-		User loginUser = userService.getUserFromRequest(request);
 		Business business = businessRepository.findById(businessId).get();
 		return fundingRepository.findByBusinessAndFundingIsActive(business, state, PageRequest.of(page, 6))
 			.map(funding -> funding.toFundingListResponseDto(
