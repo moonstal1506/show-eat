@@ -37,7 +37,7 @@ public class PaymentController {
 		@ApiResponse(code = 200, message = "결제 요청 정보 DB 저장 성공"),
 		@ApiResponse(code = 400, message = "결제 요청 정보 DB 저장 실패"),
 	})
-	@PostMapping
+	@PostMapping("/request")
 	public ResponseResult requestPayment(
 		@ApiParam(value = "요청 객체", required = true) @Valid @RequestBody PaymentRequestDto paymentRequestDto) {
 		PaymentResponseDto paymentResponseDto = paymentService.requestPayment(paymentRequestDto);
@@ -49,7 +49,7 @@ public class PaymentController {
 		@ApiResponse(code = 200, message = "결제 승인 요청 성공"),
 		@ApiResponse(code = 400, message = "결제 승인 요청 실패"),
 	})
-	@GetMapping
+	@GetMapping("/request/success")
 	public ResponseResult requestPaymentApproval(
 		@ApiParam(value = "토스 측 결제 고유 번호", required = true) @RequestParam String paymentKey,
 		@ApiParam(value = "우리 측 주문 고유 번호", required = true) @RequestParam String orderId,
@@ -65,7 +65,7 @@ public class PaymentController {
 		@ApiResponse(code = 200, message = "결제 승인 요청 성공"),
 		@ApiResponse(code = 400, message = "결제 승인 요청 실패"),
 	})
-	@GetMapping
+	@GetMapping("/request/fail")
 	public ResponseResult requestPaymentFail(
 		@ApiParam(value = "에러 코드", required = true) @RequestParam(name = "code") String errorCode,
 		@ApiParam(value = "에러 메시지", required = true) @RequestParam(name = "message") String errorMsg,
@@ -79,7 +79,7 @@ public class PaymentController {
 		@ApiResponse(code = 200, message = "결제 취소 요청 성공"),
 		@ApiResponse(code = 400, message = "결제 취소 요청 실패"),
 	})
-	@PostMapping
+	@PostMapping("/cancel")
 	public ResponseResult requestPaymentFail(
 		@ApiParam(value = "토스 측 주문 고유 번호", required = true) @RequestParam String paymentKey,
 		@ApiParam(value = "결제 취소 사유", required = true) @RequestParam String cancelReason) {
