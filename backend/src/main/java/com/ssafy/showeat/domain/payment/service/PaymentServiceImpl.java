@@ -121,7 +121,7 @@ public class PaymentServiceImpl implements PaymentService {
 		param.put("amount", amount);
 
 		return restTemplate.postForEntity(
-			tossOriginUrl + "/confirm",
+			tossOriginUrl + "confirm",
 			new HttpEntity<>(param, headers),
 			PaymentSuccessResponseDto.class
 		).getBody();
@@ -136,5 +136,25 @@ public class PaymentServiceImpl implements PaymentService {
 			.errorCode(errorCode)
 			.errorMsg(errorMsg)
 			.build();
+	}
+
+	@Override
+	public PaymentSuccessResponseDto requestPaymentCancel(String paymentKey, String cancelReason) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		HttpHeaders headers = new HttpHeaders();
+		byte[] secretKeyByte = (testSecretApiKey + ":").getBytes(StandardCharsets.UTF_8);
+		headers.setBasicAuth(new String(Base64.getEncoder().encode(secretKeyByte)));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		JSONObject param = new JSONObject();
+		param.put("cancelReason", cancelReason);
+
+		return restTemplate.postForEntity(
+			tossOriginUrl + paymentKey + "/cancel",
+			new HttpEntity<>(param, headers),
+			PaymentSuccessResponseDto.class
+		).getBody();
 	}
 }

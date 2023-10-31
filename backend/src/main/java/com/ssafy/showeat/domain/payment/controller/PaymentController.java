@@ -73,4 +73,18 @@ public class PaymentController {
 		PaymentFailResponseDto paymentFailResponseDto = paymentService.requestPaymentFail(errorCode, errorMsg, orderId);
 		return new SingleResponseResult<>(paymentFailResponseDto);
 	}
+
+	@ApiOperation(value = "결제 취소 요청", notes = "결제 취소를 요청합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "결제 취소 요청 성공"),
+		@ApiResponse(code = 400, message = "결제 취소 요청 실패"),
+	})
+	@PostMapping
+	public ResponseResult requestPaymentFail(
+		@ApiParam(value = "토스 측 주문 고유 번호", required = true) @RequestParam String paymentKey,
+		@ApiParam(value = "결제 취소 사유", required = true) @RequestParam String cancelReason) {
+		PaymentSuccessResponseDto paymentSuccessResponseDto = paymentService.requestPaymentCancel(paymentKey,
+			cancelReason);
+		return new SingleResponseResult<>(paymentSuccessResponseDto);
+	}
 }
