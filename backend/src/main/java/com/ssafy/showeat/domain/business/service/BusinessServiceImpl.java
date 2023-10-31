@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.*;
 import com.ssafy.showeat.global.exception.ImpossibleDeleteMenuException;
+
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +23,7 @@ import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.s3.S3Service;
+import com.ssafy.showeat.global.util.ClovaOcrService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +38,7 @@ public class BusinessServiceImpl implements BusinessService {
 	private final BusinessMenuRepository businessMenuRepository;
 	private final FundingRepository fundingRepository;
 	private final S3Service s3Service;
+	private final ClovaOcrService clovaOcrService;
 
 	@Override
 	@Transactional
@@ -160,7 +165,8 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public boolean verifyBusiness(MultipartFile businessRegistration) {
+	public boolean verifyBusiness(BusinessInfoRequestDto businessInfoRequestDto, MultipartFile businessRegistration) {
+		BusinessInfoRequestDto ocrBusinessInfo = clovaOcrService.readOcr(businessRegistration);
 		return false;
 	}
 }

@@ -80,3 +80,7 @@ jwt:
     skip:
       paths: auth/login/kakao
 #      ,/auth/logout
+
+clova:
+  url: "https://ntuel8zci6.apigw.ntruss.com/custom/v1/25840/11e8d01964315380ff54eb2db300bc588129efabbc17f82a56444f20d8867303/infer"
+  secretKey: "bGtVZFl5T29SUkh3TGFwRE16WVlWUENxb2J1dGF4UEo="

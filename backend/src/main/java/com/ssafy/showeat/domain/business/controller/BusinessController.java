@@ -3,6 +3,7 @@ package com.ssafy.showeat.domain.business.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,9 +46,8 @@ public class BusinessController {
 	public ResponseResult verifyBusiness(
 		@RequestPart BusinessInfoRequestDto businessInfoRequestDto,
 		@RequestPart MultipartFile businessRegistration
-	) throws IOException {
-		System.out.println("businessInfoRequestDto = " + businessInfoRequestDto);
-		businessService.verifyBusiness(businessRegistration);
+	) throws IOException, JSONException {
+		businessService.verifyBusiness(businessInfoRequestDto, businessRegistration);
 		return ResponseResult.successResponse;
 	}
 
