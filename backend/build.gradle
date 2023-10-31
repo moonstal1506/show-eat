@@ -77,7 +77,7 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
     // Redisson
-    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+//    implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 
     // Elastic Search
 //    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
@@ -85,6 +85,10 @@ dependencies {
 //    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.6'
 //    compile 'org.elasticsearch.client:elasticsearch-rest-client:8.4.1'
 //    compile 'org.elasticsearch:elasticsearch:8.4.1'
+
+    // QR Code - zxing
+    implementation group: 'com.google.zxing', name: 'javase', version: '3.5.0'
+    implementation group: 'com.google.zxing', name: 'core', version: '3.5.0'
 
 }
 
