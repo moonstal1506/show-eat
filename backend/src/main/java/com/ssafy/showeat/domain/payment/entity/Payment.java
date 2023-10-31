@@ -53,6 +53,9 @@ public class Payment extends BaseTimeEntity {
 	@Column
 	private String paymentKey;
 
+	@Column
+	private String cancelReason;
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private User user;
 

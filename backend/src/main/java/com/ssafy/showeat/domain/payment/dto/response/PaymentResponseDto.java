@@ -1,11 +1,9 @@
 package com.ssafy.showeat.domain.payment.dto.response;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -41,4 +39,6 @@ public class PaymentResponseDto {
 	@ApiModelProperty(value = "결제 요청 시각")
 	private String createdAt;
 
+	@ApiModelProperty(value = "결제 취소 사유")
+	private String cancelReason;
 }

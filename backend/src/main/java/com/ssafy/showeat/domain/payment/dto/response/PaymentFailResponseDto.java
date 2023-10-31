@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentFailResponseDto {
-	String errorCode;
-	String errorMsg;
-	String orderId;
+	private String errorCode;
+	private String errorMsg;
+	private String orderId;
 }
