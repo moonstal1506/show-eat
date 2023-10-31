@@ -138,5 +138,18 @@ public class ExceptionController {
         log.info("Error Message : {}", err.getMessage());
         return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_PAY_TYPE_EXCEPTION, err.getMessage());
     }
+    @ExceptionHandler(PaymentInvalidOrderAmountException.class)
+    public ResponseResult PaymentInvalidOrderAmountException(PaymentInvalidOrderAmountException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_ORDER_AMOUNT_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(NotExistPaymentException.class)
+    public ResponseResult NotExistPaymentException(NotExistPaymentException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_PAYMENT_EXCEPTION, err.getMessage());
+    }
 
 }
