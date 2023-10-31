@@ -27,6 +27,7 @@ import com.ssafy.showeat.domain.business.repository.BusinessRepository;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.MenuRequestDto;
 import com.ssafy.showeat.domain.funding.entity.Funding;
+import com.ssafy.showeat.domain.funding.entity.FundingCategory;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
@@ -102,7 +103,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 
 		// then
 		assertThat(save.getFundingTitle()).isEqualTo("테스트");
-		assertThat(save.getFundingCategory()).isEqualTo("한식");
+		assertThat(save.getFundingCategory()).isEqualTo(FundingCategory.KOREAN);
 		assertThat(save.getFundingMenu()).isEqualTo("메뉴1");
 		assertThat(save.getFundingDiscountPrice()).isEqualTo(2000);
 		assertThat(save.getFundingTags()).hasSize(2)
@@ -264,7 +265,7 @@ class FundingServiceImplTest extends IntegrationTestSupport {
 			.fundingMenu("과자")
 			.fundingPrice(10000)
 			.fundingTotalAmount(0)
-			.fundingCategory("한식")
+			.fundingCategory(FundingCategory.KOREAN)
 			.fundingDescription("설명")
 			.fundingEndDate(LocalDate.now())
 			.fundingIsActive(fundingIsActive)
