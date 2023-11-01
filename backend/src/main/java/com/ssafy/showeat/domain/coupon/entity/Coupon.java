@@ -19,6 +19,7 @@ import com.ssafy.showeat.domain.coupon.dto.response.CouponListResponseDto;
 import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.global.entity.BaseTimeEntity;
+import com.ssafy.showeat.global.exception.InvalidCouponPriceException;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,9 @@ public class Coupon extends BaseTimeEntity {
 
 	@Column(nullable = false)
 	private LocalDate couponExpirationDate;
+
+	@Column()
+	private String couponQrCodeImgUrl;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -94,6 +98,15 @@ public class Coupon extends BaseTimeEntity {
 	}
 
 	public void updatePrice(int amount) {
-		this.couponPrice -= amount;
+		int newPrice = this.couponPrice - amount;
+		if (newPrice < 0) {
+			throw new InvalidCouponPriceException();
+		} else {
+			this.couponPrice = newPrice;
+		}
+	}
+
+	public void addCouponQrCodeFileUrl(String s3QrCodeImageUrl) {
+		this.couponQrCodeImgUrl = s3QrCodeImageUrl;
 	}
 }

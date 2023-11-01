@@ -72,9 +72,6 @@ public class CouponServiceImpl implements CouponService {
 		System.out.println(coupon.getCouponPrice());
 		if (coupon.getCouponPrice() == 0) {
 			coupon.updateStatus(CouponStatus.USED);
-		} else if (coupon.getCouponPrice() < 0) {
-			coupon.updatePrice(coupon.getCouponPrice() + amount);
-			throw new InvalidCouponPriceException();
 		}
 	}
 }
