@@ -80,7 +80,12 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
 
     // Elastic Search
-//    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.elasticsearch:elasticsearch:7.17.13'
+    implementation 'com.github.adedayo.intellij.sdk:gradle-tooling-extension-impl:142.1'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+
+    implementation 'jakarta.json:jakarta.json-api:2.0.1'
 //    compile 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 //    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.6'
 //    compile 'org.elasticsearch.client:elasticsearch-rest-client:8.4.1'
