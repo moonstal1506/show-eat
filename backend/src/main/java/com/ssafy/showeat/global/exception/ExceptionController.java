@@ -125,6 +125,33 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.IMPOSSIBLE_DELETE_MENU_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(PaymentInvalidPriceException.class)
+    public ResponseResult PaymentInvalidPriceException(PaymentInvalidPriceException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_PRICE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(PaymentInvalidPayTypeException.class)
+    public ResponseResult PaymentInvalidPayTypeException(PaymentInvalidPayTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_PAY_TYPE_EXCEPTION, err.getMessage());
+    }
+    @ExceptionHandler(PaymentInvalidOrderAmountException.class)
+    public ResponseResult PaymentInvalidOrderAmountException(PaymentInvalidOrderAmountException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.PAYMENT_INVALID_ORDER_AMOUNT_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(NotExistPaymentException.class)
+    public ResponseResult NotExistPaymentException(NotExistPaymentException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.NOT_EXIST_PAYMENT_EXCEPTION, err.getMessage());
+    }
+
     @ExceptionHandler(NotExistPageFundingException.class)
     public ResponseResult NotExistPageFundingException(NotExistPageFundingException err) {
         log.info("Error : {}", err.getClass());
@@ -144,6 +171,47 @@ public class ExceptionController {
         log.info("Error : {}", err.getClass());
         log.info("Error Message : {}", err.getMessage());
         return ResponseResult.exceptionResponse(ExceptionCode.CLOVA_OCR_EXCEPTION, err.getMessage());
+
+    @ExceptionHandler(InvalidCouponTypeException.class)
+    public ResponseResult InvalidCouponTypeException(InvalidCouponTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_COUPON_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCouponPriceException.class)
+    public ResponseResult InvalidCouponPriceException(InvalidCouponPriceException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_COUPON_PRICE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidSearchTypeException.class)
+    public ResponseResult InvalidSearchTypeException(InvalidSearchTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SEARCH_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidSortTypeException.class)
+    public ResponseResult InvalidSortTypeException(InvalidSortTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SORT_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCategoryTypeException.class)
+    public ResponseResult InvalidCategoryTypeException(InvalidCategoryTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_CATEGORY_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(BlankSearchKeywordException.class)
+    public ResponseResult BlankSearchKeywordException(BlankSearchKeywordException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.BLANK_SEARCH_KEYWORD_EXCEPTION, err.getMessage());
     }
 
 }

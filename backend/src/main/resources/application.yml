@@ -5,7 +5,7 @@ spring:
   jpa:
     properties: # property 사용 설정
       hibernate: # hibernate property 설정
-        format_sql: true # 보여지는 쿼리를 예쁘게 포맷팅 -> 사용하지 않으면 긴 줄 형태로 출력됌
+        format_sql: true # 보여지는 쿼리를 예쁘게 포맷팅 -> 사용하지 않으면 긴 줄 형태로 출력됨
   servlet:
     multipart:
       enabled: true
@@ -60,8 +60,8 @@ cloud:
     s3:
       bucket: showeat
     credentials:
-      accessKey: AKIAYNGI6IUDYVBYW33G
-      secretKey: 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
+      access-key: AKIAYNGI6IUDYVBYW33G
+      secret-key: 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
     region:
       static: ap-northeast-2
       auto: false
@@ -88,3 +88,12 @@ clova:
 business:
   url: "https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey="
   secretKey: "4SlBHvxNa576fRWhPJN31xw3YYDXDhysrpBFU8sDMMgR9oZJi%2FVsGSsqvkhiJP5%2FCLueZqxvPobQMMVPQMzxIA%3D%3D"
+
+# TossPayments
+payments:
+  toss:
+    test_client_api_key: test_ck_QbgMGZzorzyKv2BGY6djVl5E1em4
+    test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
+    success_url: http://localhost:8081/api/payments/request/success
+    fail_url: http://localhost:8081/api/payments/request/fail
+

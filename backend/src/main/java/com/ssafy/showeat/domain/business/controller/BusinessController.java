@@ -3,6 +3,8 @@ package com.ssafy.showeat.domain.business.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +20,7 @@ import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
+import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
 import com.ssafy.showeat.global.response.SingleResponseResult;
@@ -35,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BusinessController {
 
 	private final BusinessService businessService;
+	private final UserService userService;
 
 	@ApiOperation(value = "사업자 인증", notes = "사업자를 인증합니다.")
 	@ApiResponses(value = {
@@ -136,9 +140,10 @@ public class BusinessController {
 	@PostMapping("/menu")
 	public ResponseResult registMenu(
 		@RequestPart RegistMenuRequestDto registMenuRequestDto,
-		@RequestPart List<MultipartFile> multipartFiles
+		@RequestPart List<MultipartFile> multipartFiles,
+		HttpServletRequest request
 	) throws IOException {
-		businessService.registMenu(registMenuRequestDto, multipartFiles);
+		businessService.registMenu(registMenuRequestDto, multipartFiles , userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -158,8 +163,8 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "메뉴 조회 실패"),
 	})
 	@GetMapping("/menu")
-	public ResponseResult getMenuList() {
-		return new ListResponseResult<>(businessService.getMenuList());
+	public ResponseResult getMenuList(HttpServletRequest request) {
+		return new ListResponseResult<>(businessService.getMenuList(userService.getUserFromRequest(request)));
 	}
 
 	@ApiOperation(value = "업체 메뉴 삭제", notes = "업주가 메뉴를 삭제합니다.")
@@ -178,9 +183,9 @@ public class BusinessController {
 		@ApiResponse(code = 200, message = "월간 통계 조회 성공"),
 		@ApiResponse(code = 400, message = "월간 통계 조회 실패"),
 	})
-	@GetMapping("/monthlystat/{businessId}")
-	public ResponseResult getMonthlyStatList(@PathVariable Long businessId) {
-		return new ListResponseResult<>(businessService.getMonthlyStatList(businessId));
+	@GetMapping("/stat/monthly/{businessId}")
+	public ResponseResult getMonthlyStatistic(@PathVariable Long businessId) {
+		return new ListResponseResult<>(businessService.getMonthlyStatistic(businessId));
 	}
 
 	@ApiOperation(value = "누적 통계 조회", notes = "업주가 업체의 누적 통계를 조회합니다.")
@@ -188,8 +193,8 @@ public class BusinessController {
 		@ApiResponse(code = 200, message = "누적 통계 조회 성공"),
 		@ApiResponse(code = 400, message = "누적 통계 조회 실패"),
 	})
-	@GetMapping("/totalstat/{businessId}")
-	public ResponseResult getTotalStatList(@PathVariable Long businessId) {
-		return new SingleResponseResult<>(businessService.getTotalStatList(businessId));
+	@GetMapping("/stat/total/{businessId}")
+	public ResponseResult getTotalStatistic(@PathVariable Long businessId) {
+		return new SingleResponseResult<>(businessService.getTotalStatistic(businessId));
 	}
 }
