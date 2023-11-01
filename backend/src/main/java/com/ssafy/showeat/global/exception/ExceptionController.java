@@ -173,4 +173,32 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.INVALID_COUPON_PRICE_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(InvalidSearchTypeException.class)
+    public ResponseResult InvalidSearchTypeException(InvalidSearchTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SEARCH_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidSortTypeException.class)
+    public ResponseResult InvalidSortTypeException(InvalidSortTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_SORT_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCategoryTypeException.class)
+    public ResponseResult InvalidCategoryTypeException(InvalidCategoryTypeException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.INVALID_CATEGORY_TYPE_EXCEPTION, err.getMessage());
+    }
+
+    @ExceptionHandler(BlankSearchKeywordException.class)
+    public ResponseResult BlankSearchKeywordException(BlankSearchKeywordException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.BLANK_SEARCH_KEYWORD_EXCEPTION, err.getMessage());
+    }
+
 }
