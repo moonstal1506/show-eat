@@ -1,4 +1,5 @@
 /* Import */
+import Image from "next/image";
 import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
@@ -26,9 +27,13 @@ const ProfileContainer = styled("div")`
 `;
 
 const ProfileImageWrapper = styled("div")`
+    // Position Attribute
+    position: relative;
+
     // Box Model Attribute
     width: 40px;
     height: 40px;
+    overflow: hidden;
 
     // Style Attribute
     border: 1px solid ${(props) => props.theme.colors.primary3};
@@ -36,10 +41,8 @@ const ProfileImageWrapper = styled("div")`
     background-color: ${(props) => props.theme.colors.gray1};
 `;
 
-const ProfileImage = styled("img")`
+const ProfileImage = styled(Image)`
     // Box Model Attribute
-    width: 100%;
-    height: 100%;
     object-fit: cover;
 `;
 
@@ -57,7 +60,7 @@ function ProfileBox(props: ProfileBoxProps) {
     return (
         <ProfileContainer>
             <ProfileImageWrapper>
-                <ProfileImage src={source} alt="user-profile" />
+                <ProfileImage src={source} alt="user-profile" fill />
             </ProfileImageWrapper>
             <NicknameWrapper>{nickname}</NicknameWrapper>
         </ProfileContainer>
