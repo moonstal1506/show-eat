@@ -16,9 +16,6 @@ public class UpdateCouponStatusRequestDto {
 	@ApiModelProperty(value = "쿠폰ID", example = "1")
 	private Long couponId;
 
-	@ApiModelProperty(value = "쿠폰 타입", example = "SINGLE")
-	private CouponType couponType;
-
 	@ApiModelProperty(value = "쿠폰 상태", example = "ACTIVE")
 	private CouponStatus couponStatus;
 }

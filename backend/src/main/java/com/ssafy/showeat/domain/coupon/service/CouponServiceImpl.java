@@ -57,17 +57,19 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
+	@Transactional
 	public void updateCouponPrice(UpdateCouponPriceRequestDto updateCouponPriceRequestDto) {
 		log.info("CouponService_updateCouponPrice || 해당 쿠폰의 금액을 차감");
 		Coupon coupon = couponRepository.findById(updateCouponPriceRequestDto.getCouponId()).orElseThrow(
 			NotExistCouponException::new);
 
-		if (updateCouponPriceRequestDto.getCouponType() != CouponType.GIFTCARD) {
+		if (coupon.getCouponType() != CouponType.GIFTCARD) {
 			throw new InvalidCouponTypeException();
 		}
 
 		int amount = updateCouponPriceRequestDto.getCouponAmount();
 		coupon.updatePrice(coupon.getCouponPrice() - amount);
+		System.out.println(coupon.getCouponPrice());
 		if (coupon.getCouponPrice() == 0) {
 			coupon.updateStatus(CouponStatus.USED);
 		} else if (coupon.getCouponPrice() < 0) {
