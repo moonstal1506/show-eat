@@ -29,6 +29,7 @@ import com.ssafy.showeat.global.response.ocr.ClovaOcrResponseDto;
 import com.ssafy.showeat.global.response.ocr.FieldInfo;
 import com.ssafy.showeat.global.response.ocr.ImageInfo;
 import com.ssafy.showeat.global.s3.S3Service;
+import com.ssafy.showeat.global.util.BusinessRegistrationService;
 import com.ssafy.showeat.global.util.ClovaOcrService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class BusinessServiceImpl implements BusinessService {
 	private final FundingRepository fundingRepository;
 	private final S3Service s3Service;
 	private final ClovaOcrService clovaOcrService;
+	private final BusinessRegistrationService businessRegistrationService;
 
 	@Override
 	@Transactional
@@ -177,7 +179,9 @@ public class BusinessServiceImpl implements BusinessService {
 
 		//업체 입력 정보와 ocr 일치 확인
 		checkOcrAndBusinessInfo(clovaOcrResponseDto, businessInfoRequestDto);
-		return false;
+
+		//국세청 사업자등록정보 진위확인
+		return businessRegistrationService.verifyBusinessRegistration(businessInfoRequestDto);
 	}
 
 	private void checkOcrAndBusinessInfo(ClovaOcrResponseDto clovaOcrResponseDto,

@@ -15,6 +15,7 @@ public enum ExceptionCode {
 	NOT_EXIST_BUSINESS_EXCEPTION(460, "해당 업체가 존재하지 않습니다."),
 	INVALID_REGISTRATION_EXCEPTION(461, "입력 정보와 사업자 등록증 정보가 일치하지 않습니다."),
 	CLOVA_OCR_EXCEPTION(462, "CLOVA OCR에서 예측하지 못한 에러가 발생했습니다."),
+	BUSINESS_REGISTRATION_EXCEPTION(463, "국세청 사업자등록정보 진위확인에서 예측하지 못한 에러가 발생했습니다."),
 	NOT_EXIST_COUPON_EXCEPTION(470, "해당 쿠폰이 존재하지 않습니다."),
 	NOT_EXIST_FUNDING_EXCEPTION(480,"펀딩을 찾을 수 없습니다."),
 	INACTIVE_FUNDING_EXCEPTION(481,"이미 종료된 펀딩입니다."),
