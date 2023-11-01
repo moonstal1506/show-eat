@@ -5,21 +5,21 @@ import javax.validation.constraints.NotNull;
 
 import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCouponStatusRequestDto {
 
-	@NotNull
+	@ApiModelProperty(value = "쿠폰ID", example = "1")
 	private Long couponId;
 
-	@NotBlank
+	@ApiModelProperty(value = "쿠폰 상태", example = "ACTIVE")
 	private CouponStatus couponStatus;
-
 }
