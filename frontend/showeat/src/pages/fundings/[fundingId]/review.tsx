@@ -1,20 +1,22 @@
-import FundingLayout from "@/layouts/FundingLayout";
-import Link from "next/link";
-import { useRouter } from "next/router";
+/* Import */
+import FundingLayout from "@layouts/FundingLayout";
+import { ReactNode } from "react";
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Funding Review Page */
 function Review() {
-    const router = useRouter();
-    const { query } = router;
-    return (
-        <>
-            <div>호우 호우우우우</div>
-            <Link href={`/fundings/${query.fundingId}`}>돌아가기</Link>
-        </>
-    );
+    return <div>리뷰 페이지입니다.</div>;
 }
 
-Review.getLayout = function getLayout(page: React.ReactElement) {
+// ----------------------------------------------------------------------------------------------------
+
+/* Layout */
+Review.getLayout = function getLayout(page: ReactNode) {
     return <FundingLayout>{page}</FundingLayout>;
 };
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
 export default Review;
