@@ -93,7 +93,7 @@ public class Coupon extends BaseTimeEntity {
 		this.couponStatus = couponStatus;
 	}
 
-	public void updatePrice(int couponPrice) {
-		this.couponPrice = couponPrice;
+	public void updatePrice(int amount) {
+		this.couponPrice -= amount;
 	}
 }

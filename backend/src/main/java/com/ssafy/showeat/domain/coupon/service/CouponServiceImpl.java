@@ -68,7 +68,7 @@ public class CouponServiceImpl implements CouponService {
 		}
 
 		int amount = updateCouponPriceRequestDto.getCouponAmount();
-		coupon.updatePrice(coupon.getCouponPrice() - amount);
+		coupon.updatePrice(amount);
 		System.out.println(coupon.getCouponPrice());
 		if (coupon.getCouponPrice() == 0) {
 			coupon.updateStatus(CouponStatus.USED);
