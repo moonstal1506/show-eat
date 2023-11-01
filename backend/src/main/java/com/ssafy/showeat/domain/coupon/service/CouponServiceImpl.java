@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponPriceRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponListResponseDto;
@@ -37,30 +38,6 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public List<CouponListResponseDto> getActiveCouponListByUserId(Long userId) {
-		log.info("CouponService_getActiveCouponLIstByUserid || 유저의 사용가능 쿠폰 조회");
-		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
-		List<Coupon> couponList = couponRepository.findActiveCouponByUser(user);
-		return couponList.stream().map(Coupon::toCouponListResponseDto).collect(Collectors.toList());
-	}
-
-	@Override
-	public List<CouponListResponseDto> getUsedCouponListByUserId(Long userId) {
-		log.info("CouponService_getUsedCouponLIstByUserid || 유저의 사용완료 쿠폰 조회");
-		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
-		List<Coupon> couponList = couponRepository.findUsedCouponByUser(user);
-		return couponList.stream().map(Coupon::toCouponListResponseDto).collect(Collectors.toList());
-	}
-
-	@Override
-	public List<CouponListResponseDto> getExpiredCouponListByUserId(Long userId) {
-		log.info("CouponService_getExpiredCouponLIstByUserid || 유저의 사용완료 쿠폰 조회");
-		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
-		List<Coupon> couponList = couponRepository.findExpiredCouponByUser(user);
-		return couponList.stream().map(Coupon::toCouponListResponseDto).collect(Collectors.toList());
-	}
-
-	@Override
 	public CouponDetailResponseDto getCouponDetailByCouponId(Long couponId) {
 		log.info("CouponService_getCouponDetailByCouponId || 해당 쿠폰의 상세 정보 조회");
 		Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotExistCouponException::new);
@@ -70,9 +47,18 @@ public class CouponServiceImpl implements CouponService {
 	@Override
 	@Transactional
 	public void updateCouponStatus(UpdateCouponStatusRequestDto updateCouponStatusRequestDto) {
-		log.info("CouponService_updateCouponStatus || 해당 쿠폰 사용 처리");
+		log.info("CouponService_updateCouponStatus || 해당 쿠폰의 상태를 변경");
 		Coupon coupon = couponRepository.findById(updateCouponStatusRequestDto.getCouponId()).orElseThrow(
 			NotExistCouponException::new);
 		coupon.updateStatus(updateCouponStatusRequestDto.getCouponStatus());
+	}
+
+	@Override
+	public void updateCouponPrice(UpdateCouponPriceRequestDto updateCouponPriceRequestDto) {
+		log.info("CouponService_updateCouponPrice || 해당 쿠폰의 금액을 차감");
+		Coupon coupon = couponRepository.findById(updateCouponPriceRequestDto.getCouponId()).orElseThrow(
+			NotExistCouponException::new);
+		int amount = updateCouponPriceRequestDto.getCouponAmount();
+		coupon.updatePrice(coupon.getCouponPrice() - amount);
 	}
 }

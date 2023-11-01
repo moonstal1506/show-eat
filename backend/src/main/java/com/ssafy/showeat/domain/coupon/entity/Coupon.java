@@ -59,7 +59,7 @@ public class Coupon extends BaseTimeEntity {
 			.couponId(couponId)
 			.couponStatus(couponStatus)
 			.couponPrice(couponPrice)
-			.expirationDate(couponExpirationDate)	// TODO : 60, 90, 180일 더한 날짜 반환
+			.expirationDate(couponExpirationDate)    // TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
 			.fundingTitle(funding.getFundingTitle())
 			.fundingMenu(funding.getFundingMenu())
@@ -74,7 +74,7 @@ public class Coupon extends BaseTimeEntity {
 		return CouponListResponseDto.builder()
 			.couponId(couponId)
 			.couponStatus(couponStatus)
-			.expirationDate(couponExpirationDate)	// TODO : 60, 90, 180일 더한 날짜 반환
+			.expirationDate(couponExpirationDate)    // TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
 			.businessImgUrl(funding.getBusiness().getBusinessImgUrl())
 			.fundingMenu(funding.getFundingMenu())
@@ -85,5 +85,9 @@ public class Coupon extends BaseTimeEntity {
 
 	public void updateStatus(CouponStatus couponStatus) {
 		this.couponStatus = couponStatus;
+	}
+
+	public void updatePrice(int couponPrice) {
+		this.couponPrice = couponPrice;
 	}
 }
