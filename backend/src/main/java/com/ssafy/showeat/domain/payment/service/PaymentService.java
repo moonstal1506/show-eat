@@ -15,4 +15,6 @@ public interface PaymentService {
 	PaymentFailResponseDto requestPaymentFail(String errorCode, String errorMsg, String orderId);
 
 	PaymentSuccessResponseDto requestPaymentCancel(String paymentKey, String cancelReason);
+
+	void updateUserMoney(String orderId, Long amount);
 }

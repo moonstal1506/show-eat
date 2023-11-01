@@ -57,6 +57,7 @@ public class PaymentController {
 		paymentService.verifyPayment(paymentKey, orderId, amount);
 		PaymentSuccessResponseDto paymentApprovalResponseDto = paymentService.requestPaymentApproval(paymentKey,
 			orderId, amount);
+		paymentService.updateUserMoney(orderId, amount);
 		return new SingleResponseResult<>(paymentApprovalResponseDto);
 	}
 

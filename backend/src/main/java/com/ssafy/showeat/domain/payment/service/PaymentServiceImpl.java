@@ -157,4 +157,16 @@ public class PaymentServiceImpl implements PaymentService {
 			PaymentSuccessResponseDto.class
 		).getBody();
 	}
+
+	@Override
+	public void updateUserMoney(String orderId, Long amount) {
+		paymentRepository.findByOrderId(orderId)
+			.ifPresentOrElse(
+				P -> {
+					P.getUser().updateUserMoney(amount);
+				}, () -> {
+					throw new NotExistPaymentException();
+				}
+			);
+	}
 }
