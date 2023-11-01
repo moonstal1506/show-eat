@@ -1,19 +1,10 @@
 /* Import */
-import { AppProps } from "next/app";
+import { AppPropsWithLayout } from "@customTypes/layoutProps";
 import { Global, ThemeProvider } from "@emotion/react";
 import globalStyles from "@styles/global";
+import { ReactNode } from "react";
 import { RecoilRoot } from "recoil";
 import theme from "@styles/theme";
-import { ReactElement, ReactNode } from "react";
-import { NextPage } from "next";
-
-export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
-    getLayout?: (page: ReactElement) => ReactNode;
-};
-
-type AppPropsWithLayout = AppProps & {
-    Component: NextPageWithLayout;
-};
 
 // ----------------------------------------------------------------------------------------------------
 
