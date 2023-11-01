@@ -1,5 +1,6 @@
 /* Import */
 import { LayoutProps } from "@customTypes/layoutProps";
+import Header from "@components/header";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -9,6 +10,7 @@ function MainLayout(props: LayoutProps) {
 
     return (
         <>
+            <Header />
             <div>여기는 메인 페이지입니다.</div>
             <article>{children}</article>
         </>
