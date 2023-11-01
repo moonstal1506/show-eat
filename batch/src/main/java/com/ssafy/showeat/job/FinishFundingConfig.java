@@ -41,7 +41,7 @@ public class FinishFundingConfig {
 
 	@Bean
 	public Job finishFundingJob() {
-		return jobBuilderFactory.get("qwEZ")
+		return jobBuilderFactory.get("finishFundingJob")
 			.listener(jobListener)
 			.start(finishFundingStep())
 			.build();
@@ -49,7 +49,7 @@ public class FinishFundingConfig {
 
 	@Bean
 	public Step finishFundingStep(){
-		return stepBuilderFactory.get("qwEZ")
+		return stepBuilderFactory.get("finishFundingStep")
 			.<Funding, Pair<Funding, List<Coupon>>>chunk(10)
 			.reader(fundingReader())
 			.processor(fundingProcessor())
@@ -62,7 +62,6 @@ public class FinishFundingConfig {
 		log.info("Reader 실행");
 		List<Funding> fundingList = fundingRepository.findByFundingIsActiveAndFundingEndDate(FundingIsActive.ACTIVE,
 			LocalDate.now());
-		System.out.println("fundingList = " + fundingList.size());
 		return new IteratorItemReader<>(fundingList);
 	}
 
