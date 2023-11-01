@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.*;
+import com.ssafy.showeat.domain.elasticSearch.DocTestsTransport;
+import com.ssafy.showeat.domain.elasticSearch.SearchDocument;
+import com.ssafy.showeat.domain.elasticSearch.SearchRepository;
 import com.ssafy.showeat.global.exception.ImpossibleDeleteMenuException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,9 @@ public class BusinessServiceImpl implements BusinessService {
 	private final BusinessMenuRepository businessMenuRepository;
 	private final FundingRepository fundingRepository;
 	private final S3Service s3Service;
+	private final SearchRepository searchRepository;
+	private final DocTestsTransport docTestsTransport = new DocTestsTransport();
+	private final ElasticsearchClient client = new ElasticsearchClient(docTestsTransport);
 
 	@Override
 	@Transactional
@@ -110,6 +117,9 @@ public class BusinessServiceImpl implements BusinessService {
 		Business business = businessRepository.findByUser(loginUser).get();
 		BusinessMenu businessMenu = s3Service.uploadMenuImageToS3(registMenuRequestDto.toEntity(), multipartFiles);
 		business.addBusinessMenu(businessMenu);
+		SearchDocument searchDocument = new SearchDocument(businessMenu.getBusinessMenuId()
+				,businessMenu.getBusinessMenuName());
+		searchRepository.save(searchDocument);
 	}
 
 	@Override
