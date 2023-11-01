@@ -44,6 +44,10 @@ public class Coupon extends BaseTimeEntity {
 	private CouponStatus couponStatus;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private CouponType couponType;
+
+	@Column(nullable = false)
 	private LocalDate couponExpirationDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -58,6 +62,7 @@ public class Coupon extends BaseTimeEntity {
 		return CouponDetailResponseDto.builder()
 			.couponId(couponId)
 			.couponStatus(couponStatus)
+			.couponType(couponType)
 			.couponPrice(couponPrice)
 			.expirationDate(couponExpirationDate)    // TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
@@ -74,6 +79,7 @@ public class Coupon extends BaseTimeEntity {
 		return CouponListResponseDto.builder()
 			.couponId(couponId)
 			.couponStatus(couponStatus)
+			.couponType(couponType)
 			.expirationDate(couponExpirationDate)    // TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
 			.businessImgUrl(funding.getBusiness().getBusinessImgUrl())
