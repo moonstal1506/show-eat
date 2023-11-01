@@ -23,9 +23,9 @@ public class BusinessInfoRequestDto {
     private String businessName;
 
     @ApiModelProperty(value = "사업자등록번호", example = "123121234")
-    private Long businessNumber;
+    private String businessNumber;
 
     @ApiModelProperty(value = "개업연월일", example = "20030215")
-    private int startDate;
+    private String startDate;
 
 }

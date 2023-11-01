@@ -2,8 +2,6 @@ package com.ssafy.showeat.global.util;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -16,7 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.showeat.global.exception.ClovaOcrException;
+import com.ssafy.showeat.global.response.ocr.ClovaOcrResponseDto;
 
 @Service
 public class ClovaOcrService {
@@ -27,7 +28,7 @@ public class ClovaOcrService {
 	@Value("${clova.secretKey}")
 	private String secretKey;
 
-	public BusinessInfoRequestDto readOcr(MultipartFile businessRegistration) {
+	public ClovaOcrResponseDto readOcr(MultipartFile businessRegistration) {
 		try {
 			URL url = new URL(apiURL);
 			HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -75,10 +76,13 @@ public class ClovaOcrService {
 			}
 			br.close();
 
-			System.out.println(response);
+			//필요한 정보만 가져옴
+			ObjectMapper objectMapper = new ObjectMapper()
+				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			return objectMapper.readValue(response.toString(), ClovaOcrResponseDto.class);
 		} catch (Exception e) {
-			System.out.println(e);
+			throw new ClovaOcrException(e.getMessage());
 		}
-		return null;
 	}
+
 }
