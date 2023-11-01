@@ -13,9 +13,12 @@ import com.ssafy.showeat.domain.coupon.dto.response.CouponDetailResponseDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponListResponseDto;
 import com.ssafy.showeat.domain.coupon.entity.Coupon;
 import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
+import com.ssafy.showeat.domain.coupon.entity.CouponType;
 import com.ssafy.showeat.domain.coupon.repository.CouponRepository;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
+import com.ssafy.showeat.global.exception.InvalidCouponPriceException;
+import com.ssafy.showeat.global.exception.InvalidCouponTypeException;
 import com.ssafy.showeat.global.exception.NotExistCouponException;
 import com.ssafy.showeat.global.exception.NotExistUserException;
 
@@ -58,7 +61,18 @@ public class CouponServiceImpl implements CouponService {
 		log.info("CouponService_updateCouponPrice || 해당 쿠폰의 금액을 차감");
 		Coupon coupon = couponRepository.findById(updateCouponPriceRequestDto.getCouponId()).orElseThrow(
 			NotExistCouponException::new);
+
+		if (updateCouponPriceRequestDto.getCouponType() != CouponType.GIFTCARD) {
+			throw new InvalidCouponTypeException();
+		}
+
 		int amount = updateCouponPriceRequestDto.getCouponAmount();
 		coupon.updatePrice(coupon.getCouponPrice() - amount);
+		if (coupon.getCouponPrice() == 0) {
+			coupon.updateStatus(CouponStatus.USED);
+		} else if (coupon.getCouponPrice() < 0) {
+			coupon.updatePrice(coupon.getCouponPrice() + amount);
+			throw new InvalidCouponPriceException();
+		}
 	}
 }
