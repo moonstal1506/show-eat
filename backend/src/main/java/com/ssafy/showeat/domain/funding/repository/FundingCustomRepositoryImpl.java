@@ -171,20 +171,27 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 		return null;
 	}
 	private BooleanBuilder searchFundingByCondition(SearchFundingRequestDto searchFundingRequestDto){
-		BooleanBuilder builder = new BooleanBuilder();
+		BooleanBuilder mainBuilder = new BooleanBuilder();
+		BooleanBuilder searchTypeBuilder = new BooleanBuilder();
 
 		if(searchFundingRequestDto.getSearchType().equals(FundingSearchType.BUSINESS_NAME.name()))
-			getFundingByBusinessName(builder , searchFundingRequestDto.getKeyword());
+			getFundingByBusinessName(searchTypeBuilder , searchFundingRequestDto.getKeyword());
+
+		if(searchFundingRequestDto.getSearchType().equals(FundingSearchType.FUNDING_MENU.name()))
+			getFundingByFundingMenu(searchTypeBuilder , searchFundingRequestDto.getKeyword());
 
 
-		return builder;
+
+		return mainBuilder;
 	}
 
-
+	private void getFundingByFundingMenu(BooleanBuilder builder , String fundingMenu){
+		builder.or(funding.fundingMenu.like(fundingMenu));
+	}
 
 	private void getFundingByBusinessName(BooleanBuilder builder , String businessName){
 		List<Long> businessIdListByBusinessName = getBusinessIdListByBusinessName(businessName);
-		builder.and(funding.fundingId.in(businessIdListByBusinessName));
+		builder.or(funding.fundingId.in(businessIdListByBusinessName));
 	}
 
 	private List<Long> getBusinessIdListByBusinessName(String businessName){
