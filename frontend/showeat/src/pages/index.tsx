@@ -1,5 +1,7 @@
 /* Import */
 import Head from "next/head";
+import MainLayout from "@layouts/MainLayout";
+import { ReactNode } from "react";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -15,6 +17,13 @@ function Home() {
         </>
     );
 }
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Layout */
+Home.getLayout = function getLayout(page: ReactNode) {
+    return <MainLayout>{page}</MainLayout>;
+};
 
 // ----------------------------------------------------------------------------------------------------
 
