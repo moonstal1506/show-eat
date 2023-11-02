@@ -8,10 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.MathExpressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -23,6 +25,7 @@ import com.ssafy.showeat.domain.business.entity.QBusiness;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
+import com.ssafy.showeat.domain.funding.entity.FundingSearchType;
 import com.ssafy.showeat.domain.funding.entity.FundingSortType;
 import com.ssafy.showeat.domain.funding.entity.QFunding;
 
@@ -159,13 +162,37 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 		jpaQueryFactory
 			.select()
 			.from()
-			.where()
+			.where(searchFundingByCondition(searchFundingRequestDto))
 			.orderBy(fundingSort(searchFundingRequestDto.getSortType()))
 			.limit(pageable.getPageSize())
 			.offset(pageable.getOffset())
 			.fetch();
 
 		return null;
+	}
+	private BooleanBuilder searchFundingByCondition(SearchFundingRequestDto searchFundingRequestDto){
+		BooleanBuilder builder = new BooleanBuilder();
+
+		if(searchFundingRequestDto.getSearchType().equals(FundingSearchType.BUSINESS_NAME.name()))
+			getFundingByBusinessName(builder , searchFundingRequestDto.getKeyword());
+
+
+		return builder;
+	}
+
+
+
+	private void getFundingByBusinessName(BooleanBuilder builder , String businessName){
+		List<Long> businessIdListByBusinessName = getBusinessIdListByBusinessName(businessName);
+		builder.and(funding.fundingId.in(businessIdListByBusinessName));
+	}
+
+	private List<Long> getBusinessIdListByBusinessName(String businessName){
+		return jpaQueryFactory
+			.select(business.businessId)
+			.from(business)
+			.where(business.businessName.like(businessName))
+			.fetch();
 	}
 
 	private OrderSpecifier<?> fundingSort(String sortType){
