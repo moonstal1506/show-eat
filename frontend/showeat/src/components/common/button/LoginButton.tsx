@@ -21,7 +21,7 @@ const ButtonContainer = styled("div")<Partial<LoginButtonProps>>`
     // Layout Attribute
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1em;
 
     // Box Model Attribute
@@ -45,7 +45,10 @@ const ButtonContainer = styled("div")<Partial<LoginButtonProps>>`
     }
     &.google {
         background-color: white;
-        box-shadow: 0 0 0 1px black inset;
+        box-shadow: 0 0 0 1px ${(props) => props.theme.colors.gray2} inset;
+        &:hover {
+            box-shadow: 0 0 0 1px black inset;
+        }
     }
 
     // Interaction Attribute
@@ -66,12 +69,21 @@ const ButtonContainer = styled("div")<Partial<LoginButtonProps>>`
 `;
 
 const TextWrapper = styled("div")<{ fontSize: number }>`
+    // Box Model Attribute
+    width: 100%;
+
     // Text Attribute
     font-size: ${(props) => props.fontSize}px;
     font-weight: 700;
+    text-align: center;
 `;
 
 const ImageWrapper = styled("div")<{ height: string }>`
+    // Layout Attribute
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     // Box Model Attribute
     width: ${(props) => parseNumber(props.height) * 0.6}px;
     height: ${(props) => parseNumber(props.height) * 0.6}px;
