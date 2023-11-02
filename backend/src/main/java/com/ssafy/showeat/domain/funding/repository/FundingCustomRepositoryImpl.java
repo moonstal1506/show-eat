@@ -1,6 +1,7 @@
 package com.ssafy.showeat.domain.funding.repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -8,14 +9,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessTotalStatResponseDto;
+import com.ssafy.showeat.domain.business.entity.Business;
+import com.ssafy.showeat.domain.business.entity.QBusiness;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
+import com.ssafy.showeat.domain.funding.entity.FundingSortType;
 import com.ssafy.showeat.domain.funding.entity.QFunding;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +34,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 
 	private final JPAQueryFactory jpaQueryFactory;
 	private final QFunding funding = QFunding.funding;
+	private final QBusiness business = QBusiness.business;
 
 	@Override
 	public List<BusinessMonthlyStatResponseDto> findMonthlyStatListById(Long businessId) {
@@ -138,12 +147,44 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 	@Override
 	public Page<FundingListResponseDto> findBySearchFundingRequestDto(SearchFundingRequestDto searchFundingRequestDto , Pageable pageable) {
 
-		// 카테고리가 없다면 모든 카테고리내에서 검색
+		// 검색어
+		// 검색 조건에 따라
+		/**
+		 *
+		 */
+		// 음식 카테고리 조건
+		// 펀딩 지역 조건
+		// 음식 값 min , max 조건
 
-		// 지역이 없다면 모든 지역에서 검색
-
-		//
+		jpaQueryFactory
+			.select()
+			.from()
+			.where()
+			.orderBy(fundingSort(searchFundingRequestDto.getSortType()))
+			.limit(pageable.getPageSize())
+			.offset(pageable.getOffset())
+			.fetch();
 
 		return null;
+	}
+
+	private OrderSpecifier<?> fundingSort(String sortType){
+		if (sortType.equals(FundingSortType.POPULARITY.name()))
+			return new OrderSpecifier(Order.DESC, participationRate());
+		if(sortType.equals(FundingSortType.CLOSING_SOON.name()))
+			return new OrderSpecifier(Order.DESC, funding.fundingEndDate);
+		if(sortType.equals(FundingSortType.LOW_PRICE.name()))
+			return new OrderSpecifier(Order.ASC, funding.fundingDiscountPrice);
+		if(sortType.equals(FundingSortType.HIGH_DISCOUNT_RATE.name()))
+			return new OrderSpecifier(Order.ASC, funding.fundingDiscountRate);
+
+		return null;
+	}
+
+	private NumberExpression participationRate(){
+		return MathExpressions.round(
+			funding.fundingCurCount.castToNum(Double.class)
+				.divide(funding.fundingMinLimit.castToNum(Double.class))
+				.multiply(100.0));
 	}
 }
