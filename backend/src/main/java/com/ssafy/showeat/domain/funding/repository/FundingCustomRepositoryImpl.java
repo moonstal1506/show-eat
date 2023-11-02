@@ -175,6 +175,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 	private BooleanBuilder searchFundingByCondition(SearchFundingRequestDto searchFundingRequestDto){
 		BooleanBuilder mainBuilder = new BooleanBuilder();
 		BooleanBuilder searchTypeBuilder = new BooleanBuilder();
+		BooleanBuilder categoryBuilder = new BooleanBuilder();
 
 		for (String searchType : searchFundingRequestDto.getSearchType()) {
 			if(searchType.equals(FundingSearchType.BUSINESS_NAME.name()))
@@ -187,8 +188,15 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 				getFundingByTag(searchTypeBuilder , searchFundingRequestDto.getKeyword());
 		}
 
+		getFundingByCategory(categoryBuilder , searchFundingRequestDto.getCategory());
+
+
 
 		return mainBuilder;
+	}
+
+	private void getFundingByCategory(BooleanBuilder builder , List<String> categoryList){
+		builder.or(funding.fundingCategory.in(categoryList));
 	}
 
 	private void getFundingByTag(BooleanBuilder builder , String tag){
