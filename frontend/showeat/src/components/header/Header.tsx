@@ -127,7 +127,7 @@ function Header() {
                     src="/assets/images/service-logo.svg"
                     width={120}
                     height={60}
-                    alt="logo-icon"
+                    alt="service-logo"
                     priority
                 />
             </LogoImageWrapper>
