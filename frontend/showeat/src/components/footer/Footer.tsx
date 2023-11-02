@@ -163,8 +163,8 @@ function Footer() {
     return (
         <FooterContainer isPageOverflow={isPageOverflow}>
             <LogoWrapper
-                src="/assets/images/stack_flow_logo.svg"
-                alt="Stack Flow Logo"
+                src="/assets/images/team-logo.svg"
+                alt="team-logo"
                 width={150}
                 height={150}
             />

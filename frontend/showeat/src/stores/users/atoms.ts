@@ -19,7 +19,7 @@ const { persistAtom } = recoilPersist({
 const userDefaultValue: UserType = {
     userId: 0,
     userNickname: "본웅이는아가야지켜조야해",
-    userImgUrl: "/assets/images/service-logo.png",
+    userImgUrl: "/assets/images/service-logo.svg",
     userAddress: "",
     userBusiness: false,
     userMoney: 0,
