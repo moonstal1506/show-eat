@@ -132,8 +132,8 @@ function Header() {
                     priority
                 />
             </LogoImageWrapper>
-            <NavigationContainer isAuth={!hasAccessToken}>
-                {!hasAccessToken ? (
+            <NavigationContainer isAuth={hasAccessToken}>
+                {hasAccessToken ? (
                     <>
                         <IconButton
                             width="30"

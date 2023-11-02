@@ -1,9 +1,10 @@
 /* Import */
 import Image from "next/image";
 import { LoginButton } from "@components/common/button";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import SingleLayout from "@layouts/SingleLayout";
 import styled from "@emotion/styled";
+import authWithKakao from "@apis/auth";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -63,8 +64,33 @@ const ButtonContainer = styled("div")`
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Variables */
+const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
+// ----------------------------------------------------------------------------------------------------
+
 /* Sign In Page */
 function SignIn() {
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
+        console.log(code);
+
+        // If code exists, authenticate the user
+        if (code) {
+            authWithKakao(code);
+        }
+    }, []);
+
+    const handleKakaoLogin = () => {
+        console.log(KAKAO_CLIENT_ID);
+        console.log(KAKAO_REDIRECT_URI);
+        const KAKAO_BASE_URL: string = "https://kauth.kakao.com/oauth/authorize";
+        window.location.href = `${KAKAO_BASE_URL}?client_id=${KAKAO_CLIENT_ID}
+            &redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+    };
+
     return (
         <SignInContainer>
             <HeaderWrapper>쑈잇 시작하기</HeaderWrapper>
@@ -81,7 +107,12 @@ function SignIn() {
                 />
             </ImageWrapper>
             <ButtonContainer>
-                <LoginButton width="25%" colorType="kakao" text="카카오로 시작하기" />
+                <LoginButton
+                    width="25%"
+                    onClick={handleKakaoLogin}
+                    colorType="kakao"
+                    text="카카오로 시작하기"
+                />
                 <LoginButton width="25%" colorType="google" text="구글로 시작하기" />
             </ButtonContainer>
         </SignInContainer>
