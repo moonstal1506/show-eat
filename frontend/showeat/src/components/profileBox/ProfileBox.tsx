@@ -33,6 +33,8 @@ const ProfileImageWrapper = styled("div")`
     // Box Model Attribute
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     overflow: hidden;
 
     // Style Attribute
@@ -47,7 +49,13 @@ const ProfileImage = styled(Image)`
 `;
 
 const NicknameWrapper = styled("div")`
+    // Box Model Attribute
+    width: 150px;
+    overflow: hidden;
+
     // Text Attribute
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-weight: 700;
 `;
 
@@ -60,7 +68,7 @@ function ProfileBox(props: ProfileBoxProps) {
     return (
         <ProfileContainer>
             <ProfileImageWrapper>
-                <ProfileImage src={source} alt="user-profile" fill />
+                <ProfileImage src={source} width={40} height={40} alt="user-profile" />
             </ProfileImageWrapper>
             <NicknameWrapper>{nickname}</NicknameWrapper>
         </ProfileContainer>
