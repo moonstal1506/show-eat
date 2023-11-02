@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.core.Job;
@@ -31,23 +35,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@EnableBatchProcessing
 public class FinishFundingConfig {
 
 	private final FundingRepository fundingRepository;
 	private final CouponRepository couponRepository;
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private final JobListener jobListener;
 
 	@Bean
 	public Job finishFundingJob() {
 		return jobBuilderFactory.get("finishFundingJob")
-			.listener(jobListener)
+			.incrementer(new RunIdIncrementer())
+			.listener(new JobListener())
 			.start(finishFundingStep())
 			.build();
 	}
 
 	@Bean
+	@JobScope
 	public Step finishFundingStep(){
 		return stepBuilderFactory.get("finishFundingStep")
 			.<Funding, Pair<Funding, List<Coupon>>>chunk(10)
@@ -58,26 +64,28 @@ public class FinishFundingConfig {
 	}
 
 	@Bean
+	@StepScope
 	public ItemReader<Funding> fundingReader(){
-		log.info("Reader 실행");
+		// log.info("Reader 실행");
 		List<Funding> fundingList = fundingRepository.findByFundingIsActiveAndFundingEndDate(FundingIsActive.ACTIVE,
 			LocalDate.now());
 		return new IteratorItemReader<>(fundingList);
 	}
 
 	@Bean
+	@StepScope
 	public ItemProcessor<Funding,Pair<Funding, List<Coupon>>> fundingProcessor(){
 		return funding -> {
-			log.info("Processor 실행");
+			// log.info("Processor 실행");
 			List<Coupon> couponList = new ArrayList<>();
 
 			if(funding.getFundingCurCount() < funding.getFundingMinLimit()){
 				// 실패
-				log.info("{} 실패" , funding.getFundingTitle());
+				// log.info("{} 실패" , funding.getFundingTitle());
 				funding.changeFundingStatusByFail();
 			}else{
 				// 성공
-				log.info("{} 성공" , funding.getFundingTitle());
+				// log.info("{} 성공" , funding.getFundingTitle());
 				funding.changeFundingStatusBySuccess();
 
 				for (UserFunding userFunding : funding.getUserFundings()) {
@@ -91,9 +99,10 @@ public class FinishFundingConfig {
 	}
 
 	@Bean
+	@StepScope
 	public ItemWriter<Pair<Funding, List<Coupon>>> fundingWriter(){
 		return items -> {
-			log.info("Writer 실행");
+			//log.info("Writer 실행");
 			List<Funding> fundingList = new ArrayList<>();
 			List<Coupon> coupontList = new ArrayList<>();
 
