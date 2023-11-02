@@ -1,4 +1,5 @@
 /* Import */
+import Footer from "@components/footer";
 import Header from "@components/header";
 import { LayoutProps } from "@customTypes/layoutProps";
 
@@ -13,6 +14,7 @@ function MainLayout(props: LayoutProps) {
             <Header />
             <div>여기는 메인 페이지입니다.</div>
             <article>{children}</article>
+            <Footer />
         </>
     );
 }
