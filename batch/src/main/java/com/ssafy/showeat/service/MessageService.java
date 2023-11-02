@@ -37,6 +37,26 @@ public class MessageService {
 	}
 
 	/**
+	 * 단일 메시지 발송
+	 */
+	public SingleMessageSentResponse sendCouponDeadlineMessage(
+		String fundingTitle,
+		LocalDate couponExpirationDate,
+		String userPhone
+	) {
+		Message message = new Message();
+		// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+		message.setFrom(sender);
+		message.setTo(userPhone);
+		message.setSubject("[쑈잇] " + fundingTitle + "쿠폰 마감 하루 전");
+		String expirationDate = dateFormat.format(couponExpirationDate);
+		message.setText(fundingTitle + " 쿠폰이 곧 소멸됩니다! \n 서둘러 사용하세요! \n 사용기한: " + expirationDate);
+
+		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+		return response;
+	}
+
+	/**
 	 * MMS 발송
 	 * 단일 발송, 여러 건 발송 상관없이 이용 가능
 	 */
