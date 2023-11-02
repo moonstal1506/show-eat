@@ -1,21 +1,7 @@
 /* Import */
-import {
-    userIdState,
-    userNicknameState,
-    userImgUrlState,
-    userAddressState,
-    userBusinessState,
-    userMoneyState,
-} from "./atoms";
+import { userState, userDefaultValue } from "./atoms";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export {
-    userIdState,
-    userNicknameState,
-    userImgUrlState,
-    userAddressState,
-    userBusinessState,
-    userMoneyState,
-};
+export { userState, userDefaultValue };
