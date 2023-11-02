@@ -21,6 +21,7 @@ public class CouponListResponseDto {
 	private Long couponId;
 	private CouponStatus couponStatus;
 	private CouponType couponType;
+	private int couponOriginalPrice;
 	private LocalDate expirationDate;
 	private String businessName;
 	private String businessImgUrl;

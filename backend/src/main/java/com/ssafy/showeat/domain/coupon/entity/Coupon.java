@@ -84,6 +84,7 @@ public class Coupon extends BaseTimeEntity {
 			.couponId(couponId)
 			.couponStatus(couponStatus)
 			.couponType(couponType)
+			.couponOriginalPrice(funding.getFundingDiscountPrice())
 			.expirationDate(couponExpirationDate)    // TODO : 60, 90, 180일 더한 날짜 반환
 			.businessName(funding.getBusiness().getBusinessName())
 			.businessImgUrl(funding.getBusiness().getBusinessImgUrl())
