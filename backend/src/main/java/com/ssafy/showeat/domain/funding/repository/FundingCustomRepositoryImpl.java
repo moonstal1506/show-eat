@@ -163,7 +163,8 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 
 		jpaQueryFactory
 			.select()
-			.from()
+			.from(funding)
+			.innerJoin(business).on(funding.business.businessId.eq(business.businessId))
 			.where(searchFundingByCondition(searchFundingRequestDto))
 			.orderBy(fundingSort(searchFundingRequestDto.getSortType()))
 			.limit(pageable.getPageSize())
@@ -176,6 +177,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 		BooleanBuilder mainBuilder = new BooleanBuilder();
 		BooleanBuilder searchTypeBuilder = new BooleanBuilder();
 		BooleanBuilder categoryBuilder = new BooleanBuilder();
+		BooleanBuilder guAddressBuilder = new BooleanBuilder();
 
 		for (String searchType : searchFundingRequestDto.getSearchType()) {
 			if(searchType.equals(FundingSearchType.BUSINESS_NAME.name()))
@@ -189,10 +191,16 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 		}
 
 		getFundingByCategory(categoryBuilder , searchFundingRequestDto.getCategory());
-
+		getFundingByGuAddress(guAddressBuilder , searchFundingRequestDto.getAddress());
 
 
 		return mainBuilder;
+	}
+
+	private void getFundingByGuAddress(BooleanBuilder builder , List<String> guAddressList){
+		for (String gu : guAddressList)
+			builder.or(business.businessAddress.like(gu));
+
 	}
 
 	private void getFundingByCategory(BooleanBuilder builder , List<String> categoryList){
@@ -217,8 +225,9 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 	}
 
 	private void getFundingByBusinessName(BooleanBuilder builder , String businessName){
-		List<Long> businessIdListByBusinessName = getBusinessIdListByBusinessName(businessName);
-		builder.or(funding.fundingId.in(businessIdListByBusinessName));
+		// List<Long> businessIdListByBusinessName = getBusinessIdListByBusinessName(businessName);
+		// builder.or(funding.fundingId.in(businessIdListByBusinessName));
+		builder.or(business.businessName.like(businessName));
 	}
 
 	private List<Long> getBusinessIdListByBusinessName(String businessName){
