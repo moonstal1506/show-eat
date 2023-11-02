@@ -11,7 +11,6 @@ function SingleLayout(props: LayoutProps) {
     return (
         <>
             <Header />
-            <div>여기는 푸터 없는 페이지입니다.</div>
             <article>{children}</article>
         </>
     );
