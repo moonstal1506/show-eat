@@ -28,6 +28,7 @@ const HeaderContainer = styled("div")`
 
     // Style Attribute
     border-bottom: 1px solid ${(props) => props.theme.colors.gray2};
+    background-color: white;
 
     // Interaction Attribute
     user-select: none;
