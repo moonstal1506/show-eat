@@ -28,6 +28,7 @@ import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
 import com.ssafy.showeat.domain.funding.entity.FundingSearchType;
 import com.ssafy.showeat.domain.funding.entity.FundingSortType;
 import com.ssafy.showeat.domain.funding.entity.QFunding;
+import com.ssafy.showeat.domain.funding.entity.QFundingTag;
 
 import lombok.AllArgsConstructor;
 
@@ -38,6 +39,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 	private final QFunding funding = QFunding.funding;
 	private final QBusiness business = QBusiness.business;
+	private final QFundingTag fundingTag = QFundingTag.fundingTag1;
 
 	@Override
 	public List<BusinessMonthlyStatResponseDto> findMonthlyStatListById(Long businessId) {
@@ -174,15 +176,32 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 		BooleanBuilder mainBuilder = new BooleanBuilder();
 		BooleanBuilder searchTypeBuilder = new BooleanBuilder();
 
-		if(searchFundingRequestDto.getSearchType().equals(FundingSearchType.BUSINESS_NAME.name()))
-			getFundingByBusinessName(searchTypeBuilder , searchFundingRequestDto.getKeyword());
+		for (String searchType : searchFundingRequestDto.getSearchType()) {
+			if(searchType.equals(FundingSearchType.BUSINESS_NAME.name()))
+				getFundingByBusinessName(searchTypeBuilder , searchFundingRequestDto.getKeyword());
 
-		if(searchFundingRequestDto.getSearchType().equals(FundingSearchType.FUNDING_MENU.name()))
-			getFundingByFundingMenu(searchTypeBuilder , searchFundingRequestDto.getKeyword());
+			if(searchType.equals(FundingSearchType.FUNDING_MENU.name()))
+				getFundingByFundingMenu(searchTypeBuilder , searchFundingRequestDto.getKeyword());
 
+			if(searchType.equals(FundingSearchType.FUNDING_TAG.name()))
+				getFundingByTag(searchTypeBuilder , searchFundingRequestDto.getKeyword());
+		}
 
 
 		return mainBuilder;
+	}
+
+	private void getFundingByTag(BooleanBuilder builder , String tag){
+		List<Long> fundingIdListByTag = getFundingIdListByTag(tag);
+		builder.or(funding.fundingId.in(fundingIdListByTag));
+	}
+
+	private List<Long> getFundingIdListByTag(String tag){
+		return jpaQueryFactory
+			.select(fundingTag.funding.fundingId)
+			.from(fundingTag)
+			.where(fundingTag.fundingTag.like(tag))
+			.fetch();
 	}
 
 	private void getFundingByFundingMenu(BooleanBuilder builder , String fundingMenu){
