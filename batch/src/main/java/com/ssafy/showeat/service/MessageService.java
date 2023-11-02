@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,40 +20,46 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
+import com.ssafy.showeat.domain.NotificationType;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MessageService {
 
+	public static final String SHOWEAT = "[쑈잇] ";
+	private final DefaultMessageService messageService;
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+
 	@Value("${sms.sender}")
 	private String sender;
 
-	private final DefaultMessageService messageService;
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM월 dd일");
-
 	public MessageService() {
-		this.messageService = NurigoApp.INSTANCE.initialize("NCSLC4FNKZ8P694C", "Z4QQIAQPPITWUUW1DEZK6GJ0CDGRKLUB",
-			"https://api.coolsms.co.kr");
+		this.messageService = NurigoApp.INSTANCE.initialize(
+			"NCSLC4FNKZ8P694C",
+			"Z4QQIAQPPITWUUW1DEZK6GJ0CDGRKLUB",
+			"https://api.coolsms.co.kr"
+		);
 	}
 
 	/**
 	 * 단일 메시지 발송
 	 */
-	public SingleMessageSentResponse sendCouponDeadlineMessage(
+	public SingleMessageSentResponse sendMessage(
 		String fundingTitle,
-		LocalDate couponExpirationDate,
-		String userPhone
+		LocalDate deadLine,
+		String userPhone,
+		NotificationType notificationType
 	) {
 		Message message = new Message();
 		// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
 		message.setFrom(sender);
 		message.setTo(userPhone);
-		message.setSubject("[쑈잇] " + fundingTitle + "쿠폰 마감 하루 전");
-		String expirationDate = dateFormat.format(couponExpirationDate);
-		message.setText(fundingTitle + " 쿠폰이 곧 소멸됩니다! \n 서둘러 사용하세요! \n 사용기한: " + expirationDate);
+		message.setSubject("[쑈잇] " + fundingTitle + notificationType.getSubject());
+		String deadLineDate = dateFormat.format(deadLine);
+		message.setText(fundingTitle + notificationType.getMessage() + deadLineDate);
 
-		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-		return response;
+		return this.messageService.sendOne(new SingleMessageSendingRequest(message));
 	}
 
 	/**
@@ -62,9 +68,10 @@ public class MessageService {
 	 */
 	public SingleMessageSentResponse sendMmsQR(
 		String fundingTitle,
-		LocalDate couponExpirationDate,
+		LocalDate deadLine,
 		String userPhone,
-		String qrUrl
+		String qrUrl,
+		NotificationType notificationType
 	) throws IOException {
 		// UUID 생성
 		UUID uuid = UUID.randomUUID();
@@ -85,9 +92,9 @@ public class MessageService {
 		message.setFrom(sender);
 		message.setTo(userPhone);
 		message.setType(MessageType.MMS);
-		message.setSubject("[쑈잇] " + fundingTitle + " 쿠폰 도착");
-		String expirationDate = dateFormat.format(couponExpirationDate);
-		message.setText(fundingTitle + " 쿠폰이 도착했습니다! \n 사용기한: " + expirationDate);
+		message.setSubject(SHOWEAT + fundingTitle + notificationType.getSubject());
+		String deadLineDate = dateFormat.format(deadLine);
+		message.setText(fundingTitle + notificationType.getMessage() + deadLineDate);
 		message.setImageId(imageId);
 
 		// 여러 건 메시지 발송일 경우 send many 예제와 동일하게 구성하여 발송할 수 있습니다.
