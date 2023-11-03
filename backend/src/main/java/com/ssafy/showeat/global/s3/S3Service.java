@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class S3Service {
 
-	private String bucketName = "showeatbucket/user";
+	private String bucketName = "showeatbucket";
 	private final AmazonS3Client amazonS3Client;
 
 	public BusinessMenu uploadMenuImageToS3(BusinessMenu businessMenu , List<MultipartFile> menuImages) throws IOException {
@@ -38,17 +38,17 @@ public class S3Service {
 
 			// S3에 업로드
 			amazonS3Client.putObject(
-				new PutObjectRequest(bucketName, originalName, menuImage.getInputStream(), objectMetaData)
+				new PutObjectRequest(bucketName+"/menu", originalName, menuImage.getInputStream(), objectMetaData)
 					.withCannedAcl(CannedAccessControlList.PublicRead)
 			);
 
-			businessMenu.addBusinessMenuImage(BusinessMenuImage.builder().businessMenuImageUrl(amazonS3Client.getUrl(bucketName, originalName).toString()).build());
+			businessMenu.addBusinessMenuImage(BusinessMenuImage.builder().businessMenuImageUrl(amazonS3Client.getUrl(bucketName+"/menu", originalName).toString()).build());
 		}
 
 		return businessMenu;
 	}
 
-	public String uploadImageToS3(MultipartFile image) throws IOException {
+	public String uploadBusinessImageToS3(MultipartFile image) throws IOException {
 		String originalName = image.getOriginalFilename(); // 파일 이름
 		long size = image.getSize(); // 파일 크기
 
@@ -58,10 +58,27 @@ public class S3Service {
 
 		// S3에 업로드
 		amazonS3Client.putObject(
-				new PutObjectRequest(bucketName, originalName, image.getInputStream(), objectMetaData)
+				new PutObjectRequest(bucketName+"/business", originalName, image.getInputStream(), objectMetaData)
 						.withCannedAcl(CannedAccessControlList.PublicRead)
 		);
 
-		return amazonS3Client.getUrl(bucketName, originalName).toString();
+		return amazonS3Client.getUrl(bucketName+"/business", originalName).toString();
+	}
+
+	public String uploadQrImageToS3(MultipartFile image) throws IOException {
+		String originalName = image.getOriginalFilename(); // 파일 이름
+		long size = image.getSize(); // 파일 크기
+
+		ObjectMetadata objectMetaData = new ObjectMetadata();
+		objectMetaData.setContentType(image.getContentType());
+		objectMetaData.setContentLength(size);
+
+		// S3에 업로드
+		amazonS3Client.putObject(
+				new PutObjectRequest(bucketName+"/qr", originalName, image.getInputStream(), objectMetaData)
+						.withCannedAcl(CannedAccessControlList.PublicRead)
+		);
+
+		return amazonS3Client.getUrl(bucketName+"/qr", originalName).toString();
 	}
 }

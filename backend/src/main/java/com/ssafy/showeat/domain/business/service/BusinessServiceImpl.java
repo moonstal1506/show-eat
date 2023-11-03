@@ -56,8 +56,8 @@ public class BusinessServiceImpl implements BusinessService {
 		log.info("BusinessServiceImpl_registerBusinessUser || 업체 등록");
 		//todo 회원 Id 가져오기
 		User loginUser = userRepository.findById(1L).get();
-		String businessRegistrationUrl = s3Service.uploadImageToS3(businessRegistration);
-		String bankBookUrl = s3Service.uploadImageToS3(bankBook);
+		String businessRegistrationUrl = s3Service.uploadBusinessImageToS3(businessRegistration);
+		String bankBookUrl = s3Service.uploadBusinessImageToS3(bankBook);
 		businessRepository.save(businessUserRequestDto.toEntity(businessRegistrationUrl, bankBookUrl, loginUser));
 	}
 
@@ -80,7 +80,7 @@ public class BusinessServiceImpl implements BusinessService {
 		//todo 회원 Id 가져오기
 		User loginUser = userRepository.findById(1L).get();
 		Business business = businessRepository.findByUser(loginUser).get();
-		String businessImgUrl = s3Service.uploadImageToS3(businessImg);
+		String businessImgUrl = s3Service.uploadBusinessImageToS3(businessImg);
 		business.updateImgUrl(businessImgUrl);
 	}
 

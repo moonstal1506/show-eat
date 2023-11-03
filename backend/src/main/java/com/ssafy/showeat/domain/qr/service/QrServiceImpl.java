@@ -54,7 +54,7 @@ public class QrServiceImpl implements QrService {
 			MultipartFile qrCodeMultipartFile = convertFileToMultipartFile(qrCodeFile);
 
 			// Amazon S3에 업로드
-			String s3ImageUrl = s3Service.uploadImageToS3(qrCodeMultipartFile);
+			String s3ImageUrl = s3Service.uploadQrImageToS3(qrCodeMultipartFile);
 			coupon.addCouponQrCodeFileUrl(s3ImageUrl);
 
 		} catch (Exception e) {
