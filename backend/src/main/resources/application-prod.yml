@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create #create update none
+      ddl-auto: update #create update none
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/showeat?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -13,5 +13,5 @@ payments:
   toss:
     test_client_api_key: test_ck_QbgMGZzorzyKv2BGY6djVl5E1em4
     test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
-    success_url: http://localhost:8081/api/payments/request/success
-    fail_url: http://localhost:8081/api/payments/request/fail
+    success_url: http://showeat.kr/api/payments/request/success
+    fail_url: http://showeat.kr/api/payments/request/fail
