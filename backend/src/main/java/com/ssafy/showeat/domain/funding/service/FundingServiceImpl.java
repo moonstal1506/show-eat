@@ -184,9 +184,13 @@ public class FundingServiceImpl implements FundingService {
 	public Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto, User user) {
 		log.info("FundingServiceImpl_searchFunding || 펀딩 검색");
 		validateSearch(searchFundingRequestDto);
+
 		Pageable pageable = PageRequest.of(searchFundingRequestDto.getPage(), 9);
 		Page<Funding> searchFundingList = fundingRepository.findBySearchFundingRequestDto(
 			searchFundingRequestDto, pageable);
+
+		if(searchFundingList.getTotalPages() <= searchFundingRequestDto.getPage())
+			throw new NotExistPageFundingException();
 
 		return searchFundingList.map(funding -> funding.toFundingListResponseDto(bookmarkService.isBookmark(user,funding)));
 	}
@@ -194,10 +198,27 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public List<FundingListResponseDto> getFundingByType(String type, User user) {
 		log.info("FundingServiceImpl_getFundingByType");
+		validateSortType(type);
+
 		return fundingRepository.findByType(type)
 				.stream()
 				.map(funding -> funding.toFundingListResponseDto(bookmarkService.isBookmark(user,funding)))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Page<FundingListResponseDto> getFundingByCategory(String category, String sortType, int page, User user) {
+		log.info("FundingServiceImpl_getFundingByCategory");
+		Pageable pageable = PageRequest.of(page, 9);
+		Page<Funding> fundingList = fundingRepository.findByCategory(category, sortType, pageable);
+
+		validateSortType(sortType);
+		validateCategoryType(category);
+
+		if(fundingList.getTotalPages() <= page)
+			throw new NotExistPageFundingException();
+
+		return fundingList.map(funding -> funding.toFundingListResponseDto(bookmarkService.isBookmark(user,funding)));
 	}
 
 	@Override

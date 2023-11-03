@@ -146,5 +146,20 @@ public class FundingController {
 		return new ListResponseResult<>(fundingService.getFundingByType(type,userService.getUserFromRequest(request)));
 	}
 
+	@ApiOperation(value = "카테고리별 펀딩 조회", notes = "홈화면에 보여줄 종류별 펀딩 조회")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "펀딩 조회 성공"),
+		@ApiResponse(code = 400, message = "펀딩 조회 실패"),
+	})
+	@GetMapping("/home/category")
+	public ResponseResult getFundingInHomeByCategory(
+		@RequestParam String category,
+		@RequestParam String sortType,
+		@RequestParam int page,
+		HttpServletRequest request) {
+		log.info("FundingController_getFundingInHomeByCategory");
+		return new PageResponseResult<>(fundingService.getFundingByCategory(category,sortType,page,userService.getUserFromRequest(request)));
+	}
+
 
 }
