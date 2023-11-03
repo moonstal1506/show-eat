@@ -24,6 +24,9 @@ public class PaymentResponseDto {
 	@ApiModelProperty(value = "주문 상품 이름", example = "카우카우 금액권")
 	private String orderName;
 
+	@ApiModelProperty(value = "구매자 Credential ID", example = "abcd1234")
+	private String credentialId;
+
 	@ApiModelProperty(value = "구매자 이메일", example = "example@gmail.com")
 	private String userEmail;
 

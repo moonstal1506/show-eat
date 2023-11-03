@@ -22,7 +22,9 @@ import com.ssafy.showeat.domain.payment.dto.response.PaymentSuccessResponseDto;
 import com.ssafy.showeat.domain.payment.dto.response.PaymentResponseDto;
 import com.ssafy.showeat.domain.payment.entity.Payment;
 import com.ssafy.showeat.domain.payment.repository.PaymentRepository;
+import com.ssafy.showeat.domain.user.entity.Credential;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
+import com.ssafy.showeat.domain.user.repository.UserRepository;
 import com.ssafy.showeat.global.exception.NotExistPaymentException;
 import com.ssafy.showeat.global.exception.NotExistUserException;
 import com.ssafy.showeat.global.exception.PaymentInvalidOrderAmountException;
@@ -38,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PaymentServiceImpl implements PaymentService {
 
 	private final PaymentRepository paymentRepository;
+	private final UserRepository userRepository;
 	private final CredentialRepository credentialRepository;
 
 	@Value("${payments.toss.test_client_api_key}")
@@ -58,7 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
 		log.info("PaymentServiceImpl_requestPayment || 결제 요청 정보를 DB에 저장, 필요 정보 반환");
 		Long amount = paymentRequestDto.getAmount();
 		String payType = paymentRequestDto.getPayType();
-		String userEmail = paymentRequestDto.getUserEmail();
+		String credentialId = paymentRequestDto.getCredentialId();
 
 		if (amount == null) {
 			throw new PaymentInvalidPriceException();
@@ -70,9 +73,10 @@ public class PaymentServiceImpl implements PaymentService {
 
 		Payment payment = paymentRequestDto.toEntity();
 		paymentRepository.save(payment);
-		credentialRepository.findByEmail(userEmail)
+		Credential credential = credentialRepository.findByCredentialId(credentialId).orElseThrow(NotExistUserException::new);
+		userRepository.findByCredential(credential)
 			.ifPresentOrElse(
-				C -> C.getUser().addPayment(payment), () -> {
+				U -> U.addPayment(payment), () -> {
 					throw new NotExistUserException();
 				}
 			);

@@ -45,6 +45,9 @@ public class Payment extends BaseTimeEntity {
 	private String orderName;
 
 	@Column(nullable = false)
+	private String credentialId;
+
+	@Column(nullable = false)
 	private String userEmail;
 
 	@Column(nullable = false)
@@ -54,6 +57,7 @@ public class Payment extends BaseTimeEntity {
 	@Column
 	private String paymentKey;
 
+	@Setter
 	@Column
 	private String cancelReason;
 
@@ -67,6 +71,7 @@ public class Payment extends BaseTimeEntity {
 			.amount(amount)
 			.orderId(orderId)
 			.orderName(orderName)
+			.credentialId(credentialId)
 			.userEmail(user.getCredential().getEmail())
 			.userNickname(user.getUserNickname())
 			.createdAt(this.getCreatedDate().toString())
