@@ -49,5 +49,14 @@ public class Notification extends BaseTimeEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	
+
+	public NotificationListResponseDto toNotificationListResponseDto() {
+		return NotificationListResponseDto.builder()
+			.notificationId(notificationId)
+			.fundingId(funding.getFundingId())
+			.notificationMessage(funding.getFundingTitle() + notificationType.getSubject())
+			.notificationType(notificationType)
+			.build();
+	}
+
 }
