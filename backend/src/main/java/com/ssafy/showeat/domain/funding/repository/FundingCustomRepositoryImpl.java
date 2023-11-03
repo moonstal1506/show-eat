@@ -217,6 +217,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 
 		return new PageImpl<>(content, pageable, count);
 	}
+
 	private BooleanBuilder searchFundingByCondition(SearchFundingRequestDto searchFundingRequestDto){
 		BooleanBuilder mainBuilder = new BooleanBuilder();
 		BooleanBuilder searchTypeBuilder = new BooleanBuilder();

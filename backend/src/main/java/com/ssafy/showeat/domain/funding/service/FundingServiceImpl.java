@@ -197,7 +197,7 @@ public class FundingServiceImpl implements FundingService {
 
 	@Override
 	public List<FundingListResponseDto> getFundingByType(String type, User user) {
-		log.info("FundingServiceImpl_getFundingByType");
+		log.info("FundingServiceImpl_getFundingByType || 홈 화면 종류별 펀딩 조회");
 		validateSortType(type);
 
 		return fundingRepository.findByType(type)
@@ -208,7 +208,7 @@ public class FundingServiceImpl implements FundingService {
 
 	@Override
 	public Page<FundingListResponseDto> getFundingByCategory(String category, String sortType, int page, User user) {
-		log.info("FundingServiceImpl_getFundingByCategory");
+		log.info("FundingServiceImpl_getFundingByCategory || 홈 화면 음식 카테고리별 펀딩 조회");
 		Pageable pageable = PageRequest.of(page, 9);
 		Page<Funding> fundingList = fundingRepository.findByCategory(category, sortType, pageable);
 
