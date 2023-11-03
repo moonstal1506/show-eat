@@ -107,31 +107,35 @@ const TeamInfoDescriptionWrapper = styled("span")`
 `;
 
 const LinkInfoContainer = styled("div")`
+    // Box Model Attribute
     width: 70%;
-
-    font-size: 14px;
-    text-align: right;
-
     white-space: nowrap;
     overflow: hidden;
+
+    // Text Attribute
+    font-size: 14px;
+    text-align: right;
     text-overflow: ellipsis;
 `;
 
 const LinkInfoWrapper = styled("a")`
+    // Text Attribute
     font-size: 14px;
     font-weight: 700;
     text-decoration: underline;
-
-    cursor: pointer;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
+    &:link {
+        color: inherit;
+    }
     &:visited {
         color: inherit;
     }
+
+    // Interaction Attribute
+    cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -164,9 +168,10 @@ function Footer() {
         <FooterContainer isPageOverflow={isPageOverflow}>
             <LogoWrapper
                 src="/assets/images/team-logo.svg"
-                alt="team-logo"
                 width={150}
                 height={150}
+                alt="team-logo"
+                priority
             />
             <ShowEatInfoContainer>
                 <ShowEatTitleContainer>
