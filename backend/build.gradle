@@ -9,7 +9,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2' // Spring REST Docs
+//    id 'org.asciidoctor.jvm.convert' version '3.3.2' // Spring REST Docs
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // QueryDSL
 }
 
@@ -24,18 +24,13 @@ configurations {
 }
 
 // Spring REST Docs
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-// Spring REST Docs
-bootJar {
-    dependsOn asciidoctor
-    copy {
-        from "${asciidoctor.outputDir}"
-        into 'BOOT-INF/classes/static/docs'
-    }
-}
+//bootJar {
+//    dependsOn asciidoctor
+//    copy {
+//        from "${asciidoctor.outputDir}"
+//        into 'BOOT-INF/classes/static/docs'
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -115,26 +110,28 @@ compileQuerydsl {
 }
 
 // Spring REST Docs
-test {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
-}
-
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
-asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs')
-}
-
-task copyDocument(type: Copy) {
-    dependsOn asciidoctor
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static/docs")
-}
-
-build {
-    dependsOn copyDocument
-}
+//def snippetsDir = "$projectDir/build/generated-snippets"
+//
+//test {
+//    outputs.dir snippetsDir
+//    useJUnitPlatform()
+//}
+//
+//asciidoctor {
+//    inputs.dir snippetsDir
+//    dependsOn test
+//}
+//
+//asciidoctor.doFirst {
+//    delete file('src/main/resources/static/docs')
+//}
+//
+//task copyDocument(type: Copy) {
+//    dependsOn asciidoctor
+//    from file("build/docs/asciidoc")
+//    into file("src/main/resources/static/docs")
+//}
+//
+//build {
+//    dependsOn copyDocument
+//}
