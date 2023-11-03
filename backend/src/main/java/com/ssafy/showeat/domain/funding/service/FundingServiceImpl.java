@@ -20,6 +20,7 @@ import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
 import com.ssafy.showeat.domain.business.repository.BusinessMenuRepository;
 import com.ssafy.showeat.domain.business.repository.BusinessRepository;
+import com.ssafy.showeat.domain.coupon.service.CouponService;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.MenuRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
@@ -61,16 +62,15 @@ public class FundingServiceImpl implements FundingService {
 	private final BusinessRepository businessRepository;
 	private final BusinessMenuRepository businessMenuRepository;
 	private final BookmarkService bookmarkService;
+	private final CouponService couponService;
 
 	@Override
 	@Transactional
 	public void createFunding(CreateFundingRequestDto createFundingRequestDto , User loginUser) {
 		log.info("FundingServiceImpl_createFunding || 업주가 펀딩을 생성");
 
-		// TODO : 업주가 아닌 사람이 펀딩을 생성하려고 하면 예외처리를 해줘야함 -> 이 부분은 security 단위에서 처리
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 
-		// TODO : 각 메뉴ID에 대해서 정보 가지고 오기
 		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
 			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
 			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
@@ -93,7 +93,7 @@ public class FundingServiceImpl implements FundingService {
 			return;
 
 		funding.changeFundingStatusByMaxApply();
-		// TODO : 쿠폰 발급
+		couponService.createCoupon(funding);
 		// TODO : HISTORY 생성
 	}
 
