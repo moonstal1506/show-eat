@@ -19,6 +19,7 @@ public class UserResDto {
     private boolean userBusiness;
     private boolean visited;
     private int userMoney;
+    private String userPhone;
     private CredentialRole credentialRole;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
