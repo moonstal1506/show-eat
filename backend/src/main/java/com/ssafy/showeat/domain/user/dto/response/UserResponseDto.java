@@ -15,5 +15,6 @@ public class UserResponseDto {
     private String userAddress;
     private boolean userBusiness;
     private int userMoney;
+    private String userPhone;
     private boolean visited;
 }
