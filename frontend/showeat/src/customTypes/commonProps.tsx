@@ -45,7 +45,7 @@ export interface TextInputProps {
     iconUrl?: string;
     error?: boolean;
     labelFontSize?: string;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
+    onClick?: () => void;
 }
 
 export interface RadioButtonProps {
