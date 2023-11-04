@@ -8,15 +8,15 @@ import { keyframes } from "@emotion/react";
 /* Type */
 interface CouponProps {
     couponData: {
-        fundingImgUrl: string;
-        businessImgUrl: string;
         couponId: number;
         couponStatus: "ACTIVE" | "USED" | "EXPIRED";
-        businessName: string;
-        remainingDays: number;
         couponType: "SINGLE" | "GIFTCARD";
-        fundingMenu?: string;
         couponOriginalPrice: number;
+        businessName: string;
+        businessImgUrl: string;
+        fundingMenu?: string;
+        fundingImgUrl: string;
+        remainingDays: number;
     };
     onClick: (couponId: number) => void;
 }
