@@ -15,7 +15,9 @@ function TextInput({
     setTextValue,
     defaultValue,
     labelName,
-    svgSRC,
+    iconUrl,
+    error = false,
+    labelFontSize = "20px",
     onClick,
 }: TextInputProps) {
     const theme = useTheme();
@@ -43,9 +45,12 @@ function TextInput({
         user-select: none;
     `;
 
-    const TextIconContainer = styled("div")`
+    const TextIconContainer = styled("div")<{ error: boolean }>`
         width: 100%;
-        border: 1px solid black;
+        box-shadow: ${(props) =>
+            props.error
+                ? `0px 0px 4px 2px ${props.theme.colors.normalRed}`
+                : `0px 0px 4px 2px ${props.theme.colors.gray5}`};
         border-radius: 10px;
         padding: 10px 20px;
         margin-top: 5px;
@@ -53,14 +58,16 @@ function TextInput({
         gap: 10px;
         z-index: 900;
         &:focus-within {
-            box-shadow: 0px 0px 5px 2px ${theme.colors.gray3};
+            box-shadow: 0px 0px 4px 2px ${theme.colors.primary3};
         }
     `;
 
-    const LabelWrapper = styled("label")`
+    const LabelWrapper = styled("label")<{ labelFontSize: string }>`
         width: 100%;
         font-weight: 700;
-        font-size: 20px;
+        font-size: ${(props) => props.labelFontSize};
+
+        margin-left: 0.5em;
     `;
 
     const handleTextInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,9 +83,13 @@ function TextInput({
 
     return (
         <TextInputContainer width={width} height={height}>
-            {labelName && <LabelWrapper htmlFor={id}>{labelName}</LabelWrapper>}
+            {labelName && (
+                <LabelWrapper htmlFor={id} labelFontSize={labelFontSize}>
+                    {labelName}
+                </LabelWrapper>
+            )}
 
-            <TextIconContainer onClick={handleTextIconContainer}>
+            <TextIconContainer onClick={handleTextIconContainer} error={error}>
                 <TextInputWrapper
                     ref={textInputRef}
                     type="text"
@@ -88,9 +99,9 @@ function TextInput({
                     defaultValue={defaultValue}
                     onChange={(e) => handleTextInputValue(e)}
                 />
-                {svgSRC && (
+                {iconUrl && (
                     <IconWrapper
-                        src={svgSRC}
+                        src={iconUrl}
                         alt="SVG Icon"
                         width={20}
                         height={20}

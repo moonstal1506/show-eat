@@ -42,7 +42,9 @@ export interface TextInputProps {
     placeholder?: string;
     defaultValue?: string;
     labelName?: string;
-    svgSRC?: string;
+    iconUrl?: string;
+    error?: boolean;
+    labelFontSize?: string;
     onClick?: (event: MouseEvent<HTMLElement>) => void;
 }
 
