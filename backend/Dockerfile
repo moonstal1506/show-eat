@@ -17,4 +17,4 @@ WORKDIR /app
 # 결국 /app 밑에 airlingo-0.0.1-SNAPSHOT.jar파일을 복사!
 COPY --from=builder /app/build/libs/*.jar ./
 # 환경에따라 빌드 해주는 명령어
-CMD ["java","-jar","-Dspring.profiles.active=prod","./showeat-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","-Dspring.profiles.active=prod","./ShowEat-0.0.1-SNAPSHOT.jar"]
