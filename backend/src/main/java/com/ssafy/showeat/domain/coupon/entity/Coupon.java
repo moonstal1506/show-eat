@@ -54,9 +54,6 @@ public class Coupon extends BaseTimeEntity {
 	@Column
 	private String couponQrCodeImgUrl;
 
-	@Column
-	private boolean couponCreatedQr;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
