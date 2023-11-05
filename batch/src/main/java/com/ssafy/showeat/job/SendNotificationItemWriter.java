@@ -30,12 +30,7 @@ public class SendNotificationItemWriter implements ItemWriter<Notification> {
 
 		for (Notification notification : notifications) {
 			log.info("SendNotificationItemWriter write 실행 {}", notification);
-			SingleMessageSentResponse singleMessageSentResponse = messageService.sendMessage(
-				notification.getFunding().getFundingTitle(),
-				notification.getFunding().getFundingEndDate(),
-				notification.getUser().getUserPhone(),
-				notification.getNotificationType()
-			);
+			SingleMessageSentResponse singleMessageSentResponse = messageService.sendMessage(notification);
 			log.info("singleMessageSentResponse = " + singleMessageSentResponse);
 			notification.updateSent();
 			notificationRepository.save(notification);
