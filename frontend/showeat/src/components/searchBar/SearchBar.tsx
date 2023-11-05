@@ -38,7 +38,7 @@ const IconMenuContainer = styled("div")`
     justify-content: space-around;
     align-items: center;
 
-    width: 720px;
+    width: 960px;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ function SearchBar() {
         <SearchBarContainer>
             <SearchInputWrapper>
                 <TextInput
-                    width="720px"
+                    width="960px"
                     id="searchbar-input"
                     placeholder="새로 입점한 우리 동네의 셀러와 관심 있는 메뉴를 검색해보세요!"
                     setTextValue={setSearchText}
