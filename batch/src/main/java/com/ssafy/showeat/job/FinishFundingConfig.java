@@ -3,6 +3,9 @@ package com.ssafy.showeat.job;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,9 +18,14 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.batch.item.support.IteratorItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.data.util.Pair;
 
 import com.ssafy.showeat.domain.Coupon;
@@ -31,6 +39,7 @@ import com.ssafy.showeat.listner.JobListener;
 import com.ssafy.showeat.repository.CouponRepository;
 import com.ssafy.showeat.repository.FundingRepository;
 import com.ssafy.showeat.repository.NotificationRepository;
+import com.ssafy.showeat.service.QrService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,18 +50,28 @@ import lombok.extern.slf4j.Slf4j;
 @EnableBatchProcessing
 public class FinishFundingConfig {
 
+	private final int CHUNK_SIZE = 10;
+
 	private final FundingRepository fundingRepository;
 	private final CouponRepository couponRepository;
 	private final NotificationRepository notificationRepository;
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final EntityManagerFactory entityManagerFactory;
+	private final QrService qrService;
 
+	/**
+	 * 펀딩 마감
+	 * 성공 -> 쿠폰 생성 -> 큐알 생성 -> 알림 생성 -> 알림 보내기
+	 * 실패 -> 알림 생성 -> 알림 보내기
+	 */
 	@Bean
 	public Job finishFundingJob() {
 		return jobBuilderFactory.get("finishFundingJob")
 			.incrementer(new RunIdIncrementer())
 			.listener(new JobListener())
 			.start(finishFundingStep())
+			.next(createCouponQrStep())
 			.build();
 	}
 
@@ -60,7 +79,7 @@ public class FinishFundingConfig {
 	@JobScope
 	public Step finishFundingStep() {
 		return stepBuilderFactory.get("finishFundingStep")
-			.<Funding, Pair<Funding, List<Coupon>>>chunk(10)
+			.<Funding, Pair<Funding, List<Coupon>>>chunk(CHUNK_SIZE)
 			.reader(fundingReader())
 			.processor(fundingProcessor())
 			.writer(fundingWriter())
@@ -141,6 +160,43 @@ public class FinishFundingConfig {
 			if (!couponList.isEmpty())
 				couponRepository.saveAll(couponList);
 		};
+	}
+
+	@Bean
+	public Step createCouponQrStep() {
+		return this.stepBuilderFactory.get("createCouponQrStep")
+			.<Coupon, Coupon>chunk(CHUNK_SIZE)
+			.reader(createCouponQrItemReader())
+			.processor(createCouponQrItemProcessor())
+			.writer(createCouponQrItemWriter())
+			.taskExecutor(new SimpleAsyncTaskExecutor()) // 가장 간단한 멀티쓰레드 TaskExecutor를 선언하였습니다.
+			.build();
+	}
+
+	@Bean
+	public JpaPagingItemReader<Coupon> createCouponQrItemReader() {
+		return new JpaPagingItemReaderBuilder<Coupon>()
+			.name("addExpireCouponNotificationItemReader")
+			.entityManagerFactory(entityManagerFactory)
+			// pageSize: 한 번에 조회할 row 수
+			.pageSize(CHUNK_SIZE)
+			// couponCreatedQr가 false인 쿠폰이 대상이 됩니다.
+			.queryString("select c from Coupon c where c.couponCreatedQr = :couponCreatedQr ")
+			.parameterValues(Map.of("couponCreatedQr", false))
+			.build();
+	}
+
+	@Bean
+	public ItemProcessor<Coupon, Coupon> createCouponQrItemProcessor() {
+		log.info("createCouponQrItemProcessor 실행");
+		return coupon -> qrService.qrToCoupon(coupon);
+	}
+
+	@Bean
+	public JpaItemWriter<Coupon> createCouponQrItemWriter() {
+		return new JpaItemWriterBuilder<Coupon>()
+			.entityManagerFactory(entityManagerFactory)
+			.build();
 	}
 
 }

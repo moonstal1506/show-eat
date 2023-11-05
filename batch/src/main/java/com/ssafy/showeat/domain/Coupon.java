@@ -46,6 +46,9 @@ public class Coupon extends BaseTimeEntity {
 	@Column
 	private String couponQrCodeImgUrl;
 
+	@Column
+	private boolean couponCreatedQr;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -69,5 +72,10 @@ public class Coupon extends BaseTimeEntity {
 
 	public void updateStatus(CouponStatus couponStatus) {
 		this.couponStatus = couponStatus;
+	}
+
+	public void addCouponQrCodeFileUrl(String s3QrCodeImageUrl) {
+		this.couponCreatedQr = true;
+		this.couponQrCodeImgUrl = s3QrCodeImageUrl;
 	}
 }
