@@ -1,5 +1,5 @@
 /* Import */
-import authWithKakao from "@apis/auth";
+import { getLoginWithKakao } from "@apis/auth";
 import LoadingSpinner from "@components/loadingSpinner";
 import { setCookie } from "cookies-next";
 import styled from "@emotion/styled";
@@ -36,7 +36,7 @@ function SignInLoading() {
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
         if (code) {
-            authWithKakao(code).then((result) => {
+            getLoginWithKakao(code).then((result) => {
                 const { accessToken } = result.data.tokenDto;
                 const {
                     userId,
@@ -64,6 +64,8 @@ function SignInLoading() {
                     router.replace("/sign-up");
                 }
             });
+        } else {
+            router.replace("/sign-in");
         }
     }, []);
 
