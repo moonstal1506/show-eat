@@ -89,13 +89,7 @@ function MenuButton({ width, onClick, imageUrl, menuName }: MenuButtonProps) {
     return (
         <MenuButtonContainer width={width} onClick={onClick}>
             <ImageWrapper width={width} height={width} draggable="false">
-                <Image
-                    src={imageUrl}
-                    alt="Menu Button Image"
-                    fill
-                    draggable="false"
-                    objectFit="cover"
-                />
+                <Image src={imageUrl} alt="Menu Button Image" fill draggable="false" />
             </ImageWrapper>
             <TextWrapper>{menuName}</TextWrapper>
         </MenuButtonContainer>
