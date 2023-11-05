@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import MainLayout from "@layouts/MainLayout";
 import { ReactNode } from "react";
 import SearchBar from "@/components/searchBar/SearchBar";
-import Carousel from "../components/carousel/Carousel";
+import CardCarousel from "../components/carousel/CardCarousel";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ function Home() {
                     <RecommendContentsContainer>
                         {isLogin && <span>억</span>}
                         <CarouselWrapper>
-                            <Carousel />
+                            <CardCarousel width="1000px" height="450px" />
                         </CarouselWrapper>
                     </RecommendContentsContainer>
                 </MainContentsContainer>
