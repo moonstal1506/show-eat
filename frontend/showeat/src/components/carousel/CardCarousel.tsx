@@ -1,3 +1,4 @@
+/* Import */
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Slider from "react-slick";
@@ -5,6 +6,9 @@ import { keyframes } from "@emotion/react";
 import { useRef } from "react";
 // import Card from "../card/Card";
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
 interface CarouselProps {
     width: number;
     height: number;
@@ -14,6 +18,9 @@ interface CarouselProps {
 
 const carouselContents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const hoverAnimation = keyframes`
 from {
   transform: scale(1)
@@ -37,11 +44,7 @@ const CarouselContainer = styled("div")<Partial<CarouselProps>>`
     height: ${(props) => `${props.height}px`};
 
     padding: 1em 0;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    margin: 4em 0;
 `;
 
 const CarouselHeaderContainer = styled("div")`
@@ -50,12 +53,13 @@ const CarouselHeaderContainer = styled("div")`
 `;
 
 const CarouselTitleWrapper = styled("span")`
-    font-weight: 700;
     font-size: 26px;
+    font-weight: 700;
 `;
 
 const CarouselDescriptionWrapper = styled("span")`
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 500;
     color: ${(props) => props.theme.colors.gray4};
 
     padding-top: 0.2em;
@@ -67,6 +71,11 @@ const CarouselCardsContainer = styled("div")<Partial<CarouselProps>>`
     height: ${(props) => `${props.height}px`};
 
     position: relative;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 `;
 
 const CarouselCardWrapper = styled("div")<Partial<CarouselProps>>`
@@ -96,9 +105,12 @@ const LeftArrowWrapper = styled("div")<{ height: number }>`
     cursor: pointer;
 
     transform: translateX(-100%);
+    opacity: 0.5;
+    z-index: 100;
 
     &:hover {
         background: rgba(0, 0, 0, 0.2); // 반투명한 회색 창
+        opacity: 1;
 
         & img {
             animation: ${hoverAnimation} 0.2s linear forwards;
@@ -107,6 +119,8 @@ const LeftArrowWrapper = styled("div")<{ height: number }>`
 
     &:active {
         background: rgba(0, 0, 0, 0.4); // 반투명한 회색 창
+        opacity: 1;
+
         & img {
             animation: ${clickAnimation} 0.1s linear forwards;
         }
@@ -128,9 +142,12 @@ const RightArrowWrapper = styled("div")<{ height: number }>`
     cursor: pointer;
 
     transform: translateX(1920%) translateY(-100%);
+    opacity: 0.5;
+    z-index: 100;
 
     &:hover {
         background: rgba(0, 0, 0, 0.2); // 반투명한 회색 창
+        opacity: 1;
 
         & img {
             animation: ${hoverAnimation} 0.2s linear forwards;
@@ -139,6 +156,8 @@ const RightArrowWrapper = styled("div")<{ height: number }>`
 
     &:active {
         background: rgba(0, 0, 0, 0.4); // 반투명한 회색 창
+        opacity: 1;
+
         & img {
             animation: ${clickAnimation} 0.1s linear forwards;
         }
@@ -149,14 +168,17 @@ const ArrowImageWrapper = styled(Image)`
     //
 `;
 
-function Carousel({ width, height, title, description }: CarouselProps) {
+// ----------------------------------------------------------------------------------------------------
+
+/* Card Carousel Component */
+function CardCarousel({ width, height, title, description }: CarouselProps) {
     const settings = {
         infinite: true,
         speed: 300,
         slidesToShow: 3,
         slidesToScroll: 3,
         autoplay: true,
-        autoplaySpeed: 3000,
+        autoplaySpeed: 5000,
         arrows: false,
     };
 
@@ -214,4 +236,7 @@ function Carousel({ width, height, title, description }: CarouselProps) {
     );
 }
 
-export default Carousel;
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
+export default CardCarousel;
