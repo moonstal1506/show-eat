@@ -2,6 +2,7 @@
 import { deleteCookie, getCookie } from "cookies-next";
 import { IconButton, TextButton } from "@components/common/button";
 import Image from "next/image";
+import { postLogout } from "@apis/auth";
 import ProfileBox from "@components/profileBox";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -84,16 +85,15 @@ function Header() {
     const [user, setUser] = useUserState();
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
 
-    useEffect(() => {
-        setHasAccessToken(Boolean(getCookie("access-token")));
-    }, []);
-
     // Function for Handling Logout
     const handleLogout = () => {
-        deleteCookie("access-token");
-        setHasAccessToken(false);
-        setUser(userDefaultValue);
-        router.replace("/");
+        const accessToken = getCookie("access-token");
+        postLogout(user.userId, accessToken).then(() => {
+            deleteCookie("access-token");
+            setHasAccessToken(false);
+            setUser(userDefaultValue);
+            router.replace("/");
+        });
     };
 
     // Function for Rendering Buttons
@@ -127,6 +127,10 @@ function Header() {
             />
         );
     };
+
+    useEffect(() => {
+        setHasAccessToken(Boolean(getCookie("access-token")));
+    }, []);
 
     return (
         <HeaderContainer>
