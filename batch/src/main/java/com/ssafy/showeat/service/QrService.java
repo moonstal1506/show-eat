@@ -44,7 +44,7 @@ public class QrService {
 		File qrCodeFile = new File(pathname); // 임시로 파일을 생성합니다.
 
 		try {
-			MatrixToImageWriter.writeToPath(encode, "PNG", qrCodeFile.toPath());
+			MatrixToImageWriter.writeToPath(encode, "jpg", qrCodeFile.toPath());
 
 			MultipartFile qrCodeMultipartFile = convertFileToMultipartFile(qrCodeFile);
 
@@ -62,7 +62,7 @@ public class QrService {
 	public MultipartFile convertFileToMultipartFile(File file) {
 		try {
 			FileInputStream input = new FileInputStream(file);
-			return new MockMultipartFile("file", file.getName(), "image/png", input);
+			return new MockMultipartFile("file", file.getName(), "image/jpg", input);
 		} catch (Exception e) {
 			log.error("파일을 MultipartFile로 변환 중 오류 발생: {}", e.getMessage());
 			return null;

@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.ssafy.showeat.config.TestBatchConfig;
+import com.ssafy.showeat.service.MessageService;
 import com.ssafy.showeat.service.QrService;
 import com.ssafy.showeat.service.s3.S3Service;
 import com.ssafy.showeat.service.s3.config.AmazonS3Config;
@@ -24,7 +25,9 @@ import com.ssafy.showeat.service.s3.config.AmazonS3Config;
 	TestBatchConfig.class,
 	QrService.class,
 	S3Service.class,
-	AmazonS3Config.class
+	AmazonS3Config.class,
+	MessageService.class,
+	SendMmsNotificationItemWriter.class
 })
 class FinishFundingConfigTest {
 
@@ -39,7 +42,16 @@ class FinishFundingConfigTest {
 
 		// then
 		assertEquals(ExitStatus.COMPLETED, jobExecution.getExitStatus());
+	}
 
+	@Test
+	public void test_sendCreateCouponNotificationStep() throws Exception {
+
+		// when
+		JobExecution jobExecution = jobLauncherTestUtils.launchStep("sendCreateCouponNotificationStep");
+
+		// then
+		assertEquals(ExitStatus.COMPLETED, jobExecution.getExitStatus());
 	}
 
 
