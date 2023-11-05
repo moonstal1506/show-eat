@@ -1,5 +1,5 @@
 /* Import */
-import { Dispatch, MouseEvent, ReactNode, SetStateAction } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -32,18 +32,6 @@ export interface TextBoxProps {
     text: string;
     colorType?: "primary" | "secondary" | "gray";
     fontSize?: number;
-}
-
-export interface TextInputProps {
-    width: string;
-    id: string;
-    setTextValue: Dispatch<SetStateAction<string>>;
-    height?: string;
-    placeholder?: string;
-    defaultValue?: string;
-    labelName?: string;
-    svgSRC?: string;
-    onClick?: (event: MouseEvent<HTMLElement>) => void;
 }
 
 export interface RadioButtonProps {
