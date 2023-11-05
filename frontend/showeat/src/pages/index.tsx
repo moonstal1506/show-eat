@@ -21,7 +21,7 @@ const MainContentsContainer = styled("div")`
     flex-direction: column;
     justify-content: center;
 
-    min-width: 1020px;
+    min-width: 1080px;
 
     padding-top: 20px;
 `;
@@ -55,7 +55,12 @@ function Home() {
                     <RecommendContentsContainer>
                         {isLogin && <span>억</span>}
                         <CarouselWrapper>
-                            <CardCarousel width="1000px" height="450px" />
+                            <CardCarousel
+                                width={960}
+                                height={450}
+                                title="무수히 많은 펀딩의 요청이! 실시간 HOT 펀딩"
+                                description="셀러가 설정한 최소 참여 인원을 초과 달성하고 있는 실시간 인기 펀딩 목록이에요."
+                            />
                         </CarouselWrapper>
                     </RecommendContentsContainer>
                 </MainContentsContainer>

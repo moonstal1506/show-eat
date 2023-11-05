@@ -17,7 +17,7 @@ const FooterContainer = styled("div")<{ isPageOverflow: boolean }>`
     width: 100%;
     height: 150px;
 
-    margin-top: 1em;
+    margin-top: 5em;
 
     border-top: 1px solid ${(props) => props.theme.colors.gray2};
     background-color: white;
