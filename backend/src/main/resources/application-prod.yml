@@ -12,9 +12,14 @@ spring:
     redis:
       host: k9a203.p.ssafy.io
       port: 6379
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
+  #security
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: http://43.200.81.111:3000/sign-in/loading
+
 # TossPayments
 payments:
   toss:
