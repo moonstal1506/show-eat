@@ -6,6 +6,17 @@ import { MenuButton } from "../common/button";
 
 // ----------------------------------------------------------------------------------------------------
 
+// interface SearchBarProps {
+//     keyword: string;
+//     searchType: string[];
+//     page: number;
+//     category?: string[];
+//     address?: string[];
+//     maxPrice?: number;
+//     minPrice?: number;
+//     sortType?: string;
+// }
+
 /* Style */
 const menuCategory = [
     { eng: "KOREAN", kr: "한식", imageUrl: "/assets/images/cook-cow.png" },
