@@ -2,7 +2,7 @@
 import { deleteCookie, getCookie } from "cookies-next";
 import { IconButton, TextButton } from "@components/common/button";
 import Image from "next/image";
-import { postLogout } from "@apis/auth";
+import { patchLogout } from "@apis/auth";
 import ProfileBox from "@components/profileBox";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -88,8 +88,9 @@ function Header() {
     // Function for Handling Logout
     const handleLogout = () => {
         const accessToken = getCookie("access-token");
-        postLogout(user.userId, accessToken).then(() => {
+        patchLogout(user.userId, accessToken).then(() => {
             deleteCookie("access-token");
+            deleteCookie("refresh-token");
             setHasAccessToken(false);
             setUser(userDefaultValue);
             router.replace("/");
@@ -129,8 +130,8 @@ function Header() {
     };
 
     useEffect(() => {
-        setHasAccessToken(Boolean(getCookie("access-token")));
-    }, []);
+        setHasAccessToken(Boolean(getCookie("access-token")) && user.userId !== 0);
+    }, [user]);
 
     return (
         <HeaderContainer>

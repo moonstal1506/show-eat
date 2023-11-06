@@ -19,10 +19,11 @@ const { persistAtom } = recoilPersist({
 const userDefaultValue: UserType = {
     userId: 0,
     userNickname: "",
-    userImgUrl: "",
+    userImgUrl: "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
     userAddress: "",
     userBusiness: false,
     userMoney: 0,
+    userPhone: "",
 };
 
 const userState = atom<UserType>({
@@ -34,4 +35,4 @@ const userState = atom<UserType>({
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { userState, userDefaultValue };
+export { userDefaultValue, userState };

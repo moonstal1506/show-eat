@@ -37,7 +37,7 @@ function SignInLoading() {
         const code = params.get("code");
         if (code) {
             getLoginWithKakao(code).then((result) => {
-                const { accessToken } = result.data.tokenDto;
+                const { accessToken, refreshToken } = result.data.tokenDto;
                 const {
                     userId,
                     userNickname,
@@ -46,9 +46,11 @@ function SignInLoading() {
                     userBusiness,
                     visited,
                     userMoney,
+                    userPhone,
                 } = result.data;
 
                 setCookie("access-token", accessToken);
+                setCookie("refresh-token", refreshToken);
                 setUser({
                     userId,
                     userNickname,
@@ -56,6 +58,7 @@ function SignInLoading() {
                     userAddress,
                     userBusiness,
                     userMoney,
+                    userPhone,
                 });
 
                 if (visited) {

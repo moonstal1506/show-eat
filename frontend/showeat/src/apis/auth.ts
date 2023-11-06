@@ -19,7 +19,7 @@ const getLoginWithKakao = async (code: string) => {
 };
 
 /* Function for Handling Logout */
-const postLogout = async (userId: number, accessToken: CookieValueTypes) => {
+const patchLogout = async (userId: number, accessToken: CookieValueTypes) => {
     const props: FetchProps = {
         url: "auth/logout",
         method: "PATCH",
@@ -34,4 +34,4 @@ const postLogout = async (userId: number, accessToken: CookieValueTypes) => {
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getLoginWithKakao, postLogout };
+export { getLoginWithKakao, patchLogout };
