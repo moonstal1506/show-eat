@@ -4,7 +4,9 @@ import Image from "next/image";
 import Slider from "react-slick";
 import { keyframes } from "@emotion/react";
 import { useRef } from "react";
-// import Card from "../card/Card";
+import { useRouter } from "next/router";
+import { postBookmark } from "@/apis/fundings";
+import Card from "../card";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -14,9 +16,29 @@ interface CarouselProps {
     height: number;
     title: string;
     description: string;
+    cardDatas: {
+        fundingId: number;
+        title: string;
+        businessName: string;
+        category: string;
+        maxLimit: number;
+        minLimit: number;
+        curCount: number;
+        menu: string;
+        price: number;
+        discountPrice: number;
+        discountRate: number;
+        startDate: string;
+        endDate: string;
+        fundingIsActive: string;
+        fundingIsSuccess: string;
+        fundingImageResponseDtos: {
+            imageId: number;
+            imageUrl: string;
+        }[];
+        fundingIsBookmark: boolean;
+    }[];
 }
-
-const carouselContents = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -82,12 +104,9 @@ const CarouselCardWrapper = styled("div")<Partial<CarouselProps>>`
     width: ${(props) => `${props.width}px`};
     height: ${(props) => `${props.height}px`};
 
-    box-shadow: 0px 0px 2px 1px ${(props) => props.theme.colors.gray3};
-
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 `;
 
 const LeftArrowWrapper = styled("div")<{ height: number }>`
@@ -171,7 +190,7 @@ const ArrowImageWrapper = styled(Image)`
 // ----------------------------------------------------------------------------------------------------
 
 /* Card Carousel Component */
-function CardCarousel({ width, height, title, description }: CarouselProps) {
+function CardCarousel({ width, height, title, description, cardDatas }: CarouselProps) {
     const settings = {
         infinite: true,
         speed: 300,
@@ -181,6 +200,8 @@ function CardCarousel({ width, height, title, description }: CarouselProps) {
         autoplaySpeed: 5000,
         arrows: false,
     };
+
+    const router = useRouter();
 
     const sliderRef = useRef<Slider | null>(null);
 
@@ -196,6 +217,13 @@ function CardCarousel({ width, height, title, description }: CarouselProps) {
         }
     };
 
+    const handleCard = (fundingId: number) => {
+        router.push(`/fundings/${fundingId}`);
+    };
+
+    const handleBookmark = (fundingId: number) => {
+        postBookmark(fundingId);
+    };
     return (
         <CarouselContainer width={width} height={height}>
             <CarouselHeaderContainer>
@@ -213,13 +241,19 @@ function CardCarousel({ width, height, title, description }: CarouselProps) {
                     />
                 </LeftArrowWrapper>
                 <Slider {...settings} ref={sliderRef}>
-                    {carouselContents.map((content, idx) => (
+                    {cardDatas.map((cardData, idx) => (
                         <CarouselCardWrapper
-                            key={`${content}-${idx}`}
+                            key={`${cardData}-${idx}`}
                             width={width}
                             height={height}
                         >
-                            {content}
+                            <Card
+                                fundingData={cardData}
+                                onFundingClick={() => handleCard(cardData.fundingId)}
+                                onBookmark={() => {
+                                    handleBookmark(cardData.fundingId);
+                                }}
+                            />
                         </CarouselCardWrapper>
                     ))}
                 </Slider>
