@@ -7,17 +7,7 @@ spring:
     url: jdbc:mysql://k9a203.p.ssafy.io:3306/showeat?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: showeat
     password: showeat1357
-
-# TossPayments
-payments:
-  toss:
-    test_client_api_key: test_ck_QbgMGZzorzyKv2BGY6djVl5E1em4
-    test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
-    success_url: http://showeat.kr/api/payments/request/success
-    fail_url: http://showeat.kr/api/payments/request/fail
-
-#redis
-server:
+  #redis
   data:
     redis:
       host: k9a203.p.ssafy.io
@@ -25,3 +15,10 @@ server:
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
+# TossPayments
+payments:
+  toss:
+    test_client_api_key: test_ck_QbgMGZzorzyKv2BGY6djVl5E1em4
+    test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
+    success_url: http://showeat.kr/api/payments/request/success
+    fail_url: http://showeat.kr/api/payments/request/fail
