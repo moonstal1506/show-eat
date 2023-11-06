@@ -15,3 +15,13 @@ payments:
     test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
     success_url: http://showeat.kr/api/payments/request/success
     fail_url: http://showeat.kr/api/payments/request/fail
+
+#redis
+server:
+  data:
+    redis:
+      host: k9a203.p.ssafy.io
+      port: 6379
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
