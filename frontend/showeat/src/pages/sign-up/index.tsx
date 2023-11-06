@@ -1,10 +1,13 @@
 /* Import */
-import { ReactNode } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { formatPhoneNumber } from "@utils/format";
+import { InputDropDown } from "@components/common/dropdown";
 import SingleLayout from "@layouts/SingleLayout";
 import styled from "@emotion/styled";
 import { TextButton } from "@components/common/button";
 import { TextInput } from "@components/common/input";
 import useUserState from "@hooks/useUserState";
+import withAuth from "@libs/withAuth";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -66,6 +69,23 @@ const ButtonWrapper = styled("div")`
 /* Sign Up Page */
 function SignUp() {
     const [user, setUser] = useUserState();
+    const [nickname, setNickname] = useState<string>("");
+    const [phone, setPhone] = useState<string>("");
+    const [address, setAddress] = useState<string>("");
+
+    const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setNickname(event.target.value.trim());
+    };
+
+    const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPhone(event.target.value);
+    };
+
+    useEffect(() => {
+        setNickname(user.userNickname ?? "");
+        setPhone(user.userPhone ?? "");
+        setAddress(user.userAddress ?? "");
+    }, [user]);
 
     return (
         <SignUpContainer>
@@ -77,19 +97,23 @@ function SignUp() {
                 <TextInput
                     width="100%"
                     id="nickname"
-                    defaultValue={user.userNickname}
+                    value={nickname}
+                    // defaultValue={user.userNickname}
                     labelText="닉네임"
+                    onChange={handleNicknameChange}
                 />
                 <TextInput
                     width="100%"
                     id="phone"
+                    value={phone}
                     placeholder="010-1234-5678"
                     labelText="전화번호"
+                    onChange={handlePhoneChange}
                 />
-                <TextInput width="100%" id="address" labelText="관심 지역" />
+                {/* <InputDropDown /> */}
             </InputContainer>
             <ButtonWrapper>
-                <TextButton width="200px" text="개인정보 저장" />
+                <TextButton width="200px" text="개인정보 저장" onClick={() => {}} />
             </ButtonWrapper>
         </SignUpContainer>
     );
@@ -97,12 +121,17 @@ function SignUp() {
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Middleware */
+const SignUpWithAuth = withAuth({ WrappedComponent: SignUp, guardType: "USER_ONLY" });
+
+// ----------------------------------------------------------------------------------------------------
+
 /* Layout */
-SignUp.getLayout = function getLayout(page: ReactNode) {
+SignUpWithAuth.getLayout = function getLayout(page: ReactNode) {
     return <SingleLayout>{page}</SingleLayout>;
 };
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default SignUp;
+export default SignUpWithAuth;
