@@ -14,7 +14,7 @@ spring:
         enabled: false
 
 server:
-  port: 8083
+  port: 8082
 
 # 로그 레벨 설정
 logging:
