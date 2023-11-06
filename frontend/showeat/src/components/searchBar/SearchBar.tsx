@@ -1,6 +1,7 @@
 /* Import */
 import { useState } from "react";
 import styled from "@emotion/styled";
+import { useRouter } from "next/router";
 import { TextInput } from "../common/input";
 import { MenuButton } from "../common/button";
 
@@ -56,10 +57,12 @@ const IconMenuContainer = styled("div")`
 
 /* Search Bar Button Component */
 function SearchBar() {
+    const router = useRouter();
     const [searchText, setSearchText] = useState<string>("");
 
     const handleSearch = () => {
         console.log(searchText);
+        router.push("/search");
     };
 
     const handleMenuButton = (menu: string) => {
