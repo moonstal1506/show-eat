@@ -1,18 +1,21 @@
 /* Import */
+import { ChangeEvent, MouseEvent, KeyboardEvent, useRef } from "react";
 import { InputProps } from "@customTypes/commonProps";
 import styled from "@emotion/styled";
 import Image from "next/image";
-import { ChangeEvent, memo, MouseEvent, useRef, useState } from "react";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
 interface TextInputProps extends InputProps {
-    defaultValue?: string;
+    value: string;
     placeholder?: string;
     labelText?: string;
     source?: string;
+    isError?: boolean;
     onClick?: (event: MouseEvent<HTMLElement>) => void;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onKeyUp?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -34,7 +37,7 @@ const LabelWrapper = styled("label")`
     font-weight: 700;
 `;
 
-const InputBox = styled("div")`
+const InputBox = styled("div")<{ isError: boolean }>`
     // Box Model Attribute
     width: 100%;
     box-sizing: border-box;
@@ -42,7 +45,9 @@ const InputBox = styled("div")`
     padding: 0.5em 1em;
 
     // Style Attribute
-    border: 1px solid ${(props) => props.theme.colors.gray3};
+    border: 2px solid
+        ${(props) =>
+            props.isError ? `${props.theme.colors.normalRed}` : `${props.theme.colors.gray3}`};
     border-radius: 15px;
     &:focus-within {
         border-color: transparent;
@@ -67,6 +72,7 @@ const IconWrapper = styled(Image)`
     max-height: 30px;
 
     // Interaction Attribute
+    cursor: pointer;
     user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -82,32 +88,31 @@ function TextInput(props: TextInputProps) {
         height = "auto",
         id,
         name = id,
-        defaultValue = "",
+        value,
         placeholder = "",
         labelText = "",
         source = "",
+        isError = false,
         onClick = () => {},
+        onChange = () => {},
+        onKeyUp = () => {},
     } = props;
-    const [text, setText] = useState<string>(defaultValue);
     const textInputRef = useRef<HTMLInputElement | null>(null);
-
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setText(event.target.value.trim());
-    };
 
     return (
         <InputContainer width={width} height={height}>
             {labelText && <LabelWrapper htmlFor={id}>{labelText}</LabelWrapper>}
 
-            <InputBox onClick={() => textInputRef.current?.focus()}>
+            <InputBox isError={isError} onClick={() => textInputRef.current?.focus()}>
                 <InputWrapper
                     type="text"
                     ref={textInputRef}
                     id={id}
                     name={name}
-                    value={text}
+                    value={value}
                     placeholder={placeholder}
-                    onChange={handleInputChange}
+                    onChange={onChange}
+                    onKeyUp={onKeyUp}
                 />
                 {source && (
                     <IconWrapper
@@ -126,4 +131,4 @@ function TextInput(props: TextInputProps) {
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default memo(TextInput);
+export default TextInput;
