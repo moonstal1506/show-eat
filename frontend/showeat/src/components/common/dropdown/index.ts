@@ -1,8 +1,8 @@
 /* Import */
-import ButtonDropDown from "./ButtonDropDown";
-import InputDropDown from "./InputDropDown";
+import ButtonDropdown from "./ButtonDropdown";
+import InputDropdown from "./InputDropdown";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { ButtonDropDown, InputDropDown };
+export { ButtonDropdown, InputDropdown };
