@@ -27,3 +27,6 @@ payments:
     test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
     success_url: http://localhost:8081/api/payments/request/success
     fail_url: http://localhost:8081/api/payments/request/fail
+
+kafka:
+  server: "localhost:9092"

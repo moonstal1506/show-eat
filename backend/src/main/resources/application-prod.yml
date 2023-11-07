@@ -27,3 +27,6 @@ payments:
     test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
     success_url: http://showeat.kr/api/payments/request/success
     fail_url: http://showeat.kr/api/payments/request/fail
+
+kafka:
+  server: "k9a203.p.ssafy.io:9092"
