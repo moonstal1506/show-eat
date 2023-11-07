@@ -29,7 +29,7 @@ for user in user_data:
         'business_number' : fake.pyint(min_value=0, max_value=100000000),
         'business_registration_url' : fake.sentence(),
         'bank_book_url' : fake.sentence(), 
-        'business_bio' : fake.paragraph(), 
+        'business_bio' : fake.catch_phrase(), 
         'business_operating_time' : fake.sentence(),
         'business_closed_days' : fake.sentence(), 
         'user_id' : fake.pyint(min_value=2, max_value=100),
