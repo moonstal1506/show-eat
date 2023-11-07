@@ -5,8 +5,6 @@ import { FetchProps } from "@customTypes/apiProps";
 // ----------------------------------------------------------------------------------------------------
 
 /* Function for get My Coupons */
-
-/* 내 쿠폰 가져오는 함수 */
 const getCouponList = async (userId: number, status: string, page: number) => {
     console.log(userId, " ", status);
     const props: FetchProps = {
@@ -16,11 +14,9 @@ const getCouponList = async (userId: number, status: string, page: number) => {
     };
 
     const result = await fetchGet(props);
-    console.log("result", result);
     const data = Array.isArray(result.data.couponListResponseDtos)
         ? result.data.couponListResponseDtos
         : [];
-    console.log("이게뭐야?", data);
     return data;
 };
 

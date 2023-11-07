@@ -54,12 +54,10 @@ function Coupons() {
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
         setPage(0);
-        fetchCouponData();
     };
 
     const handleLoadMore = () => {
         setPage(page + 1); // 더보기 : 페이지 + 1
-        fetchCouponData();
     };
 
     const fetchCouponData = () => {
@@ -71,8 +69,6 @@ function Coupons() {
                 } else {
                     setCouponData([...couponData, ...data]);
                 }
-                console.log("couponData 유형:", typeof data.result);
-                console.log("성공!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             })
             .catch((error) => {
                 console.error("쿠폰 데이터를 가져오는 중 오류 발생:", error);
