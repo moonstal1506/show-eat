@@ -13,6 +13,7 @@ interface InputDropdownProps extends DropdownProps {
     name?: string;
     value: string;
     placeholder?: string;
+    required: boolean;
     labelText?: string;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -156,7 +157,7 @@ const ItemContainer = styled("div")<{ height: string }>`
     // Box Model Attribute
     width: 100%;
     max-height: ${(props) => props.height};
-    min-height: 10em;
+    min-height: 5em;
     overflow-y: scroll;
 `;
 
@@ -194,6 +195,7 @@ function InputDropdown(props: InputDropdownProps) {
         name = id,
         value,
         placeholder = "",
+        required = false,
         labelText = "",
         itemList,
         onChange,
@@ -237,6 +239,7 @@ function InputDropdown(props: InputDropdownProps) {
                     value={selectedItem}
                     placeholder={placeholder}
                     readOnly
+                    required={required}
                     onChange={onChange}
                 />
                 <IconWrapper
