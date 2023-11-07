@@ -18,7 +18,7 @@ spring:
       client:
         registration:
           kakao:
-            redirect-uri: http://43.200.81.111:8081
+            redirect-uri: http://43.200.81.111:3000/sign-in/loading
 
 # TossPayments
 payments:
