@@ -7,4 +7,5 @@ export interface UserType {
     userBusiness: boolean;
     userMoney: number;
     userPhone: string;
+    visited: boolean;
 }

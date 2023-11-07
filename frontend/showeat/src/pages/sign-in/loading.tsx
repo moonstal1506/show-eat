@@ -59,6 +59,7 @@ function SignInLoading() {
                     userBusiness,
                     userMoney,
                     userPhone,
+                    visited,
                 });
 
                 if (visited) {
