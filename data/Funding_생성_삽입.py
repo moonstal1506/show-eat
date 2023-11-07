@@ -34,15 +34,22 @@ for busienss in business_data:
         funding_discount_price = fake.pyint(min_value=10000, max_value=49999)
         funding_price = fake.pyint(min_value=50000, max_value=100000)
         funding_discount_rate =  ((funding_price - funding_discount_price) / funding_price) * 100
+        
+        funding_max_limit = fake.pyint(min_value=30, max_value=200)
+        funding_min_limit = fake.pyint(min_value=5, max_value=20)
+        funding_cur_count = fake.pyint(min_value=0, max_value=funding_max_limit-10)
+        participation_rate =  ( funding_cur_count / funding_min_limit) * 100
+        funding_total_amount = funding_cur_count * funding_discount_price
+
         row = {
             'funding_title': fake.word(),
             'funding_business_name': fake.company(),
             'funding_category': random.choice(categories),
-            'funding_max_limit': fake.pyint(min_value=5, max_value=20),
-            'funding_min_limit': fake.pyint(min_value=30, max_value=200),
-            'funding_cur_count': 0,
-            'participation_rate': 0,
-            'funding_total_amount': 0,
+            'funding_max_limit': funding_max_limit,
+            'funding_min_limit': funding_min_limit,
+            'funding_cur_count': funding_cur_count,
+            'participation_rate': participation_rate,
+            'funding_total_amount': funding_total_amount,
             'funding_discount_price': funding_discount_price,
             'funding_discount_rate': funding_discount_rate,
             'funding_menu': fake.word(),
