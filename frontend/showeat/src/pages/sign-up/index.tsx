@@ -1,8 +1,11 @@
 /* Import */
 import addressConfig from "@configs/addressConfig";
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
 import { formatPhoneNumber } from "@utils/format";
 import { InputDropdown } from "@components/common/dropdown";
+import { getCookie } from "cookies-next";
+import { GetServerSideProps } from "next";
+import { getUserInfo, patchSettingInfo } from "@apis/users";
 import SingleLayout from "@layouts/SingleLayout";
 import styled from "@emotion/styled";
 import { TextButton } from "@components/common/button";
@@ -14,7 +17,7 @@ import withAuth from "@libs/withAuth";
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
-const SignUpContainer = styled("div")`
+const SignUpContainer = styled("form")`
     // Layout Attribute
     display: flex;
     flex-direction: column;
@@ -68,6 +71,34 @@ const ButtonWrapper = styled("div")`
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Server Side Rendering */
+export const getServerSideProps: GetServerSideProps = async () => {
+    const userId = getCookie("user-id");
+    // console.log(userId);
+    if (userId) {
+        // console.log("대체 왜?");
+        const result = await getUserInfo(+userId);
+        const { visited } = result.data;
+
+        if (visited) {
+            // console.log("왜 안됨?");
+            return {
+                redirect: {
+                    destination: "/",
+                    permanent: false,
+                },
+                props: {},
+            };
+        }
+    }
+
+    return {
+        props: {},
+    };
+};
+
+// ----------------------------------------------------------------------------------------------------
+
 /* Sign Up Page */
 function SignUp() {
     // States and Variables
@@ -92,10 +123,25 @@ function SignUp() {
         setAddress(event.target?.value);
     };
 
-    useEffect(() => {
-        if (user.visited) {
-            router.replace("/");
+    // Function for Submitting
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (user.userId !== 0) {
+            const rawPhone = phone.replace(/-/g, "");
+            patchSettingInfo(user.userId, nickname, rawPhone, address).then(() => {
+                setUser((prevState) => ({
+                    ...prevState,
+                    userNickname: nickname,
+                    userPhone: phone,
+                    userAddress: address,
+                    visited: true,
+                }));
+                router.replace("/");
+            });
         }
+    };
+
+    useEffect(() => {
         if (user) {
             setNickname(user.userNickname ?? "");
             setPhone(formatPhoneNumber(user.userPhone ?? ""));
@@ -103,12 +149,8 @@ function SignUp() {
         }
     }, [user]);
 
-    useEffect(() => {
-        console.log(address);
-    }, [address]);
-
     return (
-        <SignUpContainer>
+        <SignUpContainer onSubmit={handleSubmit}>
             <HeaderWrapper>개인정보 입력</HeaderWrapper>
             <DescriptionWrapper>
                 서비스 이용을 위해 필요한 <span>필수 개인정보</span>를 입력해 주세요.
@@ -132,16 +174,17 @@ function SignUp() {
                 />
                 <InputDropdown
                     width="25%"
-                    height="100px"
+                    height="6em"
                     id="address"
                     value={address}
+                    required
                     labelText="관심 지역"
                     itemList={addressConfig}
                     onChange={handleAddressChange}
                 />
             </InputContainer>
             <ButtonWrapper>
-                <TextButton width="200px" text="개인정보 저장" onClick={() => {}} />
+                <TextButton type="submit" width="200px" text="개인정보 저장" />
             </ButtonWrapper>
         </SignUpContainer>
     );
