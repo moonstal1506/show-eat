@@ -10,9 +10,16 @@ export interface ButtonProps {
     onClick?: (event: MouseEvent<HTMLElement>) => void;
 }
 
+export interface DropdownProps {
+    width: string;
+    height?: string;
+    itemList: string[];
+}
+
 export interface InputProps {
     width: string;
     height?: string;
+    maxHeight?: string;
     id: string;
     name?: string;
 }
