@@ -64,14 +64,18 @@ function changeFontWeight(text: string): string {
 }
 
 /* Function for Making Phone Number Format */
-function formatPhoneNumber(phoneNumber: string): string {
-    if (phoneNumber.length <= 3) {
-        return phoneNumber;
+function formatPhoneNumber(text: string): string {
+    const digits = text.replace(/\D/g, "").slice(0, 11);
+
+    if (digits.length <= 3) {
+        return digits;
     }
-    if (phoneNumber.length <= 7) {
-        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+
+    if (digits.length <= 7) {
+        return `${digits.slice(0, 3)}-${digits.slice(3)}`;
     }
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+
+    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
 }
 
 /* Function for Extracting and Parsing Number */
