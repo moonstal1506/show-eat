@@ -1,11 +1,13 @@
 /* Import */
+import addressConfig from "@configs/addressConfig";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { formatPhoneNumber } from "@utils/format";
-import { InputDropDown } from "@components/common/dropdown";
+import { InputDropdown } from "@components/common/dropdown";
 import SingleLayout from "@layouts/SingleLayout";
 import styled from "@emotion/styled";
 import { TextButton } from "@components/common/button";
 import { TextInput } from "@components/common/input";
+import { useRouter } from "next/router";
 import useUserState from "@hooks/useUserState";
 import withAuth from "@libs/withAuth";
 
@@ -68,24 +70,42 @@ const ButtonWrapper = styled("div")`
 
 /* Sign Up Page */
 function SignUp() {
+    // States and Variables
     const [user, setUser] = useUserState();
     const [nickname, setNickname] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [address, setAddress] = useState<string>("");
+    const router = useRouter();
 
+    // Function for Handling Nickname Change
     const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setNickname(event.target.value.trim());
     };
 
+    // Function for Handling Phone Number Change
     const handlePhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPhone(event.target.value);
+        setPhone(formatPhoneNumber(event.target.value));
+    };
+
+    // Function for Handling Phone Number Change
+    const handleAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setAddress(event.target?.value);
     };
 
     useEffect(() => {
-        setNickname(user.userNickname ?? "");
-        setPhone(user.userPhone ?? "");
-        setAddress(user.userAddress ?? "");
+        if (user.visited) {
+            router.replace("/");
+        }
+        if (user) {
+            setNickname(user.userNickname ?? "");
+            setPhone(formatPhoneNumber(user.userPhone ?? ""));
+            setAddress(user.userAddress ?? "");
+        }
     }, [user]);
+
+    useEffect(() => {
+        console.log(address);
+    }, [address]);
 
     return (
         <SignUpContainer>
@@ -98,7 +118,6 @@ function SignUp() {
                     width="100%"
                     id="nickname"
                     value={nickname}
-                    // defaultValue={user.userNickname}
                     labelText="닉네임"
                     onChange={handleNicknameChange}
                 />
@@ -108,9 +127,18 @@ function SignUp() {
                     value={phone}
                     placeholder="010-1234-5678"
                     labelText="전화번호"
+                    source="/assets/icons/phone-icon.svg"
                     onChange={handlePhoneChange}
                 />
-                {/* <InputDropDown /> */}
+                <InputDropdown
+                    width="25%"
+                    height="100px"
+                    id="address"
+                    value={address}
+                    labelText="관심 지역"
+                    itemList={addressConfig}
+                    onChange={handleAddressChange}
+                />
             </InputContainer>
             <ButtonWrapper>
                 <TextButton width="200px" text="개인정보 저장" onClick={() => {}} />
