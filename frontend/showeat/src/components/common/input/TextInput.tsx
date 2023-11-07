@@ -10,9 +10,9 @@ import Image from "next/image";
 interface TextInputProps extends InputProps {
     value: string;
     placeholder?: string;
+    required?: boolean;
     labelText?: string;
     source?: string;
-    isError?: boolean;
     onClick?: (event: MouseEvent<HTMLElement>) => void;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onKeyUp?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -37,7 +37,7 @@ const LabelWrapper = styled("label")`
     font-weight: 700;
 `;
 
-const InputBox = styled("div")<{ isError: boolean }>`
+const InputBox = styled("div")`
     // Layout Attribute
     display: flex;
 
@@ -48,9 +48,7 @@ const InputBox = styled("div")<{ isError: boolean }>`
     padding: 0.5em 1em;
 
     // Style Attribute
-    border: 2px solid
-        ${(props) =>
-            props.isError ? `${props.theme.colors.normalRed}` : `${props.theme.colors.gray3}`};
+    border: 2px solid ${(props) => props.theme.colors.gray3};
     border-radius: 15px;
     &:focus-within {
         border-color: transparent;
@@ -93,9 +91,9 @@ function TextInput(props: TextInputProps) {
         name = id,
         value,
         placeholder = "",
+        required = false,
         labelText = "",
         source = "",
-        isError = false,
         onClick = () => {},
         onChange = () => {},
         onKeyUp = () => {},
@@ -106,7 +104,7 @@ function TextInput(props: TextInputProps) {
         <InputContainer width={width} height={height}>
             {labelText && <LabelWrapper htmlFor={id}>{labelText}</LabelWrapper>}
 
-            <InputBox isError={isError} onClick={() => textInputRef.current?.focus()}>
+            <InputBox onClick={() => textInputRef.current?.focus()}>
                 <InputWrapper
                     type="text"
                     ref={textInputRef}
@@ -114,6 +112,7 @@ function TextInput(props: TextInputProps) {
                     name={name}
                     value={value}
                     placeholder={placeholder}
+                    required={required}
                     onChange={onChange}
                     onKeyUp={onKeyUp}
                 />
