@@ -43,6 +43,3 @@ cloud:
       auto: false
     stack:
       auto: false
-
-kafka:
-  server: "localhost:9092"
