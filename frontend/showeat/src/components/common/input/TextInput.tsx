@@ -38,6 +38,9 @@ const LabelWrapper = styled("label")`
 `;
 
 const InputBox = styled("div")<{ isError: boolean }>`
+    // Layout Attribute
+    display: flex;
+
     // Box Model Attribute
     width: 100%;
     box-sizing: border-box;
@@ -66,13 +69,13 @@ const InputWrapper = styled("input")`
     outline: none;
 `;
 
-const IconWrapper = styled(Image)`
+const IconWrapper = styled(Image)<{ "data-clickable": boolean }>`
     // Box Model Attribute
     max-width: 30px;
     max-height: 30px;
 
     // Interaction Attribute
-    cursor: pointer;
+    cursor: ${(props) => (props["data-clickable"] ? "pointer" : "default")};
     user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -120,6 +123,7 @@ function TextInput(props: TextInputProps) {
                         width={20}
                         height={20}
                         alt="input-icon"
+                        data-clickable={id !== "phone"}
                         onClick={onClick}
                     />
                 )}
