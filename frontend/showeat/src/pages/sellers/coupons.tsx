@@ -1,9 +1,12 @@
 /* Import */
 import withAuth from "@libs/withAuth";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import BuyerLayout from "@/layouts/BuyerLayout";
 import styled from "@emotion/styled";
-import Coupon from "@/components/coupon/Coupon";
+import Coupon from "@components/coupon/Coupon";
+import getCouponList from "@apis/coupons";
+import TextButton from "@components/common/button/TextButton";
+import useUserState from "@hooks/useUserState";
 
 const CouponContainer = styled("div")`
     color: #000;
@@ -29,54 +32,63 @@ const CouponList = styled("div")`
 `;
 
 function Coupons() {
-    // const activeCoupons = getMyCoupons(userId, "ACTIVE");
-    // const usedCoupons = getMyCoupons(userId, "USED");
-    // const expiredCoupons = getMyCoupons(userId, "EXPIRED");
-    // 쿠폰 상태별로 다르게 리스트 불러오기
-    const couponData = [
-        {
-            couponId: 1,
-            couponStatus: "ACTIVE",
-            couponType: "SINGLE",
-            couponOriginalPrice: 10000,
-            remainingDays: 30,
-            businessName: "메가커피",
-            businessImgUrl: "/assets/images/service-logo.svg",
-            fundingMenu: "아메리카노",
-            fundingImgUrl: "/assets/images/service-logo.svg",
-        },
-        {
-            couponId: 2,
-            couponStatus: "USED",
-            couponType: "SINGLE",
-            couponOriginalPrice: 20000,
-            remainingDays: 10,
-            businessName: "스타벅스",
-            businessImgUrl: "/assets/images/service-logo.svg",
-            fundingMenu: "바닐라 라떼",
-            fundingImgUrl: "/assets/images/service-logo.svg",
-        },
-        {
-            couponId: 3,
-            couponStatus: "EXPIRED",
-            couponType: "SINGLE",
-            couponOriginalPrice: 20000,
-            remainingDays: 10,
-            businessName: "스타벅스",
-            businessImgUrl: "/assets/images/service-logo.svg",
-            fundingMenu: "바닐라 라떼",
-            fundingImgUrl: "/assets/images/service-logo.svg",
-        },
-    ];
+    const [couponData, setCouponData] = useState([]);
+    const [status, setStatus] = useState<string>("");
+    const [user] = useUserState();
+
+    // 쿠폰 상태 클릭
+    const handleStatusChange = (newStatus: string) => {
+        setStatus(newStatus);
+    };
+
+    const fetchCouponData = () => {
+        const { userId } = user;
+        getCouponList(userId, status)
+            .then((result) => {
+                const { data } = result;
+                setCouponData(data);
+            })
+            .catch((error) => {
+                console.error("쿠폰 데이터를 가져오는 중 오류 발생:", error);
+            });
+    };
+
+    useEffect(() => {
+        if (status) {
+            fetchCouponData();
+        }
+    }, [status]);
 
     return (
         <CouponContainer>
             <CouponWrapper>보유 쿠폰</CouponWrapper>
-            <CouponList>
-                {couponData.map((coupon) => (
-                    <Coupon key={coupon.couponId} couponData={coupon} onClick={() => {}} />
-                ))}
-            </CouponList>
+            <TextButton
+                width="150px"
+                onClick={() => handleStatusChange("ACTIVE")}
+                text="사용 가능"
+                curve="round"
+            />
+            <TextButton
+                width="150px"
+                onClick={() => handleStatusChange("USED")}
+                text="사용 완료"
+                curve="round"
+            />
+            <TextButton
+                width="150px"
+                onClick={() => handleStatusChange("EXPIRED")}
+                text="사용 불가"
+                curve="round"
+            />
+            {couponData.length === 0 ? (
+                <div>쿠폰이 없습니다.</div>
+            ) : (
+                <CouponList>
+                    {couponData.map((coupon) => (
+                        <Coupon key={coupon.couponId} couponData={coupon} onClick={() => {}} />
+                    ))}
+                </CouponList>
+            )}
         </CouponContainer>
     );
 }
