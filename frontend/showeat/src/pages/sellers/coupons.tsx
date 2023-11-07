@@ -23,6 +23,10 @@ const CouponWrapper = styled("div")`
     font-size: 40px;
 `;
 
+const NoCouponWrapper = styled("div")`
+    font-size: 25px;
+`;
+
 const CouponList = styled("div")`
     display: flex;
     flex-wrap: wrap;
@@ -31,22 +35,44 @@ const CouponList = styled("div")`
     margin-top: 20px;
 `;
 
+const MoreButton = styled("div")`
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin: 0 auto;
+    width: 100%;
+`;
+
 function Coupons() {
     const [couponData, setCouponData] = useState([]);
     const [status, setStatus] = useState<string>("");
+    const [page, setPage] = useState(0);
     const [user] = useUserState();
 
-    // 쿠폰 상태 클릭
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
+        setPage(0);
+        fetchCouponData();
+    };
+
+    const handleLoadMore = () => {
+        setPage(page + 1); // 더보기 : 페이지 + 1
+        fetchCouponData();
     };
 
     const fetchCouponData = () => {
         const { userId } = user;
-        getCouponList(userId, status)
-            .then((result) => {
-                const { data } = result;
-                setCouponData(data);
+        getCouponList(userId, status, page)
+            .then((data) => {
+                if (page === 0) {
+                    setCouponData(data);
+                } else {
+                    setCouponData([...couponData, ...data]);
+                }
+                console.log("couponData 유형:", typeof data.result);
+                console.log("성공!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             })
             .catch((error) => {
                 console.error("쿠폰 데이터를 가져오는 중 오류 발생:", error);
@@ -57,11 +83,11 @@ function Coupons() {
         if (status) {
             fetchCouponData();
         }
-    }, [status]);
+    }, [status, page]);
 
     return (
         <CouponContainer>
-            <CouponWrapper>보유 쿠폰</CouponWrapper>
+            <NoCouponWrapper>보유 쿠폰</NoCouponWrapper>
             <TextButton
                 width="150px"
                 onClick={() => handleStatusChange("ACTIVE")}
@@ -81,12 +107,22 @@ function Coupons() {
                 curve="round"
             />
             {couponData.length === 0 ? (
-                <div>쿠폰이 없습니다.</div>
+                <MoreButton>
+                    <CouponWrapper>쿠폰이 없습니다.</CouponWrapper>
+                </MoreButton>
             ) : (
                 <CouponList>
                     {couponData.map((coupon) => (
                         <Coupon key={coupon.couponId} couponData={coupon} onClick={() => {}} />
                     ))}
+                    <MoreButton>
+                        <TextButton
+                            width="150px"
+                            onClick={() => handleLoadMore()}
+                            text="더보기"
+                            curve="round"
+                        />
+                    </MoreButton>
                 </CouponList>
             )}
         </CouponContainer>
