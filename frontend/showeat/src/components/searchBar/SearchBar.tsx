@@ -7,6 +7,7 @@ import { MenuButton } from "../common/button";
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Type */
 // interface SearchBarProps {
 //     keyword: string;
 //     searchType: string[];
@@ -17,6 +18,8 @@ import { MenuButton } from "../common/button";
 //     minPrice?: number;
 //     sortType?: string;
 // }
+
+// ----------------------------------------------------------------------------------------------------
 
 /* Style */
 const menuCategory = [
