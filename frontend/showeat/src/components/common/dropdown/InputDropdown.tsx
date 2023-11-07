@@ -1,32 +1,24 @@
 /* Import */
-import styled from "@emotion/styled";
-import { keyframes } from "@emotion/css";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { DropdownProps } from "@customTypes/commonProps";
 import Image from "next/image";
+import { keyframes } from "@emotion/css";
+import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
-interface DropDownProps {
-    dropDownList: string[];
-    color: "primary" | "secondary" | "gray";
-    placeHolder?: string;
-    maxWidth?: string;
-    maxHeight?: string;
-    fontSize?: string;
-    onClick?: (content: string) => void;
+interface InputDropdownProps extends DropdownProps {
+    id: string;
+    name?: string;
+    value: string;
+    placeholder?: string;
+    labelText?: string;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface IsOpenTypes extends DropDownProps {
+interface IsOpenTypes extends InputDropdownProps {
     isOpen: boolean;
-}
-
-interface DropDownLiTypes {
-    idx: number;
-    listLength: number;
-    fontSize: string;
-    maxWidth: string;
-    color: "primary" | "secondary" | "gray";
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -54,227 +46,222 @@ const dropDownFadeOut = keyframes`
     }
 `;
 
-const DropDownContainer = styled("div")`
+const DropdownContainer = styled("div")`
+    // Position Attribute
     position: "relative";
 
-    -webkit-user-select: none;
+    // Box Model Attribute
+    width: 100%;
+
+    // Interaction Attribute
+    user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    -webkit-user-select: none;
 `;
 
-const DropDownButtonContainer = styled("div")<Partial<IsOpenTypes>>`
+const LabelWrapper = styled("label")`
+    // Box Model Attribute
+    width: 100%;
+
+    // Text Attribute
+    font-size: 18px;
+    font-weight: 700;
+`;
+
+const ButtonContainer = styled("div")<Partial<IsOpenTypes>>`
+    // Layout Attribute
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    min-height: 20px;
+    // Box Model Attribute
+    margin-top: 0.5em;
 
-    min-width: ${(props) => props.maxWidth};
-    max-width: ${(props) => props.maxWidth};
-
-    border: 1px solid ${(props) => props.theme.colors[`${props.color}3`]};
-    border-radius: 10px;
-    box-shadow: ${(props) =>
-        props.isOpen ? `0px 0px 5px 1px ${props.theme.colors[`${props.color}3`]}` : "none"};
-
+    // Style Attribute
+    border: 2px solid ${(props) => props.theme.colors.gray3};
+    border-color: ${(props) => (props.isOpen ? "transparent" : `${props.theme.colors.gray3}`)};
+    border-radius: 15px;
     background-color: white;
+    box-shadow: ${(props) =>
+        props.isOpen
+            ? `0 0 5px 2px ${props.theme.colors.primary2},
+        0 0 0 2px ${props.theme.colors.primary3}`
+            : "none"};
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
+    // Interaction Attribute
     cursor: pointer;
-
     &:hover {
-        box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}2`]};
-        background-color: ${(props) => props.theme.colors[`${props.color}1`]};
-    }
-
-    &:active {
-        box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}3`]};
-        background-color: ${(props) => props.theme.colors[`${props.color}2`]};
+        border-color: transparent;
+        box-shadow:
+            0 0 5px 2px ${(props) => props.theme.colors.primary2},
+            0 0 0 2px ${(props) => props.theme.colors.primary3};
     }
 `;
 
-const DropDownButtonTextWrapper = styled("span")<{ maxWidth: string; fontSize: string }>`
-    max-width: calc(${(props) => props.maxWidth} - 20px);
-
+const InputWrapper = styled("input")`
+    // Box Model Attribute
+    width: 100%;
+    box-sizing: border-box;
     padding: 0.5em 1em;
-
-    font-size: ${(props) => props.fontSize};
-
-    white-space: nowrap;
     overflow: hidden;
+
+    // Style Attribute
+    border: none;
+    outline: none;
+    background-color: transparent;
+
+    // Text Attribute
+    color: black;
+    white-space: nowrap;
     text-overflow: ellipsis;
+
+    // Interaction Attribute
+    cursor: pointer;
 `;
 
-const DropDownButtonIconWrapper = styled(Image)`
-    padding: 0.5em 1em;
+const IconWrapper = styled(Image)`
+    // Box Model Attribute
+    margin-right: 1em;
 `;
 
-const DropDownInnerWrapper = styled("div")<Partial<DropDownProps>>`
-    max-width: ${(props) => props.maxWidth};
-    max-height: ${(props) => props.maxHeight};
-
-    overflow-y: ${(props) => (props.maxHeight ? "scroll" : "visible")};
-`;
-
-const DropDownOuterWrapper = styled("div")<Partial<IsOpenTypes>>`
+const ListWrapper = styled("div")<Partial<IsOpenTypes>>`
+    // Postion Attribute
     position: absolute;
+    z-index: 200;
 
+    // Layout Attribute
     display: flex;
     justify-content: center;
     align-items: center;
 
-    border: 1px solid ${(props) => props.theme.colors[`${props.color}3`]};
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px 1px ${(props) => props.theme.colors[`${props.color}2`]};
+    // Box Model Attribute
+    width: ${(props) => props.width};
+    box-sizing: border-box;
+    padding: 0.6em 0 0.6em 0.6em;
+    margin-top: 1em;
 
+    // Style Attribute
+    border-radius: 15px;
     background-color: white;
+    box-shadow:
+        0 0 5px 2px ${(props) => props.theme.colors.primary2},
+        0 0 0 2px ${(props) => props.theme.colors.primary3};
 
-    margin-top: 5px;
-
-    z-index: 1000;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.2s ease-in-out
+    animation: ${(props) => (props.isOpen ? dropDownFadein : dropDownFadeOut)} 0.5s ease-in-out
         forwards;
 `;
 
-const DropDownLiContainer = styled("ul")`
-    list-style: none;
+const ItemContainer = styled("div")<{ height: string }>`
+    // Box Model Attribute
+    width: 100%;
+    max-height: ${(props) => props.height};
+    min-height: 10em;
+    overflow-y: scroll;
 `;
 
-const DropDownLiWrapper = styled("li")<DropDownLiTypes>`
-    max-width: calc(${(props) => props.maxWidth} - 10px);
-    max-width: calc(${(props) => props.maxWidth} - 10px);
-
+const ItemWrapper = styled("div")`
+    // Box Model Attribute
+    width: 100%;
+    box-sizing: border-box;
     padding: 0.5em 1em;
-
-    font-size: ${(props) => props.fontSize};
-
-    white-space: nowrap;
     overflow: hidden;
+
+    // Text Attribute
+    white-space: nowrap;
     text-overflow: ellipsis;
 
+    // Style Attribute
+    border-radius: 10px;
+
+    // Interaction Attribute
     cursor: pointer;
-
-    border-radius: ${(props) => {
-        if (props.idx === 0) {
-            return "10px 10px 0px 0px";
-        }
-        if (props.idx === props.listLength - 1) {
-            return "0px 0px 10px 10px";
-        }
-        return "none";
-    }};
-
     &:hover {
-        background-color: ${(props) => props.theme.colors[`${props.color}3`]};
+        background-color: ${(props) => props.theme.colors.primary4};
         color: white;
-        text-shadow: 0px 0px 5px 5px black;
-    }
-
-    &:active {
-        background-color: ${(props) => props.theme.colors[`${props.color}4`]};
-        color: white;
-        text-shadow: 0px 0px 5px 5px black;
+        font-weight: 700;
     }
 `;
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Input Drop Down Component */
-function InputDropDown({
-    dropDownList,
-    color,
-    placeHolder = "-",
-    maxWidth = "500px",
-    maxHeight,
-    fontSize = "14px",
-    onClick,
-}: DropDownProps) {
+/* Input Dropdown Component */
+function InputDropdown(props: InputDropdownProps) {
+    const {
+        width,
+        height = "10em",
+        id,
+        name = id,
+        value,
+        placeholder = "",
+        labelText = "",
+        itemList,
+        onChange,
+    } = props;
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isHidden, setIsHidden] = useState<boolean>(false);
-
-    const [isSeletedText, setIsSelectedText] = useState<string>("");
+    const [selectedItem, setSelectedItem] = useState<string>(value);
 
     useEffect(() => {
         if (!isOpen) {
-            const hideTimeOut = setTimeout(() => {
-                setIsHidden(true);
-            }, 300);
-            return () => {
-                clearTimeout(hideTimeOut);
-            };
-        }
-        if (isOpen) {
-            setIsHidden(false);
+            const timeoutId = setTimeout(() => setIsOpen(false), 300);
+            return () => clearTimeout(timeoutId);
         }
         return undefined;
     }, [isOpen]);
 
     useEffect(() => {
-        setIsSelectedText(placeHolder);
-    }, [placeHolder]);
+        setSelectedItem(value);
+    }, [value]);
 
-    const handleLiContent = (content: string) => {
-        setIsSelectedText(content);
+    const handleSelection = (item: string) => {
+        setSelectedItem(item);
+        setIsOpen(false);
+        if (onChange) {
+            const selectEvent = {
+                target: {
+                    value: item,
+                    name,
+                },
+            } as ChangeEvent<HTMLInputElement>;
+            onChange(selectEvent);
+        }
     };
 
     return (
-        <DropDownContainer>
-            <DropDownButtonContainer
-                onClick={() => setIsOpen(!isOpen)}
-                color={color}
-                maxWidth={maxWidth}
-                isOpen={isOpen}
-            >
-                <DropDownButtonTextWrapper maxWidth={maxWidth} fontSize={fontSize}>
-                    {isSeletedText}
-                </DropDownButtonTextWrapper>
-                <DropDownButtonIconWrapper
+        <DropdownContainer>
+            {labelText && <LabelWrapper htmlFor={id}>{labelText}</LabelWrapper>}
+            <ButtonContainer isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+                <InputWrapper
+                    id={id}
+                    name={name}
+                    value={selectedItem}
+                    placeholder={placeholder}
+                    readOnly
+                    onChange={onChange}
+                />
+                <IconWrapper
                     src="/assets/icons/down-arrow-icon.svg"
-                    alt="drop-down-down-icon"
                     width={20}
                     height={20}
+                    alt="dropdown-icon"
                 />
-            </DropDownButtonContainer>
-            {!isHidden && (
-                <DropDownOuterWrapper isOpen={isOpen} color={color}>
-                    <DropDownInnerWrapper maxWidth={maxWidth} maxHeight={maxHeight}>
-                        <DropDownLiContainer>
-                            {dropDownList.map((content, idx) => (
-                                <DropDownLiWrapper
-                                    key={`dropdown-li-${content}-${idx + 1}`}
-                                    idx={idx}
-                                    listLength={dropDownList.length}
-                                    fontSize={fontSize}
-                                    maxWidth={maxWidth}
-                                    color={color}
-                                    onClick={() => {
-                                        if (onClick) {
-                                            onClick(content);
-                                            handleLiContent(content);
-                                        }
-                                    }}
-                                >
-                                    {content}
-                                </DropDownLiWrapper>
-                            ))}
-                        </DropDownLiContainer>
-                    </DropDownInnerWrapper>
-                </DropDownOuterWrapper>
+            </ButtonContainer>
+            {isOpen && (
+                <ListWrapper width={width} isOpen={isOpen}>
+                    <ItemContainer height={height}>
+                        {itemList.map((content, index) => (
+                            <ItemWrapper key={index} onClick={() => handleSelection(content)}>
+                                {content}
+                            </ItemWrapper>
+                        ))}
+                    </ItemContainer>
+                </ListWrapper>
             )}
-        </DropDownContainer>
+        </DropdownContainer>
     );
 }
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default InputDropDown;
+export default InputDropdown;
