@@ -10,7 +10,7 @@ const BodyContainer = styled("div")`
     display: flex;
 
     width: 100%;
-    min-height: 100vh;
+    min-height: calc(100vh-5em);
 `;
 
 /* Buyer Page Layout */
@@ -21,7 +21,7 @@ function BuyerLayout(props: LayoutProps) {
         <>
             <Header />
             <BodyContainer>
-                <NavigationBar />
+                <NavigationBar isBuyer />
                 <article>{children}</article>
             </BodyContainer>
         </>
