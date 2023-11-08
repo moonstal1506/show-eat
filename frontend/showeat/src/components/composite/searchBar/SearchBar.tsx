@@ -2,8 +2,8 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { TextInput } from "../common/input";
-import { MenuButton } from "../common/button";
+import { TextInput } from "../../common/input";
+import { MenuButton } from "../../common/button";
 
 // ----------------------------------------------------------------------------------------------------
 
