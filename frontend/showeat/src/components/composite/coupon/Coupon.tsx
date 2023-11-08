@@ -262,7 +262,6 @@ function Coupon({ couponData, onClick }: CouponProps) {
                     couponStatus={couponData.couponStatus}
                 />
                 {days && <CouponPeriodWrapper>{days}</CouponPeriodWrapper>}
-
                 {couponData.couponStatus !== "ACTIVE" && (
                     <CouponCheckBorderWrapper couponStatus={couponData.couponStatus}>
                         <CouponCheckWrapper couponStatus={couponData.couponStatus}>
