@@ -1,5 +1,5 @@
 /* Import */
-import fundingTabMenuConfig from "@configs/tabMenuConfig";
+import { fundingTabMenuConfig } from "@configs/tabMenuConfig";
 import MainLayout from "@layouts/MainLayout";
 import { ReactNode, useState } from "react";
 import { Tab, TabBar } from "@components/composite/tabBar";
