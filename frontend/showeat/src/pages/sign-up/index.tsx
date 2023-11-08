@@ -142,6 +142,10 @@ function SignUp() {
     };
 
     useEffect(() => {
+        if (user.visited) {
+            router.replace("/");
+        }
+
         if (user) {
             setNickname(user.userNickname ?? "");
             setPhone(formatPhoneNumber(user.userPhone ?? ""));
