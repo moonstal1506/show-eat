@@ -1,12 +1,24 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create #create update none
+      ddl-auto: none #create update none
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://k9a203.p.ssafy.io:3306/showeat?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: showeat
     password: showeat1357
+  #redis
+  data:
+    redis:
+      host: k9a203.p.ssafy.io
+      port: 6379
+  #security
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: http://43.200.81.111:3000/sign-in/loading
 
 # TossPayments
 payments:
@@ -15,3 +27,6 @@ payments:
     test_secret_api_key: test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD
     success_url: http://showeat.kr/api/payments/request/success
     fail_url: http://showeat.kr/api/payments/request/fail
+
+kafka:
+  server: "k9a203.p.ssafy.io:9092"

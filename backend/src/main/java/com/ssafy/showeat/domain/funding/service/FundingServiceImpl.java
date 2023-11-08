@@ -185,7 +185,7 @@ public class FundingServiceImpl implements FundingService {
 		log.info("FundingServiceImpl_searchFunding || 펀딩 검색");
 		validateSearch(searchFundingRequestDto);
 
-		Pageable pageable = PageRequest.of(searchFundingRequestDto.getPage(), 9);
+		Pageable pageable = PageRequest.of(searchFundingRequestDto.getPage(), 12);
 		Page<Funding> searchFundingList = fundingRepository.findBySearchFundingRequestDto(
 			searchFundingRequestDto, pageable);
 
@@ -209,7 +209,7 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public Page<FundingListResponseDto> getFundingByCategory(String category, String sortType, int page, User user) {
 		log.info("FundingServiceImpl_getFundingByCategory || 홈 화면 음식 카테고리별 펀딩 조회");
-		Pageable pageable = PageRequest.of(page, 9);
+		Pageable pageable = PageRequest.of(page, 12);
 		Page<Funding> fundingList = fundingRepository.findByCategory(category, sortType, pageable);
 
 		validateSortType(sortType);
