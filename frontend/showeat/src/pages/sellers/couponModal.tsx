@@ -15,7 +15,7 @@ const CouponContainer = styled("div")`
     width: 100%;
 `;
 
-const NoCouponWrapper = styled("div")`
+const CouponWrapper = styled("div")`
     color: #000;
     text-align: center;
     font-family: Pretendard;
@@ -58,24 +58,21 @@ const CouponDetails = styled("div")`
     display: flex;
 `;
 const TableWrapper = styled("div")`
-    width: 480px;
+    width: 440px;
 `;
-// const QrWrapper = styled("div")`
-//     width: 200px;
-//     height: 200px;
-// `;
+
 function Coupons() {
     const headers = ["펀딩명", "유효기간", "메뉴가격", "구입가격"];
     const contents = ["유정이", "2022", "10000", "1000"];
 
     return (
         <CouponContainer>
-            <NoCouponWrapper>쿠폰 사용 정보</NoCouponWrapper>
+            <CouponWrapper>쿠폰 사용 정보</CouponWrapper>
             <BusinessName>야미화니 커피</BusinessName>
             <CouponName>카페라떼</CouponName>
             <CouponDetails>
                 <TableWrapper>
-                    <Table headerWidth="40%" headers={headers} contents={contents} />
+                    <Table headerWidth="50%" headers={headers} contents={contents} />
                 </TableWrapper>
                 <Image alt="qrcode" src="/assets/images/qrlogo.png" height={150} width={150} />
             </CouponDetails>
