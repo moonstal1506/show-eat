@@ -1,10 +1,7 @@
 /* Import */
-import withAuth from "@libs/withAuth";
-import BuyerLayout from "@/layouts/BuyerLayout";
 import styled from "@emotion/styled";
 import Table from "@/components/common/table";
 import Image from "next/image";
-import TextButton from "@components/common/button/TextButton";
 
 const CouponContainer = styled("div")`
     display: inline-flex;
@@ -61,7 +58,7 @@ const TableWrapper = styled("div")`
     width: 440px;
 `;
 
-function Coupons() {
+function CouponModal() {
     const headers = ["펀딩명", "유효기간", "메뉴가격", "구입가격"];
     const contents = ["유정이", "2022", "10000", "1000"];
 
@@ -76,17 +73,8 @@ function Coupons() {
                 </TableWrapper>
                 <Image alt="qrcode" src="/assets/images/qrlogo.png" height={150} width={150} />
             </CouponDetails>
-            <TextButton width="150px" onClick={() => () => {}} text="확인" curve="round" />
         </CouponContainer>
     );
 }
 
-/* Middleware */
-const CouponWithAuth = withAuth({ WrappedComponent: Coupons, guardType: "PUBLIC" });
-
-/* Layout */
-CouponWithAuth.getLayout = function getLayout(page: ReactNode) {
-    return <BuyerLayout>{page}</BuyerLayout>;
-};
-
-export default CouponWithAuth;
+export default CouponModal;
