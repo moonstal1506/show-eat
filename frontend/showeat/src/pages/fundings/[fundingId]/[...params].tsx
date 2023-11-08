@@ -1,8 +1,8 @@
 /* Import */
-import { Tab, TabBar } from "@/components/composite/tabBar";
 import fundingTabMenuConfig from "@configs/tabMenuConfig";
 import MainLayout from "@layouts/MainLayout";
 import { ReactNode, useState } from "react";
+import { Tab, TabBar } from "@components/composite/tabBar";
 import { useRouter } from "next/router";
 import withAuth from "@libs/withAuth";
 
@@ -29,6 +29,7 @@ function FundingTab() {
                 {fundingTabMenuConfig.map((tab) => (
                     <Tab
                         key={tab.id}
+                        width="30%"
                         labelText={tab.labelText}
                         isActive={activeTab === tab.id}
                         onClick={() => handleTabClick(tab.id, tab.redirectUrl)}

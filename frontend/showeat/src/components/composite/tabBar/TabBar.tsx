@@ -14,13 +14,15 @@ interface TabBarProps {
 /* Style */
 const TabBarContainer = styled("div")`
     width: 100%;
+    border-bottom: 1px solid ${(props) => props.theme.colors.gray2};
 `;
 
 const TabList = styled("div")`
+    // Layout Attribute
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2em;
+    gap: 5em;
 `;
 
 // ----------------------------------------------------------------------------------------------------
