@@ -1,32 +1,42 @@
 /* Import */
-import withAuth from "@libs/withAuth";
-import { ReactNode, useEffect, useState } from "react";
-import BuyerLayout from "@/layouts/BuyerLayout";
-import styled from "@emotion/styled";
+import BuyerLayout from "@layouts/BuyerLayout";
+import BuyersCouponsModal from "@components/custom/modal/BuyersCouponsModal";
+import { buyersCouponsTabMenuConfig } from "@configs/tabMenuConfig";
+import Coupon from "@components/composite/coupon";
 import { getCouponList, getCouponDetails } from "@apis/coupons";
-import TextButton from "@components/common/button/TextButton";
-import useUserState from "@hooks/useUserState";
-import CouponModal from "@components/custom/modal/BuyersCouponModal";
 import Modal from "@components/composite/modal";
-import Coupon from "@components/composite/coupon/Coupon";
+import { ReactNode, useEffect, useState } from "react";
+import styled from "@emotion/styled";
+import { Tab, TabBar } from "@components/composite/tabBar";
+import { TextButton } from "@components/common/button";
+import { useRouter } from "next/router";
+import useUserState from "@hooks/useUserState";
+import withAuth from "@libs/withAuth";
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const CouponContainer = styled("div")`
-    color: #000;
-    font-family: Pretendard;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: centnpmer;
+    width: 100%;
+    height: calc(100vh - 80px);
+    padding: 5em 10em;
+    box-sizing: border-box;
+`;
+
+const TitleWrapper = styled("div")`
+    margin-bottom: 1em;
     font-size: 30px;
-    font-style: normal;
     font-weight: 900;
-    line-height: normal;
 `;
 
 const CouponWrapper = styled("div")`
     display: grid;
     font-weight: 700;
     font-size: 40px;
-`;
-
-const NoCouponWrapper = styled("div")`
-    font-size: 25px;
 `;
 
 const CouponList = styled("div")`
@@ -38,7 +48,6 @@ const CouponList = styled("div")`
 `;
 
 const MoreButton = styled("div")`
-    align-items: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,7 +56,14 @@ const MoreButton = styled("div")`
     width: 100%;
 `;
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Buyers Coupons Page */
 function Coupons() {
+    // States and Variables
+    const router = useRouter();
+    const { tabName } = router.query;
+    const [activeTab, setActiveTab] = useState<string>((tabName as string) || "active");
     const [couponData, setCouponData] = useState([]);
     const [status, setStatus] = useState<string>("");
     const [page, setPage] = useState(0);
@@ -69,15 +85,11 @@ function Coupons() {
         console.log("리스트!!!");
         console.log(couponData);
         setSelectedCoupon(coupon);
-        getCouponDetails(coupon.couponId)
-            .then((couponDetailsData) => {
-                console.log(couponDetailsData.data);
-                setSelectedCoupon(couponDetailsData.data);
-                setIsModalOpen(true);
-            })
-            .catch((error) => {
-                console.error("쿠폰 세부 정보를 불러오지 못했습니다:", error);
-            });
+        getCouponDetails(coupon.couponId).then((couponDetailsData) => {
+            console.log(couponDetailsData.data);
+            setSelectedCoupon(couponDetailsData.data);
+            setIsModalOpen(true);
+        });
     };
 
     const fetchCouponData = () => {
@@ -98,6 +110,13 @@ function Coupons() {
             });
     };
 
+    // Function for Handling Tab Click
+    const handleTabClick = (id: string, redirectUrl: string) => {
+        setActiveTab(id);
+        router.push(redirectUrl, undefined, { shallow: true });
+        handleStatusChange(id.toUpperCase());
+    };
+
     useEffect(() => {
         if (status) {
             fetchCouponData();
@@ -106,25 +125,18 @@ function Coupons() {
 
     return (
         <CouponContainer>
-            <NoCouponWrapper>보유 쿠폰</NoCouponWrapper>
-            <TextButton
-                width="150px"
-                onClick={() => handleStatusChange("ACTIVE")}
-                text="사용 가능"
-                curve="round"
-            />
-            <TextButton
-                width="150px"
-                onClick={() => handleStatusChange("USED")}
-                text="사용 완료"
-                curve="round"
-            />
-            <TextButton
-                width="150px"
-                onClick={() => handleStatusChange("EXPIRED")}
-                text="사용 불가"
-                curve="round"
-            />
+            <TitleWrapper>보유 쿠폰</TitleWrapper>
+            <TabBar>
+                {buyersCouponsTabMenuConfig.map((tab) => (
+                    <Tab
+                        key={tab.id}
+                        width="20%"
+                        labelText={tab.labelText}
+                        isActive={activeTab === tab.id}
+                        onClick={() => handleTabClick(tab.id, tab.redirectUrl)}
+                    />
+                ))}
+            </TabBar>
             {couponData.length === 0 ? (
                 <MoreButton>
                     <CouponWrapper>쿠폰이 없습니다.</CouponWrapper>
@@ -153,7 +165,7 @@ function Coupons() {
                 height="auto"
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
-                childComponent={<CouponModal couponDetailsData={selectedCoupon} />}
+                childComponent={<BuyersCouponsModal couponDetailsData={selectedCoupon} />}
                 buttonType="close"
                 buttonWidth="150px"
             />
@@ -161,12 +173,19 @@ function Coupons() {
     );
 }
 
+// ----------------------------------------------------------------------------------------------------
+
 /* Middleware */
-const CouponWithAuth = withAuth({ WrappedComponent: Coupons, guardType: "PUBLIC" });
+const CouponsWithAuth = withAuth({ WrappedComponent: Coupons, guardType: "USER_ONLY" });
+
+// ----------------------------------------------------------------------------------------------------
 
 /* Layout */
-CouponWithAuth.getLayout = function getLayout(page: ReactNode) {
+CouponsWithAuth.getLayout = function getLayout(page: ReactNode) {
     return <BuyerLayout>{page}</BuyerLayout>;
 };
 
-export default CouponWithAuth;
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
+export default CouponsWithAuth;
