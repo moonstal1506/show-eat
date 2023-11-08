@@ -38,4 +38,4 @@ FundingWithAuth.getLayout = function getLayout(page: ReactNode) {
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default Funding;
+export default FundingWithAuth;
