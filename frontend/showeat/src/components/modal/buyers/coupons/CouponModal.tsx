@@ -1,15 +1,15 @@
 /* Import */
 import styled from "@emotion/styled";
-import Table from "@/components/common/table";
+import Table from "@components/common/table";
 import Image from "next/image";
 
 const CouponContainer = styled("div")`
-    display: inline-flex;
-    padding: 30px 40px;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
     width: 100%;
+    padding: 0;
+    gap: 10px;
 `;
 
 const CouponWrapper = styled("div")`
@@ -29,7 +29,7 @@ const BusinessName = styled("div")`
     font-weight: 400;
     line-height: normal;
     display: flex;
-    width: 630px;
+    width: 550px;
     height: 25px;
     flex-direction: column;
     justify-content: center;
@@ -43,15 +43,15 @@ const CouponName = styled("div")`
     font-weight: 700;
     line-height: normal;
     display: flex;
-    width: 630px;
+    width: 550px;
     height: 25px;
     flex-direction: column;
     justify-content: center;
 `;
 
 const CouponDetails = styled("div")`
-    width: 630px;
-    height: 180px;
+    width: 550px;
+    height: 150px;
     display: flex;
 `;
 const TableWrapper = styled("div")`

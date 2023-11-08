@@ -133,8 +133,8 @@ function Coupons() {
                 </CouponList>
             )}
             <Modal
-                width="800px"
-                height="500px"
+                width="auto"
+                height="auto"
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
                 childComponent={<CouponModal />}
