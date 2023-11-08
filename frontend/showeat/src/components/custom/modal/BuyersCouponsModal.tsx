@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import Table from "@components/common/table";
 import Image from "next/image";
 
+// ----------------------------------------------------------------------------------------------------
+
 interface CouponDetailsProps {
     couponDetailsData: {
         couponId: number;
