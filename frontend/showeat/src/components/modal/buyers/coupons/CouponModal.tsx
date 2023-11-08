@@ -3,6 +3,22 @@ import styled from "@emotion/styled";
 import Table from "@components/common/table";
 import Image from "next/image";
 
+interface CouponDetailsProps {
+    couponDetailsData: {
+        couponId: number;
+        couponStatus: "ACTIVE" | "USED" | "EXPIRED";
+        couponType: "SINGLE" | "GIFTCARD";
+        couponPrice: number;
+        expirationDate: string;
+        businessName: string;
+        fundingTitle: string;
+        fundingMenu: string;
+        fundingDiscountPrice: number;
+        fundingPrice: number;
+        couponQrCodeImgUrl: string;
+    };
+}
+
 const CouponContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -58,20 +74,33 @@ const TableWrapper = styled("div")`
     width: 440px;
 `;
 
-function CouponModal() {
-    const headers = ["펀딩명", "유효기간", "메뉴가격", "구입가격"];
-    const contents = ["유정이", "2022", "10000", "1000"];
+function CouponModal(props: CouponDetailsProps) {
+    const {
+        couponDetailsData: {
+            expirationDate,
+            businessName,
+            fundingTitle,
+            fundingMenu,
+            fundingDiscountPrice,
+            fundingPrice,
+            couponQrCodeImgUrl,
+        },
+    } = props;
+
+    const headers = ["펀딩명", "유효기간", "금액권 가격", "구입 가격"];
+    // const headers = ["펀딩명", "유효기간", "메뉴 가격", "구입 가격"];
+    const contents = [fundingTitle, expirationDate, fundingPrice, fundingDiscountPrice];
 
     return (
         <CouponContainer>
             <CouponWrapper>쿠폰 사용 정보</CouponWrapper>
-            <BusinessName>야미화니 커피</BusinessName>
-            <CouponName>카페라떼</CouponName>
+            <BusinessName>상호: {businessName}</BusinessName>
+            <CouponName> {fundingMenu}</CouponName>
             <CouponDetails>
                 <TableWrapper>
                     <Table headerWidth="50%" headers={headers} contents={contents} />
                 </TableWrapper>
-                <Image alt="qrcode" src="/assets/images/qrlogo.png" height={150} width={150} />
+                <Image alt="qrcode" src={couponQrCodeImgUrl} height={150} width={150} />
             </CouponDetails>
         </CouponContainer>
     );

@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import BuyerLayout from "@/layouts/BuyerLayout";
 import styled from "@emotion/styled";
 import Coupon from "@components/coupon/Coupon";
-import getCouponList from "@apis/coupons";
+import { getCouponList, getCouponDetails } from "@apis/coupons";
 import TextButton from "@components/common/button/TextButton";
 import useUserState from "@hooks/useUserState";
 import Modal from "@components/modal";
@@ -53,6 +53,8 @@ function Coupons() {
     const [page, setPage] = useState(0);
     const [user] = useUserState();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [selectedCoupon, setSelectedCoupon] = useState([]);
+    const [selectedCoupon, setSelectedCoupon] = useState<CouponType | null>(null);
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
@@ -63,8 +65,18 @@ function Coupons() {
         setPage(page + 1); // 더보기 : 페이지 + 1
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
+    const openModal = (coupon) => {
+        console.log(`지금 클릭한 couponId: ${coupon.couponId}`);
+        setSelectedCoupon(coupon);
+        getCouponDetails(coupon.couponId)
+            .then((couponDetailsData) => {
+                console.log(couponDetailsData.data);
+                setSelectedCoupon(couponDetailsData.data);
+                setIsModalOpen(true);
+            })
+            .catch((error) => {
+                console.error("쿠폰 세부 정보를 불러오지 못했습니다:", error);
+            });
     };
 
     const fetchCouponData = () => {
@@ -137,7 +149,7 @@ function Coupons() {
                 height="auto"
                 isOpen={isModalOpen}
                 setIsOpen={setIsModalOpen}
-                childComponent={<CouponModal />}
+                childComponent={<CouponModal couponDetailsData={selectedCoupon} />}
                 buttonType="close"
                 buttonWidth="150px"
             />
