@@ -7,6 +7,7 @@ import Coupon from "@components/coupon/Coupon";
 import getCouponList from "@apis/coupons";
 import TextButton from "@components/common/button/TextButton";
 import useUserState from "@hooks/useUserState";
+import Modal from "@components/modal";
 
 const CouponContainer = styled("div")`
     color: #000;
@@ -50,6 +51,7 @@ function Coupons() {
     const [status, setStatus] = useState<string>("");
     const [page, setPage] = useState(0);
     const [user] = useUserState();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
@@ -58,6 +60,10 @@ function Coupons() {
 
     const handleLoadMore = () => {
         setPage(page + 1); // 더보기 : 페이지 + 1
+    };
+
+    const openModal = () => {
+        setIsModalOpen(true);
     };
 
     const fetchCouponData = () => {
@@ -109,7 +115,11 @@ function Coupons() {
             ) : (
                 <CouponList>
                     {couponData.map((coupon) => (
-                        <Coupon key={coupon.couponId} couponData={coupon} onClick={() => {}} />
+                        <Coupon
+                            key={coupon.couponId}
+                            couponData={coupon}
+                            onClick={() => openModal(coupon)}
+                        />
                     ))}
                     <MoreButton>
                         <TextButton
@@ -121,6 +131,15 @@ function Coupons() {
                     </MoreButton>
                 </CouponList>
             )}
+            <Modal
+                width="400px"
+                height="300px"
+                isOpen={isModalOpen}
+                setIsOpen={setIsModalOpen}
+                childComponent="모달 넣을곳"
+                buttonType="close"
+                buttonWidth="150px"
+            />
         </CouponContainer>
     );
 }
