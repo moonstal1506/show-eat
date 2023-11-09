@@ -7,6 +7,7 @@ import { InputProps } from "@customTypes/commonProps";
 /* Type */
 interface TextareaProps extends InputProps {
     maxLength: number;
+    value: string;
     textareaName?: string;
     focusColor?: "primary" | "secondary" | "gray";
     fontSize?: string;
@@ -87,6 +88,7 @@ function Textarea({
     maxLength,
     id,
     textareaName,
+    value,
     onChange,
     focusColor = "primary",
     fontSize,
@@ -108,6 +110,7 @@ function Textarea({
                     width={width}
                     height={height}
                     maxLength={maxLength}
+                    value={value}
                     onChange={(e) => onChange(e)}
                     fontSize={fontSize}
                 />
