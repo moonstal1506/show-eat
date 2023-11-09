@@ -17,7 +17,7 @@ function Funding() {
         if (!fundingId) {
             return;
         }
-        router.replace(`/fundings/${fundingId}/review`);
+        router.replace(`/fundings/${fundingId}/store`);
     }, [fundingId]);
 
     return null;
