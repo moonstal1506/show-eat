@@ -24,6 +24,7 @@ interface FundingTabProps extends HTMLAttributes<HTMLElement> {
 
 /* Server Side Rendering */
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+    // States and Variables
     const { fundingId, tabNames } = params as FundingParams;
     const allowedTabNames = ["review", "store"];
 
