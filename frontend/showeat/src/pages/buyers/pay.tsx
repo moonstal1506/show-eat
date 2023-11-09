@@ -169,27 +169,34 @@ function Payment() {
     const [user] = useUserState(); // 추가
     const [nickname, setNickname] = useState(""); // 추가
     const [currentPoint, setCurrentPoint] = useState(0); // 추가
-    // const [afterPoint, setAfterPoint] = useState(0); // 추가
+    const [afterPoint, setAfterPoint] = useState(0); // 추가
 
     useEffect(() => {
         const { userId } = user;
-        getUserInfo(userId).then((result) => {
-            const { userNickname, userMoney } = result.data;
 
-            setNickname(userNickname); // 닉네임 업데이트
-            setCurrentPoint(userMoney); // 현재 포인트 업데이트
-        });
-    }, []);
+        if (userId !== 0) {
+            getUserInfo(userId).then((result) => {
+                const { userNickname, userMoney } = result.data;
+                setNickname(userNickname);
+                setCurrentPoint(userMoney);
+            });
+        }
+    }, [user]);
 
-    // // 선택한 금액에 따라 포인트 계산
-    // useEffect(() => {
-    //     if (selectedValue) {
-    //         const selectedAmount = parseInt(selectedValue.replace(/[^0-9]/g, ""), 10);
-    //         if (!isNaN(selectedAmount)) {
-    //             setAfterPoint(currentPoint + selectedAmount); // 결제 후 포인트 계산
-    //         }
-    //     }
-    // }, [selectedValue, currentPoint]);
+    // 선택한 금액에 따라 포인트 계산
+    useEffect(() => {
+        if (selectedValue) {
+            const selectedAmount = parseInt(selectedValue.replace(/[^0-9]/g, ""), 10);
+            if (!Number.isNaN(selectedAmount)) {
+                setAfterPoint(currentPoint + selectedAmount);
+            }
+        }
+    }, [selectedValue, currentPoint]);
+
+    // 포인트를 ,000 형식으로 포맷하는 함수
+    const formatPoint = (point: number) => {
+        return point.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
 
     return (
         <PaymentContainer>
@@ -309,11 +316,11 @@ function Payment() {
                     </BuyerInfoTextWrapper>
                     <BuyerInfoTextWrapper>
                         <BuyerInfoTextLeft>보유 포인트</BuyerInfoTextLeft>
-                        <BuyerInfoTextRight>{currentPoint} P</BuyerInfoTextRight>
+                        <BuyerInfoTextRight>{formatPoint(currentPoint)} P</BuyerInfoTextRight>
                     </BuyerInfoTextWrapper>
                     <BuyerInfoTextWrapper>
                         <BuyerInfoTextLeft>결제 후 포인트</BuyerInfoTextLeft>
-                        <BuyerInfoTextRight>afterPoint P</BuyerInfoTextRight>
+                        <BuyerInfoTextRight>{formatPoint(afterPoint)} P</BuyerInfoTextRight>
                     </BuyerInfoTextWrapper>
                 </BuyerInfoTextBox>
             </BuyerInfoContainer>
