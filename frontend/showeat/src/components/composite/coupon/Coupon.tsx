@@ -1,4 +1,5 @@
 /* Import */
+import { CouponType } from "@customTypes/apiProps";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { keyframes } from "@emotion/react";
@@ -7,17 +8,7 @@ import { keyframes } from "@emotion/react";
 
 /* Type */
 interface CouponProps {
-    couponData: {
-        couponId: number;
-        couponStatus: "ACTIVE" | "USED" | "EXPIRED";
-        couponType: "SINGLE" | "GIFTCARD";
-        couponOriginalPrice: number;
-        businessName: string;
-        businessImgUrl: string;
-        fundingMenu?: string;
-        fundingImgUrl: string;
-        remainingDays: number;
-    };
+    couponData: CouponType;
     onClick: (couponId: number) => void;
 }
 
@@ -233,19 +224,17 @@ const SellerImageWrapper = styled(Image)`
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Function */
-function dayCheck(remainingDays: number) {
-    if (remainingDays > 0) {
-        return `D-${remainingDays}`;
-    }
-    if (remainingDays === 0) {
-        return "오늘 마감";
-    }
-    return null;
-}
-
 /* Coupon Component */
 function Coupon({ couponData, onClick }: CouponProps) {
+    function dayCheck(remainingDays: number) {
+        if (remainingDays > 0) {
+            return `D-${remainingDays}`;
+        }
+        if (remainingDays === 0) {
+            return "오늘 마감";
+        }
+        return null;
+    }
     const days = dayCheck(couponData.remainingDays);
 
     return (
