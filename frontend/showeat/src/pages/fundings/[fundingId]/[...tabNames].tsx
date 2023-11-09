@@ -3,6 +3,7 @@ import { fundingTabMenuConfig } from "@configs/tabMenuConfig";
 import { GetServerSideProps } from "next";
 import { HTMLAttributes, ReactNode, useState } from "react";
 import MainLayout from "@layouts/MainLayout";
+import styled from "@emotion/styled";
 import { Tab, TabBar } from "@components/composite/tabBar";
 import { useRouter } from "next/router";
 import withAuth from "@libs/withAuth";
@@ -22,11 +23,18 @@ interface FundingTabProps extends HTMLAttributes<HTMLElement> {
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Style */
+const FundingContainer = styled("div")`
+    width: 100vw;
+`;
+
+// ----------------------------------------------------------------------------------------------------
+
 /* Server Side Rendering */
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     // States and Variables
     const { fundingId, tabNames } = params as FundingParams;
-    const allowedTabNames = ["review", "store"];
+    const allowedTabNames = fundingTabMenuConfig.map((tab) => tab.id);
 
     if (!fundingId || !tabNames || !allowedTabNames.includes(tabNames[0])) {
         return {
@@ -62,7 +70,7 @@ function FundingTab(params: FundingTabProps) {
     };
 
     return (
-        <div>
+        <FundingContainer>
             펀딩 메인 페이지입니다.
             <TabBar>
                 {fundingTabMenuConfig.map((tab) => (
@@ -76,7 +84,7 @@ function FundingTab(params: FundingTabProps) {
                 ))}
             </TabBar>
             <div>{activeTab === "store" ? <div>상점</div> : <div>리뷰</div>}</div>
-        </div>
+        </FundingContainer>
     );
 }
 
