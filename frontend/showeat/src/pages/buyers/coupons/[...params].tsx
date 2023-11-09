@@ -44,7 +44,8 @@ const CouponList = styled("div")`
     flex-wrap: wrap;
     width: 950px;
     align-items: center;
-    margin-top: 20px;
+    margin: 30px 0 30px 20px;
+    justify-content: flex-start;
 `;
 
 const MoreButton = styled("div")`
@@ -54,6 +55,7 @@ const MoreButton = styled("div")`
     margin-top: 20px;
     margin: 0 auto;
     width: 100%;
+    padding-top: 30px;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -70,6 +72,7 @@ function Coupons() {
     const [user] = useUserState();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
+    const [last, setLast] = useState(false);
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
@@ -81,15 +84,15 @@ function Coupons() {
     };
 
     const openModal = (coupon) => {
-        console.log(`지금 클릭한 couponId: ${coupon.couponId}`);
-        console.log("리스트!!!");
-        console.log(couponData);
         setSelectedCoupon(coupon);
-        getCouponDetails(coupon.couponId).then((couponDetailsData) => {
-            console.log(couponDetailsData.data);
-            setSelectedCoupon(couponDetailsData.data);
-            setIsModalOpen(true);
-        });
+        getCouponDetails(coupon.couponId)
+            .then((couponDetailsData) => {
+                setSelectedCoupon(couponDetailsData.data);
+                setIsModalOpen(true);
+            })
+            .catch((error) => {
+                console.error("쿠폰 세부 정보를 불러오지 못했습니다:", error);
+            });
     };
 
     const fetchCouponData = () => {
@@ -97,13 +100,12 @@ function Coupons() {
         getCouponList(userId, status, page)
             .then((data) => {
                 if (page === 0) {
-                    setCouponData(data);
+                    setCouponData(data.couponListResponseDtos);
+                    setLast(data.last);
                 } else {
-                    setCouponData([...couponData, ...data]);
+                    setCouponData([...couponData, ...data.couponListResponseDtos]);
+                    setLast(data.last);
                 }
-                console.log("받아온 쿠폰 데이터!!!!!!!!!!!!!!!!:", data);
-                // totalPages를 콘솔에 출력합니다.
-                console.log("totalPages:", data.totalPages);
             })
             .catch((error) => {
                 console.error("쿠폰 데이터를 가져오는 중 오류 발생:", error);
@@ -150,14 +152,16 @@ function Coupons() {
                             onClick={() => openModal(coupon)}
                         />
                     ))}
-                    <MoreButton>
-                        <TextButton
-                            width="150px"
-                            onClick={() => handleLoadMore()}
-                            text="더보기"
-                            curve="round"
-                        />
-                    </MoreButton>
+                    {!last ? (
+                        <MoreButton>
+                            <TextButton
+                                width="150px"
+                                onClick={() => handleLoadMore()}
+                                text="더보기"
+                                curve="round"
+                            />
+                        </MoreButton>
+                    ) : null}
                 </CouponList>
             )}
             <Modal
