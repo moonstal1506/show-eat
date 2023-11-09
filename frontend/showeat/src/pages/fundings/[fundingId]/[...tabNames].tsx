@@ -1,7 +1,7 @@
 /* Import */
 import { fundingTabMenuConfig } from "@configs/tabMenuConfig";
 import { GetServerSideProps } from "next";
-import { HTMLAttributes, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import MainLayout from "@layouts/MainLayout";
 import styled from "@emotion/styled";
 import { Tab, TabBar } from "@components/composite/tabBar";
@@ -16,7 +16,7 @@ interface FundingParams {
     tabNames?: string[];
 }
 
-interface FundingTabProps extends HTMLAttributes<HTMLElement> {
+interface FundingTabProps {
     fundingId: string;
     tabName: string;
 }
@@ -56,10 +56,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 // ----------------------------------------------------------------------------------------------------
 
 /* Funding Tab Page */
-function FundingTab(params: FundingTabProps) {
+function FundingTab(props: FundingTabProps) {
     // States and Variables
     const router = useRouter();
-    const { fundingId, tabName } = params;
+    const { fundingId, tabName } = props;
     const [activeTab, setActiveTab] = useState<string>(tabName || "store");
 
     // Function for Handling Tab Click

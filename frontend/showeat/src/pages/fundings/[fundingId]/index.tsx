@@ -12,7 +12,7 @@ function Funding() {
     const router = useRouter();
     const { fundingId } = router.query;
 
-    // Hook for Routing Funding Review Page
+    // Hook for Routing Funding Store Page
     useEffect(() => {
         if (!fundingId) {
             return;
