@@ -13,8 +13,10 @@ interface TextInputProps extends InputProps {
     required?: boolean;
     labelText?: string;
     source?: string;
+    disabled?: boolean;
+    unit?: string;
     onClick?: (event: MouseEvent<HTMLElement>) => void;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     onKeyUp?: (event: KeyboardEvent<HTMLInputElement>) => void;
 }
 
@@ -81,6 +83,18 @@ const IconWrapper = styled(Image)<{ "data-clickable": boolean }>`
     -webkit-user-select: none;
 `;
 
+const UnitWrapper = styled("span")`
+    // Box Model Attribute
+    max-width: 30px;
+    max-height: 30px;
+
+    // Interaction Attribute
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Text Input Component */
@@ -95,6 +109,8 @@ function TextInput(props: TextInputProps) {
         required = false,
         labelText = "",
         source = "",
+        disabled = false,
+        unit,
         onClick = () => {},
         onChange = () => {},
         onKeyUp = () => {},
@@ -114,6 +130,7 @@ function TextInput(props: TextInputProps) {
                     value={value}
                     placeholder={placeholder}
                     required={required}
+                    disabled={disabled}
                     onChange={onChange}
                     onKeyUp={onKeyUp}
                 />
@@ -127,6 +144,7 @@ function TextInput(props: TextInputProps) {
                         onClick={onClick}
                     />
                 )}
+                {unit && <UnitWrapper>({unit})</UnitWrapper>}
             </InputBox>
         </InputContainer>
     );
