@@ -1,19 +1,57 @@
 /* Import */
 import { fundingTabMenuConfig } from "@configs/tabMenuConfig";
+import { GetServerSideProps } from "next";
+import { HTMLAttributes, ReactNode, useState } from "react";
 import MainLayout from "@layouts/MainLayout";
-import { ReactNode, useState } from "react";
 import { Tab, TabBar } from "@components/composite/tabBar";
 import { useRouter } from "next/router";
 import withAuth from "@libs/withAuth";
 
 // ----------------------------------------------------------------------------------------------------
 
+/* Type */
+interface FundingParams {
+    fundingId?: string;
+    tabNames?: string[];
+}
+
+interface FundingTabProps extends HTMLAttributes<HTMLElement> {
+    fundingId: string;
+    tabName: string;
+}
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Server Side Rendering */
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+    const { fundingId, tabNames } = params as FundingParams;
+    const allowedTabNames = ["review", "store"];
+
+    if (!fundingId || !tabNames || !allowedTabNames.includes(tabNames[0])) {
+        return {
+            redirect: {
+                destination: "/error/not-found",
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: {
+            fundingId,
+            tabName: tabNames?.[0],
+        },
+    };
+};
+
+// ----------------------------------------------------------------------------------------------------
+
 /* Funding Tab Page */
-function FundingTab() {
+function FundingTab(params: FundingTabProps) {
     // States and Variables
     const router = useRouter();
-    const { fundingId, tabName } = router.query;
-    const [activeTab, setActiveTab] = useState<string>((tabName as string) || "store");
+    const { fundingId, tabName } = params;
+    const [activeTab, setActiveTab] = useState<string>(tabName || "store");
 
     // Function for Handling Tab Click
     const handleTabClick = (id: string, redirectUrl: string) => {
