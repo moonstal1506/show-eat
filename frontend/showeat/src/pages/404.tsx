@@ -11,15 +11,18 @@ import withAuth from "@libs/withAuth";
 
 /* Style */
 const ErrorContainer = styled("div")`
+    // Layout Attribute
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1em;
 
+    // Box Model Attribute
     width: 100vw;
     height: calc(100vh - 310.2px);
 
+    // Styel Attribute
     background-color: white;
 
     // Interaction Attribute
@@ -30,30 +33,36 @@ const ErrorContainer = styled("div")`
 `;
 
 const ErrorBox = styled("div")`
+    // Layout Attribute
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 3em;
 
+    // Box Model Attribute
     margin-top: 2em;
 `;
 
 const HeaderWrapper = styled("div")`
+    // Text Attribute
     font-weight: 900;
     font-size: 200px;
     color: ${(props) => props.theme.colors.primary3};
 `;
 
 const DescriptionWrapper = styled("div")`
+    // Text Attribute
     font-weight: 700;
     font-size: 30px;
 `;
 
 const ButtonWrapper = styled("div")`
+    // Layout Attribute
     display: flex;
     justify-content: center;
     align-items: center;
 
+    // Box Model Attribute
     width: 100%;
 `;
 
@@ -61,7 +70,9 @@ const ButtonWrapper = styled("div")`
 
 /* Not Found Error Page */
 function NotFound() {
+    // States and Variables
     const router = useRouter();
+
     return (
         <ErrorContainer>
             <ErrorBox>
