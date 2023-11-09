@@ -3,12 +3,12 @@ import withAuth from "@libs/withAuth";
 import { ReactNode, useEffect, useState } from "react";
 import BuyerLayout from "@/layouts/BuyerLayout";
 import styled from "@emotion/styled";
-import Coupon from "@components/coupon/Coupon";
 import { getCouponList, getCouponDetails } from "@apis/coupons";
 import TextButton from "@components/common/button/TextButton";
 import useUserState from "@hooks/useUserState";
-import Modal from "@components/modal";
-import CouponModal from "@components/modal/buyers/coupons/couponModal";
+import CouponModal from "@components/custom/modal/BuyersCouponModal";
+import Modal from "@components/composite/modal";
+import Coupon from "@components/composite/coupon/Coupon";
 
 const CouponContainer = styled("div")`
     color: #000;
@@ -32,9 +32,10 @@ const NoCouponWrapper = styled("div")`
 const CouponList = styled("div")`
     display: flex;
     flex-wrap: wrap;
-    width: 700px;
+    width: 950px;
     align-items: center;
-    margin-top: 20px;
+    margin: 30px 0 30px 20px;
+    justify-content: flex-start;
 `;
 
 const MoreButton = styled("div")`
@@ -45,6 +46,7 @@ const MoreButton = styled("div")`
     margin-top: 20px;
     margin: 0 auto;
     width: 100%;
+    padding-top: 30px;
 `;
 
 function Coupons() {
@@ -53,8 +55,8 @@ function Coupons() {
     const [page, setPage] = useState(0);
     const [user] = useUserState();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [selectedCoupon, setSelectedCoupon] = useState([]);
-    const [selectedCoupon, setSelectedCoupon] = useState<CouponType | null>(null);
+    const [selectedCoupon, setSelectedCoupon] = useState(null);
+    const [last, setLast] = useState(false);
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
@@ -66,11 +68,9 @@ function Coupons() {
     };
 
     const openModal = (coupon) => {
-        console.log(`지금 클릭한 couponId: ${coupon.couponId}`);
         setSelectedCoupon(coupon);
         getCouponDetails(coupon.couponId)
             .then((couponDetailsData) => {
-                console.log(couponDetailsData.data);
                 setSelectedCoupon(couponDetailsData.data);
                 setIsModalOpen(true);
             })
@@ -84,9 +84,11 @@ function Coupons() {
         getCouponList(userId, status, page)
             .then((data) => {
                 if (page === 0) {
-                    setCouponData(data);
+                    setCouponData(data.couponListResponseDtos);
+                    setLast(data.last);
                 } else {
-                    setCouponData([...couponData, ...data]);
+                    setCouponData([...couponData, ...data.couponListResponseDtos]);
+                    setLast(data.last);
                 }
             })
             .catch((error) => {
@@ -134,14 +136,16 @@ function Coupons() {
                             onClick={() => openModal(coupon)}
                         />
                     ))}
-                    <MoreButton>
-                        <TextButton
-                            width="150px"
-                            onClick={() => handleLoadMore()}
-                            text="더보기"
-                            curve="round"
-                        />
-                    </MoreButton>
+                    {!last ? (
+                        <MoreButton>
+                            <TextButton
+                                width="150px"
+                                onClick={() => handleLoadMore()}
+                                text="더보기"
+                                curve="round"
+                            />
+                        </MoreButton>
+                    ) : null}
                 </CouponList>
             )}
             <Modal
