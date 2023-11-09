@@ -35,6 +35,8 @@ const LabelWrapper = styled("label")`
     // Text Attribute
     font-size: 18px;
     font-weight: 700;
+
+    margin-bottom: 0.5em;
 `;
 
 const InputBox = styled("div")`
@@ -44,7 +46,6 @@ const InputBox = styled("div")`
     // Box Model Attribute
     width: 100%;
     box-sizing: border-box;
-    margin-top: 0.5em;
     padding: 0.5em 1em;
 
     // Style Attribute
