@@ -23,37 +23,41 @@ interface AddNewMenuType {
 }
 
 const addNewMenu = async ({ menu, price, multipartFiles }: AddNewMenuType) => {
+    // Create a new FormData instance
     const formData = new FormData();
 
-    const yaho = JSON.stringify({
-        menu,
-        price,
+    // addNewMenu 함수 내에서 formData를 만들기 전에 로그로 확인
+    function logFormData(formData) {
+        formData.forEach((value, key) => {
+            console.log(`${key}, ${value}`);
+        });
+    }
+    logFormData(formData);
+
+    // Append JSON data as a string
+    formData.append(
+        "registMenuRequestDto",
+        JSON.stringify({
+            menu,
+            price,
+        }),
+    );
+
+    // Append each file
+    multipartFiles.forEach((file) => {
+        formData.append(`multipartFiles`, file);
     });
 
-    console.log(yaho);
-    // console.log(
-    //     JSON.stringify({
-    //         menu,
-    //         price,
-    //     }),
-    // );
-
-    // multipartFiles.forEach((file, index) => {
-    //     formData.append(`file${index + 1}`, file);
-    // });
+    // addNewMenu 함수 내에서 formData를 만든 후에 로그로 확인
+    logFormData(formData);
 
     const props: FetchProps = {
         url: "business/menu",
         method: "POST",
         isAuth: true,
         contentType: "file", // or "multipart/form-data"
-        data: {
-            registMenuRequestDto: yaho,
-            multipartFiles,
-        },
+        data: formData,
     };
-
-    console.log(formData);
 
     console.log(menu, price, multipartFiles);
 

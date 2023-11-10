@@ -92,10 +92,25 @@ async function fetchModify(props: FetchProps) {
         }
     }
 
+    const handleData = () => {
+        if (data) {
+            if (contentType === "json") {
+                return JSON.stringify(data);
+            }
+            if (data instanceof FormData) {
+                console.log("마!!!!!!!");
+
+                return data;
+            }
+            return undefined;
+        }
+        return undefined;
+    };
+
     const options: FetchOptionProps = {
         method,
         headers,
-        body: data ? JSON.stringify(data) : undefined,
+        body: handleData(),
         credentials: isAuth ? "include" : "omit",
         cache: cache ? "force-cache" : "no-store",
         next: {
@@ -105,6 +120,8 @@ async function fetchModify(props: FetchProps) {
     };
 
     try {
+        console.log(options, 1);
+
         const response = await fetch(`${ENDPOINT}${url}`, options);
         const fetchResult = await response.json();
         if (fetchResult && fetchResult.statusCode === 200) {
