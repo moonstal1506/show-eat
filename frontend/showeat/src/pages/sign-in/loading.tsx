@@ -47,6 +47,8 @@ function SignInLoading() {
                     visited,
                     userMoney,
                     userPhone,
+                    credentialId,
+                    userEmail,
                 } = result.data;
 
                 setCookie("access-token", accessToken);
@@ -60,6 +62,8 @@ function SignInLoading() {
                     userMoney,
                     userPhone,
                     visited,
+                    credentialId,
+                    userEmail,
                 });
 
                 if (visited) {

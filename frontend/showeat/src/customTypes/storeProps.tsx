@@ -8,6 +8,8 @@ export interface UserType {
     userMoney: number;
     userPhone: string;
     visited: boolean;
+    credentialId: string;
+    userEmail: string;
 }
 
 export interface SellerType {
