@@ -4,8 +4,9 @@ import BuyersCouponsModal from "@components/custom/modal/BuyersCouponsModal";
 import { buyersCouponsTabMenuConfig } from "@configs/tabMenuConfig";
 import Coupon from "@components/composite/coupon";
 import { CouponType } from "@customTypes/apiProps";
-import { getCouponList, getCouponDetails } from "@apis/coupons";
+import { getCouponList } from "@apis/coupons";
 import { GetServerSideProps } from "next";
+import Image from "next/image";
 import Modal from "@components/composite/modal";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "@emotion/styled";
@@ -34,44 +35,84 @@ const CouponContainer = styled("div")`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
 
     // Box Model Attribute
     width: 100%;
     height: calc(100vh - 80px);
     box-sizing: border-box;
     padding: 5em 10em;
+
+    // Interaction Attribute
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 `;
 
 const TitleWrapper = styled("div")`
+    // Box Model Attribute
     margin-bottom: 1em;
+
+    // Text Attribute
     font-size: 30px;
     font-weight: 900;
 `;
 
-const CouponWrapper = styled("div")`
-    display: grid;
+const BlankList = styled("div")`
+    // Layout Attribute
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+    // Box Model Attribute
+    height: 100vh;
+`;
+
+const TextWrapper = styled("div")`
+    // Text Attribute
     font-weight: 700;
-    font-size: 40px;
+    font-size: 30px;
+    color: ${(props) => props.theme.colors.gray4};
+    span {
+        font-size: 30px;
+        font-weight: 900;
+        color: ${(props) => props.theme.colors.secondary3};
+    }
 `;
 
 const CouponList = styled("div")`
-    display: flex;
-    flex-wrap: wrap;
-    width: 950px;
-    align-items: center;
-    margin: 30px 0 30px 20px;
-    justify-content: flex-start;
+    // Layout Attribute
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1em;
+    @media (max-width: 1400px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 1200px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    // Box Model Attribute
+    padding: 1em;
+    box-sizing: border-box;
 `;
 
-const MoreButton = styled("div")`
+const ButtonWrapper = styled("div")`
+    // Layout Attribute
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
-    margin: 0 auto;
+
+    // Box Model Attribute
     width: 100%;
-    padding-top: 30px;
+    box-sizing: border-box;
+    margin-top: 2em;
+    padding-bottom: 2em;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -103,60 +144,56 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 /* Buyers Coupons Tab Page */
 function CouponsTab(props: CouponsTabProps) {
     // States and Variables
+    const { tabName } = props;
     const router = useRouter();
     const [user] = useUserState();
-    const { tabName } = props;
     const [activeTab, setActiveTab] = useState<string>(tabName || "active");
-    const [status, setStatus] = useState<string>(activeTab.toUpperCase());
+    const [status, setStatus] = useState<string>(tabName.toUpperCase());
     const [couponData, setCouponData] = useState<CouponType[]>([]);
     const [selectedCoupon, setSelectedCoupon] = useState<CouponType | null>(null);
     const [page, setPage] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [last, setLast] = useState<boolean>(false);
-
-    const handleStatusChange = (newStatus: string) => {
-        setStatus(newStatus);
-        setPage(0);
-    };
-
-    const handleLoadMore = () => {
-        setPage(page + 1); // 더보기 : 페이지 + 1
-    };
-
-    const openModal = (coupon: CouponType) => {
-        setSelectedCoupon(coupon);
-        getCouponDetails(coupon.couponId).then((couponDetailsData) => {
-            setSelectedCoupon(couponDetailsData.data);
-            setIsModalOpen(true);
-        });
-    };
-
-    const fetchCouponData = () => {
-        const { userId } = user;
-        getCouponList(userId, status, page).then((result) => {
-            const isLastPage: boolean = result.data.last;
-            const couponList: CouponType[] = result.data.couponResponseDtos || [];
-            if (page === 0) {
-                setCouponData(couponList);
-                setLast(isLastPage);
-            } else {
-                setCouponData([...couponData, ...couponList]);
-                setLast(isLastPage);
-            }
-        });
-    };
+    const [hasMorePage, setHasMorePage] = useState<boolean>(true);
 
     // Function for Handling Tab Click
     const handleTabClick = (id: string, redirectUrl: string) => {
         setActiveTab(id);
+        setStatus(id.toUpperCase());
+        setPage(0);
         router.push(redirectUrl, undefined, { shallow: true });
-        handleStatusChange(id.toUpperCase());
+    };
+
+    // Function for Getting Tab Label Text
+    const getTabLabelText = () => {
+        return buyersCouponsTabMenuConfig.find((tab) => tab.id === activeTab)?.labelText || "";
+    };
+
+    // Function for Handling Load More Coupon Button Click
+    const handleLoadCoupon = () => {
+        setPage(page + 1);
+    };
+
+    // Function for Opening Modal
+    const openModal = (coupon: CouponType) => {
+        setSelectedCoupon(coupon);
+        setIsModalOpen(true);
     };
 
     useEffect(() => {
         const { userId } = user;
         if (userId !== 0) {
-            fetchCouponData();
+            getCouponList(userId, status, page).then((result) => {
+                const isLastPage: boolean = result.data.last;
+                const couponList: CouponType[] = result.data.couponResponseDtos || [];
+
+                if (page === 0) {
+                    setCouponData(couponList);
+                    setHasMorePage(!isLastPage);
+                } else {
+                    setCouponData([...couponData, ...couponList]);
+                    setHasMorePage(!isLastPage);
+                }
+            });
         }
     }, [user, status, page]);
 
@@ -174,26 +211,35 @@ function CouponsTab(props: CouponsTabProps) {
                     />
                 ))}
             </TabBar>
-            {couponData ? (
-                <MoreButton>
-                    <CouponWrapper>쿠폰이 없습니다.</CouponWrapper>
-                </MoreButton>
+            {couponData.length === 0 ? (
+                <BlankList>
+                    <Image
+                        src="/assets/images/crying-cook-cow.png"
+                        width={150}
+                        height={150}
+                        alt="crying-cook-cow"
+                        priority
+                    />
+                    <TextWrapper>
+                        보유 중인 <span>{getTabLabelText()}</span> 쿠폰이 없소!
+                    </TextWrapper>
+                </BlankList>
             ) : (
                 <CouponList>
                     {couponData.map((coupon, index) => (
-                        <Coupon key={index} couponData={coupon} onClick={() => openModal(coupon)} />
+                        <Coupon key={index} coupon={coupon} onClick={() => openModal(coupon)} />
                     ))}
-                    {!last && (
-                        <MoreButton>
-                            <TextButton
-                                width="150px"
-                                onClick={() => handleLoadMore()}
-                                text="더보기"
-                                curve="round"
-                            />
-                        </MoreButton>
-                    )}
                 </CouponList>
+            )}
+            {hasMorePage && (
+                <ButtonWrapper>
+                    <TextButton
+                        width="200px"
+                        onClick={handleLoadCoupon}
+                        text="쿠폰 더 보기"
+                        curve="round"
+                    />
+                </ButtonWrapper>
             )}
             {selectedCoupon && (
                 <Modal
