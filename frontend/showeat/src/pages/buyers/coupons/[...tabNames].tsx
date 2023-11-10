@@ -148,7 +148,6 @@ function CouponsTab(props: CouponsTabProps) {
     const router = useRouter();
     const [user] = useUserState();
     const [activeTab, setActiveTab] = useState<string>(tabName || "active");
-    const [status, setStatus] = useState<string>(tabName.toUpperCase());
     const [couponData, setCouponData] = useState<CouponType[]>([]);
     const [selectedCoupon, setSelectedCoupon] = useState<CouponType | null>(null);
     const [page, setPage] = useState<number>(0);
@@ -158,7 +157,6 @@ function CouponsTab(props: CouponsTabProps) {
     // Function for Handling Tab Click
     const handleTabClick = (id: string, redirectUrl: string) => {
         setActiveTab(id);
-        setStatus(id.toUpperCase());
         setPage(0);
         router.push(redirectUrl, undefined, { shallow: true });
     };
@@ -181,6 +179,7 @@ function CouponsTab(props: CouponsTabProps) {
 
     useEffect(() => {
         const { userId } = user;
+        const status: string = activeTab.toUpperCase();
         if (userId !== 0) {
             getCouponList(userId, status, page).then((result) => {
                 const isLastPage: boolean = result.data.last;
@@ -195,7 +194,7 @@ function CouponsTab(props: CouponsTabProps) {
                 }
             });
         }
-    }, [user, status, page]);
+    }, [activeTab, page, user]);
 
     return (
         <CouponContainer>
