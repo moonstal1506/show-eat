@@ -13,7 +13,7 @@ interface TextInputProps extends InputProps {
     required?: boolean;
     labelText?: string;
     source?: string;
-    disabled?: boolean;
+    readOnly?: boolean;
     unit?: string;
     onClick?: (event: MouseEvent<HTMLElement>) => void;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -109,7 +109,7 @@ function TextInput(props: TextInputProps) {
         required = false,
         labelText = "",
         source = "",
-        disabled = false,
+        readOnly = false,
         unit,
         onClick = () => {},
         onChange = () => {},
@@ -130,7 +130,7 @@ function TextInput(props: TextInputProps) {
                     value={value}
                     placeholder={placeholder}
                     required={required}
-                    disabled={disabled}
+                    readOnly={readOnly}
                     onChange={onChange}
                     onKeyUp={onKeyUp}
                 />
