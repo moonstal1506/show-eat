@@ -13,7 +13,10 @@ interface TabBarProps {
 
 /* Style */
 const TabBarContainer = styled("div")`
+    // Box Model Attribute
     width: 100%;
+
+    // Style Attribute
     border-bottom: 1px solid ${(props) => props.theme.colors.gray2};
 `;
 
@@ -29,6 +32,7 @@ const TabList = styled("div")`
 
 /* Tab Bar Component */
 function TabBar(props: TabBarProps) {
+    // States and Variables
     const { children } = props;
 
     return (
