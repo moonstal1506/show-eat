@@ -20,6 +20,7 @@ import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
+import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
@@ -143,8 +144,9 @@ public class BusinessController {
 		@RequestPart List<MultipartFile> multipartFiles,
 		HttpServletRequest request
 	) throws IOException {
-		businessService.registMenu(registMenuRequestDto, multipartFiles , userService.getUserFromRequest(request));
-		return ResponseResult.successResponse;
+		User user = userService.getUserFromRequest(request);
+		businessService.registMenu(registMenuRequestDto, multipartFiles , user);
+		return new ListResponseResult<>(businessService.getMenuList(user));
 	}
 
 	@ApiOperation(value = "업체 메뉴 조회", notes = "업주가 메뉴를 조회합니다.")
