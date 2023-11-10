@@ -29,8 +29,8 @@ interface CardProps {
         }[];
         fundingIsBookmark: boolean;
     };
-    onFundingClick: (fundingId: number) => void;
-    onBookmark: (fundingId: number) => void;
+    onFundingClick?: (fundingId: number) => void;
+    onBookmark?: (fundingId: number) => void;
 }
 
 // ----------------------------------------------------------------------------------------------------

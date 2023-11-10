@@ -62,7 +62,22 @@ const postBookmark = async (fundingId: number) => {
     return result;
 };
 
+/* Function for active Funding */
+const getActiveFunding = async (page: number, state: string) => {
+    console.log("페이지와 함께 getActiveFunding 호출 중:", page);
+
+    const props: FetchProps = {
+        url: `funding/business/${page}/${state}`,
+        method: "GET",
+        isAuth: true,
+    };
+    console.log(props);
+    const result = await fetchGet(props);
+    console.log("getActiveFunding 결과:", result);
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getMainPageList, getMyFundings, getBookmarkFundings, postBookmark };
+export { getMainPageList, getMyFundings, getBookmarkFundings, postBookmark, getActiveFunding };
