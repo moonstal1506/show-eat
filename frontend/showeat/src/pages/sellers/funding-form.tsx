@@ -75,7 +75,6 @@ const InputLabel = styled("label")`
 
     font-size: 18px;
     font-weight: 700;
-    text-align: center;
 `;
 
 const MultiInputContainer = styled("div")`
@@ -91,7 +90,6 @@ const TextAreaLabel = styled("label")`
 
     font-size: 18px;
     font-weight: 700;
-    text-align: center;
 
     padding-top: 0.3em;
 `;
@@ -335,7 +333,13 @@ function FundingForm() {
         data: "",
         dataType: "string",
     });
-    const [menuList, setMenuList] = useState([]); // API로 메뉴 목록 받아와야함
+    const [menuList, setMenuList] = useState<
+        {
+            menu: string;
+            price: number;
+            businessMenuImageResponseDtos: [];
+        }[]
+    >([]); // API로 메뉴 목록 받아와야함
     const [menuData, setMenuData] = useState({
         type: "menuRequestDtos",
         text: "메뉴 정보",
@@ -384,6 +388,7 @@ function FundingForm() {
     useEffect(() => {
         getMenuList().then((res) => {
             setMenuList(res.data);
+            console.log(res);
         });
     }, []);
 
@@ -452,6 +457,15 @@ function FundingForm() {
     const changeTag = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setTag(newValue);
+    };
+
+    const changeOriginPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = menuList.find((menu) => {
+            return e.target.value === menu.menu;
+        });
+        if (newValue) {
+            setOriginPrice(newValue.price.toString());
+        }
     };
 
     const addTag = () => {
@@ -528,7 +542,10 @@ function FundingForm() {
                                 value={menuData.menu}
                                 width="370px"
                                 required
-                                itemList={menuList.length > 0 ? menuList : []}
+                                itemList={
+                                    menuList.length > 0 ? menuList.map((one) => one.menu) : []
+                                }
+                                onChange={(e) => changeOriginPrice(e)}
                             />
                         </DropDownWrapper>
                         <TextButton
@@ -553,7 +570,13 @@ function FundingForm() {
                 </InputContainer>
                 <InputContainer>
                     <InputLabel htmlFor="originalPrice">메뉴 원가</InputLabel>
-                    <TextInput id="originalPrice" value="5000" unit="원" disabled width="500px" />
+                    <TextInput
+                        id="originalPrice"
+                        value={originPrice}
+                        unit="원"
+                        readOnly
+                        width="500px"
+                    />
                 </InputContainer>
                 <InputContainer>
                     <InputLabel htmlFor="discountPrice">메뉴 할인가</InputLabel>

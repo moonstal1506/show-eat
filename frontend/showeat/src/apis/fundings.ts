@@ -63,7 +63,37 @@ const postBookmark = async (fundingId: number) => {
 };
 
 /* Function for Create Funding */
-// const createFunding = async (fun)
+interface CreateFundingProps {
+    category: string;
+    description: string;
+    endDate: string;
+    maxLimit: number;
+    minLimit: number;
+    tags: string[];
+    title: string;
+    menuRequestDtos: {
+        discountPrice: number;
+        menuId: number;
+    };
+}
+
+const createFunding = async ({
+    category,
+    description,
+    endDate,
+    maxLimit,
+    minLimit,
+    tags,
+    title,
+    menuRequestDtos,
+}: CreateFundingProps) => {
+    const props: FetchProps = {
+        url: `bookmark/${fundingId}`,
+        method: "POST",
+        data: {},
+        isAuth: true,
+    };
+};
 
 // ----------------------------------------------------------------------------------------------------
 
