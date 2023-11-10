@@ -74,6 +74,7 @@ function SellerInfo() {
     const [businessAddressDetail, setBusinessAddressDetail] = useState<string>("");
     const [businessPhone, setBusinessPhone] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
+    const [formData, setFormData] = useState<FormData>(new FormData());
 
     const handleBusinessNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setBusinessName(event.target.value.trim());
@@ -116,6 +117,10 @@ function SellerInfo() {
         if (files && files.length > 0) {
             const selectedFile = files[0];
             setFileName(selectedFile.name);
+            const newFormData = new FormData();
+            newFormData.append("files", selectedFile);
+            setFormData(newFormData);
+            console.log(formData);
         }
     };
 
