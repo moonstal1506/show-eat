@@ -226,10 +226,10 @@ function NavigationBar({ isBuyer }: NavigationBarProps) {
                     <PointHeader>보유한 캐시카우</PointHeader>
                     <HoldingPointContainer>
                         <CashCowIcon
-                            src="/assets/images/cash-cow-coin.png"
-                            alt="cash-cow"
-                            width={40}
-                            height={40}
+                            src="/assets/icons/cashcow-coin-icon.svg"
+                            alt="cashcow-coin"
+                            width={30}
+                            height={30}
                         />
                         <HoldingPoint fontSize={pointFontSize}>
                             {formattedHoldingPoint}
