@@ -1,16 +1,8 @@
-/* Import */
-import { fetchModify } from "@utils/api";
 import { FetchProps } from "@customTypes/apiProps";
+import { fetchModify } from "@utils/api";
 
-// ----------------------------------------------------------------------------------------------------
-
-/* Function for get Funding datas */
-// interface GetPaymentPageType {
-//     type: string;
-// }
-
-/* Function for Bookmark Funding */
 const postRequestPayments = async (
+    userId: number,
     payType: string,
     amount: number,
     orderName: string,
@@ -19,7 +11,7 @@ const postRequestPayments = async (
     userNickname: string,
 ) => {
     const props: FetchProps = {
-        url: `payments/request`,
+        url: `payments/request/${userId}`,
         method: "POST",
         data: { payType, amount, orderName, credentialId, userEmail, userNickname },
         isAuth: true,
@@ -30,7 +22,4 @@ const postRequestPayments = async (
     return result;
 };
 
-// ----------------------------------------------------------------------------------------------------
-
-/* Export */
 export default postRequestPayments;
