@@ -51,8 +51,7 @@ public class UserServiceImpl implements UserService {
         //사용자 정보 조회
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(NotExistUserException::new);
-        return new UserResponseDto(user.getUserId(), user.getUserNickname(),
-                user.getUserImgUrl(), user.getUserAddress(), user.isUserBusiness(), user.getUserMoney(),user.getUserPhone(),user.isVisited());
+        return user.toUserResponseDto();
     }
 
     @Override
