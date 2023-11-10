@@ -35,7 +35,7 @@ const getMyFundings = async (page: number) => {
     return result;
 };
 
-/* Function for get My Fundings */
+/* Function for get My Bookmark Fundings */
 const getBookmarkFundings = async (page: number) => {
     const props: FetchProps = {
         url: `funding/user/bookmark`,
@@ -61,6 +61,9 @@ const postBookmark = async (fundingId: number) => {
 
     return result;
 };
+
+/* Function for Create Funding */
+// const createFunding = async (fun)
 
 // ----------------------------------------------------------------------------------------------------
 

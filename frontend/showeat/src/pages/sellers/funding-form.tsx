@@ -1,13 +1,17 @@
 /* Import */
 import { TextArea, TextInput } from "@components/common/input";
-import MainLayout from "@/layouts/MainLayout";
+import MainLayout from "@layouts/MainLayout";
 import styled from "@emotion/styled";
 import withAuth from "@libs/withAuth";
-import { ReactNode, useState } from "react";
-import { InputDropdown } from "@/components/common/dropdown";
-import { TagButton, TextButton } from "@/components/common/button";
-import menuCategory from "@/configs/menuCategory";
+import { ChangeEvent, ReactNode, useState, SetStateAction, useEffect } from "react";
+import { InputDropdown } from "@components/common/dropdown";
+import { TagButton, TextButton } from "@components/common/button";
+import menuCategory from "@configs/menuCategory";
 import Image from "next/image";
+import { changeFontWeight } from "@utils/format";
+import Modal from "@components/composite/modal";
+import FileInput from "@components/common/input/FileInput";
+import { addNewMenu, getMenuList } from "@apis/menu";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -17,6 +21,15 @@ interface TextFormDataType {
     text: string;
     data: string;
     dataType: string;
+}
+
+interface ModalDataType {
+    menuName: string;
+    setMenuName: React.Dispatch<SetStateAction<string>>;
+    originPrice: string;
+    setOriginPrice: React.Dispatch<SetStateAction<string>>;
+    uploadedFiles: File[];
+    setUploadedFiles: React.Dispatch<SetStateAction<File[]>>;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -116,6 +129,10 @@ const DateInput = styled("input")`
     }
 `;
 
+const RemainDateWrapper = styled("span")`
+    font-size: 18px;
+`;
+
 const DropDownWrapper = styled("div")`
     width: 370px;
 `;
@@ -155,10 +172,147 @@ const ButtonContainer = styled("div")`
     width: 550px;
 `;
 
+const ModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const ModalTitleWrapper = styled("span")`
+    font-size: 26px;
+    font-weight: 700;
+
+    padding-bottom: 1em;
+`;
+
+const ModalContentContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ModalInputContainer = styled("div")`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 670px;
+    height: 50px;
+`;
+
+const ModalFileInputContainer = styled("div")`
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+
+    width: 670px;
+    height: 180px;
+
+    padding-top: 0.5em;
+`;
+
+const InputTitleWrapper = styled("label")`
+    font-size: 18px;
+    font-weight: 700;
+
+    width: 100px;
+`;
+
+const FileInputTitleWrapper = styled("label")`
+    font-size: 18px;
+    font-weight: 700;
+
+    width: 100px;
+
+    padding-top: 0.4em;
+`;
+
+const InputWrapper = styled("div")`
+    width: 550px;
+`;
+
+const FileInputWrapper = styled("div")`
+    width: 550px;
+`;
+
 // ----------------------------------------------------------------------------------------------------
+
+/* Add Menu Modal Component */
+function AddMenu({
+    menuName,
+    setMenuName,
+    originPrice,
+    setOriginPrice,
+    uploadedFiles,
+    setUploadedFiles,
+}: ModalDataType): ReactNode {
+    const changeMenuName = (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setMenuName(newValue);
+    };
+
+    const changeOriginPrice = (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        if (/^\d+$/.test(newValue) || newValue === "") {
+            setOriginPrice(newValue);
+        }
+    };
+
+    return (
+        <ModalContainer>
+            <ModalTitleWrapper>메뉴 추가</ModalTitleWrapper>
+            <ModalContentContainer>
+                <ModalInputContainer>
+                    <InputTitleWrapper htmlFor="menuName">메뉴 이름</InputTitleWrapper>
+                    <InputWrapper>
+                        <TextInput
+                            value={menuName}
+                            width="543px"
+                            id="menuName"
+                            onChange={changeMenuName}
+                        />
+                    </InputWrapper>
+                </ModalInputContainer>
+                <ModalInputContainer>
+                    <InputTitleWrapper htmlFor="originPrice">메뉴 원가</InputTitleWrapper>
+                    <InputWrapper>
+                        <TextInput
+                            value={originPrice}
+                            width="543px"
+                            id="originPrice"
+                            onChange={changeOriginPrice}
+                            unit="원"
+                        />
+                    </InputWrapper>
+                </ModalInputContainer>
+                <ModalFileInputContainer>
+                    <FileInputTitleWrapper htmlFor="menuImage">메뉴 사진</FileInputTitleWrapper>
+                    <FileInputWrapper>
+                        <FileInput
+                            count={5}
+                            color="primary"
+                            id="menuImage"
+                            buttonWidth="150px"
+                            buttonHeight="40px"
+                            buttonDescription="추가"
+                            uploadedFiles={uploadedFiles}
+                            setUploadedFiles={setUploadedFiles}
+                        />
+                    </FileInputWrapper>
+                </ModalFileInputContainer>
+            </ModalContentContainer>
+        </ModalContainer>
+    );
+}
 
 /* Seller Funding Form Page */
 function FundingForm() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [textFormData, setTextFormData] = useState([
         {
             type: "title",
@@ -201,20 +355,41 @@ function FundingForm() {
         dataType: "string",
     });
 
+    const [menuName, setMenuName] = useState("");
+    const [originPrice, setOriginPrice] = useState("");
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
     function getToday() {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 2자리로 포맷팅
-        const day = date.getDate().toString().padStart(2, "0"); // 일도 2자리로 포맷팅
+        const todayDate = new Date();
+        const year = todayDate.getFullYear();
+        const month = (todayDate.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 2자리로 포맷팅
+        const day = todayDate.getDate().toString().padStart(2, "0"); // 일도 2자리로 포맷팅
 
         return `${year}-${month}-${day}`;
     }
 
     const today = getToday();
 
+    const todayValue = new Date();
+    const endDateValue = new Date(endDate.data);
+
+    todayValue.setHours(0, 0, 0, 0);
+    endDateValue.setHours(0, 0, 0, 0);
+
+    const timeDifference = endDateValue.getTime() - todayValue.getTime();
+    const daysDifference = changeFontWeight(
+        `오늘부터 ...${timeDifference / (24 * 60 * 60 * 1000)}... 일 뒤 종료 예정`,
+    );
+
+    useEffect(() => {
+        getMenuList().then((res) => {
+            setMenuList(res.data);
+        });
+    }, []);
+
     const changeFormData = (e: React.ChangeEvent<HTMLInputElement>, form: TextFormDataType) => {
         const newValue = e.target.value;
-        if (form.dataType === "number" && /^\d+$/.test(newValue)) {
+        if ((form.dataType === "number" && /^\d+$/.test(newValue)) || newValue === "") {
             setTextFormData((prev) => {
                 const update = prev.map((one) => {
                     if (one.type === form.type) {
@@ -250,7 +425,8 @@ function FundingForm() {
     const changeDiscountPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         if (
-            /^\d+$/.test(newValue)
+            /^\d+$/.test(newValue) ||
+            newValue === ""
             // && newValue < originPrice
         ) {
             setMenuData((prev) => {
@@ -299,6 +475,16 @@ function FundingForm() {
         });
     };
 
+    const submitModalData = () => {
+        addNewMenu({
+            menu: menuName,
+            price: originPrice,
+            multipartFiles: uploadedFiles,
+        }).then((res) => {
+            console.log(res);
+        });
+    };
+
     return (
         <FundingFormContainer>
             <TitleWrapper>펀딩 생성</TitleWrapper>
@@ -326,6 +512,11 @@ function FundingForm() {
                             required
                             onChange={(e) => changeEndDate(e)}
                         />
+                        {endDate.data !== "" && (
+                            <RemainDateWrapper
+                                dangerouslySetInnerHTML={{ __html: daysDifference }}
+                            />
+                        )}
                     </MultiInputContainer>
                 </InputContainer>
                 <InputContainer>
@@ -337,10 +528,14 @@ function FundingForm() {
                                 value={menuData.menu}
                                 width="370px"
                                 required
-                                itemList={menuList}
+                                itemList={menuList.length > 0 ? menuList : []}
                             />
                         </DropDownWrapper>
-                        <TextButton text="새 메뉴" width="120px" />
+                        <TextButton
+                            text="새 메뉴"
+                            width="120px"
+                            onClick={() => setIsModalOpen(true)}
+                        />
                     </MultiInputContainer>
                 </InputContainer>
                 <InputContainer>
@@ -429,6 +624,25 @@ function FundingForm() {
                 <TextButton text="펀딩 생성" width="250px" height="50px" fontSize={24} />
                 <TextButton text="취소" fill="negative" width="250px" height="50px" fontSize={24} />
             </ButtonContainer>
+            <Modal
+                isOpen={isModalOpen}
+                setIsOpen={setIsModalOpen}
+                width="800px"
+                height="500px"
+                buttonType="submit"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+                childComponent={AddMenu({
+                    menuName,
+                    setMenuName,
+                    originPrice,
+                    setOriginPrice,
+                    uploadedFiles,
+                    setUploadedFiles,
+                })}
+                onSubmit={submitModalData}
+            />
         </FundingFormContainer>
     );
 }

@@ -79,7 +79,10 @@ async function fetchModify(props: FetchProps) {
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Origin": `http://localhost:3000`,
         "Access-Control-Allow-Methods": "POST, OPTIONS, PUT, PATCH, DELETE",
-        "Content-Type": contentType === "json" ? "application/json" : "multipart/form-data",
+        "Content-Type":
+            contentType === "json"
+                ? "application/json"
+                : `multipart/form-data; boundary= #$@boundary#@$`,
     };
 
     if (isAuth) {
