@@ -107,6 +107,16 @@ const postHeart = async (fundingId: number) => {
     return result;
 };
 
+/* Function for user favorite Fundings */
+const getFavoriteFundings = async (page: number) => {
+    const props: FetchProps = {
+        url: `funding/user/bookmark/${page}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
@@ -119,4 +129,5 @@ export {
     getInActiveFunding,
     getUserFundings,
     postHeart,
+    getFavoriteFundings,
 };
