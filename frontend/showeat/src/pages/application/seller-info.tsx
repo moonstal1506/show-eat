@@ -1,8 +1,6 @@
 /* Import */
-import withAuth from "@libs/withAuth";
 import styled from "@emotion/styled";
-import SingleLayout from "@layouts/SingleLayout";
-import { ReactNode, ChangeEvent, useState, useRef, useEffect } from "react";
+import { ChangeEvent, useState, useRef, useEffect } from "react";
 import { TextInput } from "@components/common/input";
 import TextButton from "@components/common/button/TextButton";
 
@@ -245,16 +243,5 @@ function SellerInfo() {
     );
 }
 
-/* Middleware */
-const SellerInfoWithAuth = withAuth({
-    WrappedComponent: SellerInfo,
-    guardType: "USER_ONLY",
-});
-
-/* Layout */
-SellerInfoWithAuth.getLayout = function getLayout(page: ReactNode) {
-    return <SingleLayout>{page}</SingleLayout>;
-};
-
 /* Export */
-export default SellerInfoWithAuth;
+export default SellerInfo;

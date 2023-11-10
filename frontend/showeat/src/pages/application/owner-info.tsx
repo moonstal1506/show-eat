@@ -1,8 +1,6 @@
 /* Import */
-import withAuth from "@libs/withAuth";
 import styled from "@emotion/styled";
-import SingleLayout from "@layouts/SingleLayout";
-import { ReactNode, ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { TextInput } from "@components/common/input";
 
 const InputContainer = styled("div")`
@@ -82,19 +80,5 @@ function OwnerInfo() {
     );
 }
 
-// ----------------------------------------------------------------------------------------------------
-
-/* Middleware */
-const OwnerInfoWithAuth = withAuth({ WrappedComponent: OwnerInfo, guardType: "USER_ONLY" });
-
-// ----------------------------------------------------------------------------------------------------
-
-/* Layout */
-OwnerInfoWithAuth.getLayout = function getLayout(page: ReactNode) {
-    return <SingleLayout>{page}</SingleLayout>;
-};
-
-// ----------------------------------------------------------------------------------------------------
-
 /* Export */
-export default OwnerInfoWithAuth;
+export default OwnerInfo;
