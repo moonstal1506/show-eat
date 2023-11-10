@@ -1,11 +1,13 @@
 /* Import */
-import SellerLayout from "@layouts/SellerLayout";
-import Card from "@components/composite/card";
-import withAuth from "@libs/withAuth";
 import { ReactNode, useEffect, useState } from "react";
-import styled from "@emotion/styled";
 import { TextButton, ScrollButton } from "@components/common/button";
+import SellerLayout from "@layouts/SellerLayout";
+import withAuth from "@libs/withAuth";
+import styled from "@emotion/styled";
+import Card from "@components/composite/card";
 import { getActiveFunding } from "@/apis/fundings";
+import { FundingType } from "@customTypes/apiProps";
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
@@ -58,10 +60,10 @@ const MoreButtonWrapper = styled("div")`
 
 /* Seller On Boarding Fundings Page */
 function OnBoardingFunding() {
-    const [fundingData, setFundingData] = useState([]);
+    const [fundingData, setFundingData] = useState<FundingType[]>([]);
     const [page, setPage] = useState(0);
     const state = "ACTIVE";
-    const [last, setLast] = useState(false);
+    const [hasMorePage, setHasMorePage] = useState<boolean>(false);
 
     const handleLoadMore = () => {
         setPage(page + 1); // 더보기 : 페이지 + 1
@@ -69,29 +71,16 @@ function OnBoardingFunding() {
 
     const fetchFundingData = () => {
         getActiveFunding(page, state).then((data) => {
-            console.log("data", data);
-            console.log("data.content", data.data);
-            console.log("data.data.content", data.data.content);
-
             if (data.data.content && data.data.content.length > 0) {
+                const isLastPage: boolean = data.data.last;
+                const fundingList: FundingType[] = data.data.content || [];
                 if (page === 0) {
-                    const modifiedData = data.data.content.map((funding) => ({
-                        ...funding,
-                        fundingImageResponseDtos: funding.fundingImageResponseDtos,
-                    }));
-                    setFundingData(modifiedData);
-                    console.log("modifiedData", modifiedData);
-                    setLast(data.data.last);
+                    setFundingData(fundingList);
+                    setHasMorePage(!isLastPage);
                 } else {
-                    const updatedData = data.data.content.map((funding) => ({
-                        ...funding,
-                        fundingImageResponseDtos: funding.fundingImageResponseDtos,
-                    }));
-                    setFundingData([...fundingData, ...updatedData]);
-                    setLast(data.data.last);
+                    setFundingData([...fundingData, ...fundingList]);
+                    setHasMorePage(!isLastPage);
                 }
-            } else {
-                console.log("No funding data available.");
             }
         });
     };
@@ -99,6 +88,7 @@ function OnBoardingFunding() {
     useEffect(() => {
         fetchFundingData();
     }, [page]);
+
     return (
         <FavoritesContainer>
             <TitleWrapper>진행중인 목록</TitleWrapper>
@@ -106,12 +96,12 @@ function OnBoardingFunding() {
                 <CardsContainer>진행중인 펀딩이 없습니다.</CardsContainer>
             ) : (
                 <CardsContainer>
-                    {fundingData.map((funding) => (
-                        <Card key={funding.fundingId} fundingData={funding} />
+                    {fundingData.map((funding, index) => (
+                        <Card key={index} fundingData={funding} />
                     ))}
                 </CardsContainer>
             )}
-            {!last ? (
+            {hasMorePage ? (
                 <MoreButtonWrapper>
                     <TextButton
                         text="더 보기"
