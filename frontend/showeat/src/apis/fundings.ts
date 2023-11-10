@@ -70,7 +70,37 @@ const postBookmark = async (fundingId: number) => {
     return result;
 };
 
+/* Function for active Funding */
+const getActiveFunding = async (page: number, state: string) => {
+    const props: FetchProps = {
+        url: `funding/business/${page}/${state}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
+/* Function for Inactive Funding */
+const getInActiveFunding = async (page: number, state: string) => {
+    const props: FetchProps = {
+        url: `funding/business/${page}/${state}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getFundingDetail, getMainPageList, getMyFundings, getBookmarkFundings, postBookmark };
+export {
+    getFundingDetail,
+    getMainPageList,
+    getMyFundings,
+    getBookmarkFundings,
+    postBookmark,
+    getActiveFunding,
+    getInActiveFunding,
+};

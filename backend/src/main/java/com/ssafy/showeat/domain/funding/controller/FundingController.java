@@ -101,13 +101,13 @@ public class FundingController {
 		@ApiResponse(code = 200, message = "펀딩 목록 조회 성공"),
 		@ApiResponse(code = 400, message = "펀딩 목록 조회 실패"),
 	})
-	@GetMapping("/business")
+	@GetMapping("/business/{page}/{state}")
 	public ResponseResult getFundingList(
 		HttpServletRequest request,
-		FundingIsActive state,
-		@RequestParam int page
+		@PathVariable String state,
+		@PathVariable int page
 	) {
-		return new PageResponseResult<>(fundingService.getFundingList(state, page, userService.getUserFromRequest(request)));
+		return new PageResponseResult<>(fundingService.getFundingList(FundingIsActive.valueOf(state), page, userService.getUserFromRequest(request)));
 	}
 
 	@ApiOperation(value = "사용자 참여 펀딩 조회", notes = "사용자가 자신이 참여한 펀딩을 조회합니다.")
@@ -178,5 +178,15 @@ public class FundingController {
 		return new PageResponseResult<>(fundingService.getFundingByCategory(category,sortType,page,userService.getUserFromRequest(request)));
 	}
 
+	@ApiOperation(value = "유저의 펀딩 참여여부,찜 여부 조회" , notes = "유저의 펀딩 참여여부,찜 여부 조회 합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "조회 성공"),
+		@ApiResponse(code = 400, message = "조회 실패"),
+
+	})
+	@GetMapping("/{fundingId}/user/{userId}")
+	public ResponseResult getUserFundingIsZzimAndIsParticipate(@PathVariable Long fundingId, @PathVariable Long userId){
+		return new SingleResponseResult<>(fundingService.getUserFundingIsZzimAndIsParticipate(fundingId,userId));
+	}
 
 }
