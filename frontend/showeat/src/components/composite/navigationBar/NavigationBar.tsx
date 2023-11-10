@@ -1,12 +1,12 @@
 /* import */
-import useUserState from "@hooks/useUserState";
-import useSellerState from "@/hooks/useSellerState";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { TextButton } from "@components/common/button";
-import navbarMenu from "@/configs/navbarMenu";
+import navbarMenu from "@configs/navbarMenu";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import useSellerState from "@hooks/useSellerState";
+import useUserState from "@hooks/useUserState";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ function NavigationBar({ isBuyer }: NavigationBarProps) {
     const formattedHoldingPoint = holdingPoint.toLocaleString();
 
     useEffect(() => {
-        const currentUrl = router.pathname;
+        const currentUrl = router.asPath;
 
         menuList.forEach((menu) => {
             if (menu.contain.includes(currentUrl)) {
