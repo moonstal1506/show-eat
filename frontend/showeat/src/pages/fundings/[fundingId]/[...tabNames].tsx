@@ -5,6 +5,7 @@ import { getFundingDetail } from "@apis/fundings";
 import { GetServerSideProps } from "next";
 import ImageGallery from "@components/composite/imageGallery";
 import MainLayout from "@layouts/MainLayout";
+import menuCategoryList from "@configs/menuCategoryList";
 import { ReactNode, useState } from "react";
 import styled from "@emotion/styled";
 import { Tab, TabBar } from "@components/composite/tabBar";
@@ -156,26 +157,33 @@ function FundingTab(props: FundingTabProps) {
     const router = useRouter();
     const { fundingId, fundingData, tabName } = props;
     const {
-        businessName,
+        // businessName,
         title,
         category,
-        maxLimit,
-        minLimit,
-        curCount,
+        // maxLimit,
+        // minLimit,
+        // curCount,
         menu,
         price,
         discountPrice,
         discountRate,
-        startDate,
-        endDate,
-        fundingIsActive,
-        fundingIsSuccess,
-        fundingTagResponseDtos,
-        fundingImageResponseDtos,
-        bookmarkCount,
-        fundingIsBookmark,
+        // startDate,
+        // endDate,
+        // fundingIsActive,
+        // fundingIsSuccess,
+        // fundingTagResponseDtos,
+        // fundingImageResponseDtos,
+        // bookmarkCount,
+        // fundingIsBookmark,
     } = fundingData;
     const [activeTab, setActiveTab] = useState<string>(tabName || "store");
+
+    // Function for Getting Menu Category Text
+    const getCategoryValue = (categoryId: string) => {
+        const targetCategory = menuCategoryList.find((item) => item.id === categoryId);
+
+        return targetCategory ? targetCategory.value : "";
+    };
 
     // Function for Handling Tab Click
     const handleTabClick = (id: string, redirectUrl: string) => {
@@ -195,7 +203,7 @@ function FundingTab(props: FundingTabProps) {
                 <DetailBox>
                     <InfoHeaderContainer>
                         <CategoryWrapper>
-                            {category} | {menu}
+                            {getCategoryValue(category)} | {menu}
                         </CategoryWrapper>
                         <TitleWrapper>{title}</TitleWrapper>
                         <TagContainer>태그들</TagContainer>
