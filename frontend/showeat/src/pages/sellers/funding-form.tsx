@@ -12,6 +12,7 @@ import { changeFontWeight } from "@utils/format";
 import Modal from "@components/composite/modal";
 import FileInput from "@components/common/input/FileInput";
 import { addNewMenu, getMenuList } from "@apis/menu";
+import { createFunding } from "@/apis/fundings";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -325,7 +326,7 @@ function FundingForm() {
     const [category, setCategory] = useState({
         type: "category",
         text: "펀딩 분류",
-        data: "",
+        data: { text: "", value: "" },
     });
     const [endDate, setEndDate] = useState({
         type: "endDate",
@@ -336,6 +337,7 @@ function FundingForm() {
     const [menuList, setMenuList] = useState<
         {
             menu: string;
+            menuId: number;
             price: number;
             businessMenuImageResponseDtos: [];
         }[]
@@ -343,7 +345,7 @@ function FundingForm() {
     const [menuData, setMenuData] = useState({
         type: "menuRequestDtos",
         text: "메뉴 정보",
-        data: { menuId: 0, discountPrice: "" },
+        data: { menuId: 0, discountPrice: "", originPrice: "" },
         menu: "",
     });
     const [tags, setTags] = useState<{ type: string; text: string; data: string[] }>({
@@ -435,7 +437,7 @@ function FundingForm() {
             // && newValue < originPrice
         ) {
             setMenuData((prev) => {
-                return { ...prev, data: { menuId: prev.data.menuId, discountPrice: newValue } };
+                return { ...prev, data: { ...prev.data, discountPrice: newValue } };
             });
         }
     };
@@ -448,10 +450,14 @@ function FundingForm() {
     };
 
     const changeCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        setCategory((prev) => {
-            return { ...prev, data: newValue };
+        const newValue = menuCategory.find((one) => {
+            return e.target.value === one.text;
         });
+        if (newValue) {
+            setCategory((prev) => {
+                return { ...prev, data: { text: newValue.text, value: newValue.value } };
+            });
+        }
     };
 
     const changeTag = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -459,12 +465,21 @@ function FundingForm() {
         setTag(newValue);
     };
 
-    const changeOriginPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeMenuData = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = menuList.find((menu) => {
             return e.target.value === menu.menu;
         });
         if (newValue) {
-            setOriginPrice(newValue.price.toString());
+            setMenuData((prev) => {
+                return {
+                    ...prev,
+                    data: {
+                        menuId: newValue.menuId,
+                        discountPrice: newValue.price.toString(),
+                        originPrice: newValue.price.toString(),
+                    },
+                };
+            });
         }
     };
 
@@ -495,6 +510,28 @@ function FundingForm() {
             price: originPrice,
             multipartFiles: uploadedFiles,
         }).then((res) => {
+            // 메뉴 추가 임시 로그
+            console.log(res);
+        });
+    };
+
+    const submitFunding = () => {
+        createFunding({
+            category: category.data.value,
+            description: description.data,
+            endDate: endDate.data,
+            maxLimit: parseFloat(textFormData[1].data),
+            minLimit: parseFloat(textFormData[2].data),
+            tags: tags.data,
+            title: textFormData[0].data,
+            menuRequestDtos: {
+                // 임시로 1
+                menuId: 1,
+                // menuId: menuData.data.menuId,
+                discountPrice: parseFloat(menuData.data.discountPrice),
+            },
+        }).then((res) => {
+            // 펀딩 생성 임시 로그
             console.log(res);
         });
     };
@@ -543,9 +580,11 @@ function FundingForm() {
                                 width="370px"
                                 required
                                 itemList={
-                                    menuList.length > 0 ? menuList.map((one) => one.menu) : []
+                                    menuList && menuList.length > 0
+                                        ? menuList.map((one) => one.menu)
+                                        : ["데이터가 없습니다."]
                                 }
-                                onChange={(e) => changeOriginPrice(e)}
+                                onChange={(e) => changeMenuData(e)}
                             />
                         </DropDownWrapper>
                         <TextButton
@@ -560,7 +599,7 @@ function FundingForm() {
                     <CategoryDropDownWrapper>
                         <InputDropdown
                             id="category"
-                            value={category.data}
+                            value={category.data.text}
                             width="500px"
                             required
                             itemList={menuCategory.map((one) => one.text)}
@@ -572,7 +611,7 @@ function FundingForm() {
                     <InputLabel htmlFor="originalPrice">메뉴 원가</InputLabel>
                     <TextInput
                         id="originalPrice"
-                        value={originPrice}
+                        value={menuData.data.originPrice}
                         unit="원"
                         readOnly
                         width="500px"
@@ -644,7 +683,13 @@ function FundingForm() {
                 </TextAreaContainer>
             </FormContainer>
             <ButtonContainer>
-                <TextButton text="펀딩 생성" width="250px" height="50px" fontSize={24} />
+                <TextButton
+                    text="펀딩 생성"
+                    width="250px"
+                    height="50px"
+                    fontSize={24}
+                    onClick={submitFunding}
+                />
                 <TextButton text="취소" fill="negative" width="250px" height="50px" fontSize={24} />
             </ButtonContainer>
             <Modal

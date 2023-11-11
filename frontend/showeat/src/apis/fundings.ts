@@ -88,14 +88,18 @@ const createFunding = async ({
     menuRequestDtos,
 }: CreateFundingProps) => {
     const props: FetchProps = {
-        url: `bookmark/${fundingId}`,
+        url: `funding`,
         method: "POST",
-        data: {},
+        data: { category, description, endDate, tags, title, menuRequestDtos, maxLimit, minLimit },
         isAuth: true,
     };
+
+    const result = await fetchModify(props);
+
+    return result;
 };
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getMainPageList, getMyFundings, getBookmarkFundings, postBookmark };
+export { getMainPageList, getMyFundings, getBookmarkFundings, postBookmark, createFunding };
