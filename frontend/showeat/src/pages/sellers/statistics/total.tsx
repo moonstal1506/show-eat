@@ -18,7 +18,7 @@ const TotalContainer = styled("div")`
 const BusinessName = styled("div")`
     color: #000;
     font-family: Pretendard;
-    font-size: 30px;
+    font-size: 40px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -45,7 +45,7 @@ function TotalStats() {
         <TotalContainer>
             <BusinessName>야미화니 커피</BusinessName>
             <TableWrapper>
-                <Table headerWidth="50%" headers={headers} contents={contents} />
+                <Table headerWidth="50%" gap="1.5em" headers={headers} contents={contents} />
             </TableWrapper>
         </TotalContainer>
     );
