@@ -99,6 +99,7 @@ public class KakaoAuthService{
                         .credentialRole(user.getCredential().getCredentialRole())
                         .createdDate(user.getCreatedDate())
                         .modifiedDate(user.getModifiedDate())
+                        .businessId(user.getBusiness()==null?  0L:user.getBusiness().getBusinessId())
                         .tokenDto(tokenDto)
                         .build())
                 .build();
