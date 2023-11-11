@@ -1,9 +1,14 @@
 /* Import */
 import SellerLayout from "@layouts/SellerLayout";
 import withAuth from "@libs/withAuth";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Table from "@/components/common/table";
 import styled from "@emotion/styled";
+import useUserState from "@hooks/useUserState";
+import useSellerState from "@hooks/useSellerState";
+import { getTotalStatistic } from "@apis/statistics";
+import { StatisticsType } from "@customTypes/apiProps";
+
 // ----------------------------------------------------------------------------------------------------
 const TotalContainer = styled("div")`
     display: flex;
@@ -33,14 +38,41 @@ const TableWrapper = styled("div")`
 
 /* Total Statistics Page */
 function TotalStats() {
-    const headers = [
+    const [statistics, setStatistics] = useState<StatisticsType | null>(null);
+    const [seller] = useSellerState();
+    const [user] = useUserState();
+    console.log(user);
+    console.log(seller);
+
+    useEffect(() => {
+        const fetchStatistics = async () => {
+            const { userId } = user;
+            const { sellerId } = seller;
+            if (userId !== 0 || sellerId !== 0) {
+                const result = await getTotalStatistic(1); // TODO: 1 -> sellerId 로 변경
+                setStatistics(result.data);
+            }
+        };
+
+        fetchStatistics();
+    }, [user]);
+
+    const headers: string[] = [
         "누적 매출액",
         "누적 성공 펀딩수",
         "누적 성공 펀딩 참여자수",
         "누적 실패 펀딩수",
     ];
 
-    const contents = ["123,456,000 원", "3 회", "323 명", "1 회"];
+    const contents: (string | number)[] = statistics
+        ? [
+              statistics.totalRevenue,
+              statistics.totalSuccessFundingCnt,
+              statistics.totalFundingParticipantsCnt,
+              statistics.totalFailFundingCnt,
+          ]
+        : [];
+
     return (
         <TotalContainer>
             <BusinessName>야미화니 커피</BusinessName>
