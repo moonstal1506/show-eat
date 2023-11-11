@@ -46,7 +46,7 @@ function changeFontWeight(text: string): string {
         thinText.forEach((phrase: string) => {
             weightedText = weightedText.replace(
                 phrase,
-                `<span style="font-weight: 300;">${phrase.substring(3, phrase.length - 3)}</span>`,
+                `<span style="font-weight: 200;">${phrase.substring(3, phrase.length - 3)}</span>`,
             );
         });
     }
