@@ -4,6 +4,7 @@ import SingleLayout from "@layouts/SingleLayout";
 import { ReactNode, ChangeEvent, useState } from "react";
 import TextButton from "@components/common/button/TextButton";
 import { useRouter } from "next/router";
+import { postBusinessInfo } from "@apis/business";
 import SellerInfo from "./seller-info";
 import OwnerInfo from "./owner-info";
 
@@ -136,7 +137,22 @@ function Registration() {
             fileName,
             formData,
         );
-        router.replace("/sellers/profile/seller-info");
+        const newBusinessAddress = `${zonecode} ${businessAddress} ${businessAddressDetail}`;
+        const registrationRequestDto: RegistrationRequestDto = {
+            ceo,
+            email,
+            businessName,
+            startDate,
+            businessNumber,
+            newBusinessAddress,
+            businessPhone,
+        };
+        postBusinessInfo(formData).then(
+            (data: any, registrationRequestDto: RegistrationRequestDto) => {
+                console.log(data);
+                // router.replace("/sellers/profile/seller-info");
+            },
+        );
     };
 
     return (
