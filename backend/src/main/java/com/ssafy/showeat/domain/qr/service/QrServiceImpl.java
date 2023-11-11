@@ -37,7 +37,7 @@ public class QrServiceImpl implements QrService {
 		// QR 정보
 		int width = 200;
 		int height = 200;
-		String url = "https://showeat.kr/" + couponId;
+		String url = "https://showeat.kr/sellers/redeem-result/" + couponId;
 		Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotExistCouponException::new);
 
 		// QR Code - BitMatrix: qr code 정보 생성
