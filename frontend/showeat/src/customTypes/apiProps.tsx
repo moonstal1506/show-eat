@@ -52,10 +52,11 @@ export interface FundingType {
     price: number;
     discountPrice: number;
     discountRate: number;
+    description: string;
     startDate: string;
     endDate: string;
-    fundingIsActive: string;
-    fundingIsSuccess: string;
+    fundingIsActive: "ACTIVE" | "INACTIVE";
+    fundingIsSuccess: "SUCCESS" | "FAIL" | "UNDECIDED";
     fundingTagResponseDtos: {
         tagId: number;
         fundingTag: string;
