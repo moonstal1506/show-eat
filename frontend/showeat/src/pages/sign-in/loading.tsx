@@ -50,6 +50,7 @@ function SignInLoading() {
                     userMoney,
                     userPhone,
                     visited,
+                    businessId,
                 } = userResult.data;
 
                 setCookie("access-token", accessToken);
@@ -60,14 +61,15 @@ function SignInLoading() {
                     userImgUrl,
                     userAddress,
                     userBusiness,
+                    userBusinessId: businessId,
                     userMoney,
                     userPhone,
                     visited,
                 });
 
-                if (!userBusiness) {
+                if (userBusiness) {
                     getBusinessInfo(userBusiness).then((sellerResult) => {
-                        const { businessId, businessName, businessImgUrl } = sellerResult.data;
+                        const { businessName, businessImgUrl } = sellerResult.data;
                         setSeller({
                             sellerId: businessId,
                             sellerName: businessName,

@@ -4,7 +4,8 @@ export interface UserType {
     userNickname: string;
     userImgUrl: string;
     userAddress: string;
-    userBusiness: number;
+    userBusiness: boolean;
+    userBusinessId: number;
     userMoney: number;
     userPhone: string;
     visited: boolean;
