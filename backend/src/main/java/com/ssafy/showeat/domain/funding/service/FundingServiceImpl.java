@@ -72,10 +72,12 @@ public class FundingServiceImpl implements FundingService {
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 
-		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
-			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
-			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
-		}
+		BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
+		fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,createFundingRequestDto.getDiscountPrice()));
+//		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
+//			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
+//			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
+//		}
 	}
 
 	@Override
