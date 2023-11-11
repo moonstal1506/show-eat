@@ -56,7 +56,10 @@ export interface FundingType {
     endDate: string;
     fundingIsActive: string;
     fundingIsSuccess: string;
-    fundingTagResponseDtos: string[];
+    fundingTagResponseDtos: {
+        tagId: number;
+        fundingTag: string;
+    }[];
     fundingImageResponseDtos: {
         imageId: number;
         imageUrl: string;

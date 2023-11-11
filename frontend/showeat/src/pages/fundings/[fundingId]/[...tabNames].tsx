@@ -57,7 +57,6 @@ const DetailBox = styled("div")`
     // Layout Attribute
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     gap: 1em;
 
@@ -65,13 +64,46 @@ const DetailBox = styled("div")`
     width: 50%;
 `;
 
-const InfoHeaderContainer = styled("div")``;
+const InfoHeaderContainer = styled("div")`
+    // Layout Attribute
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 
-const CategoryWrapper = styled("div")``;
+    // Box Model Attribute
+    width: 100%;
+`;
 
-const TitleWrapper = styled("div")``;
+const CategoryWrapper = styled("div")`
+    // Text Attribute
+    font-size: 18px;
+    b {
+        font-size: 18px;
+    }
+`;
 
-const TagContainer = styled("div")``;
+const TitleWrapper = styled("div")`
+    // Text Attribute
+    font-size: 30px;
+    font-weight: 700;
+`;
+
+const TagContainer = styled("div")`
+    // Layout Attribute
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+`;
+
+const Line = styled("div")`
+    // Box Model Attribute
+    width: 100%;
+    height: 1px;
+
+    // Style Attribute
+    border: none;
+    background-color: ${(props) => props.theme.colors.gray2};
+`;
 
 const InfoContentContainer = styled("div")``;
 
@@ -171,7 +203,7 @@ function FundingTab(props: FundingTabProps) {
         // endDate,
         // fundingIsActive,
         // fundingIsSuccess,
-        // fundingTagResponseDtos,
+        fundingTagResponseDtos,
         // fundingImageResponseDtos,
         // bookmarkCount,
         // fundingIsBookmark,
@@ -203,17 +235,26 @@ function FundingTab(props: FundingTabProps) {
                 <DetailBox>
                     <InfoHeaderContainer>
                         <CategoryWrapper>
-                            {getCategoryValue(category)} | {menu}
+                            {getCategoryValue(category)}&nbsp;&nbsp; | &nbsp;&nbsp;<b>{menu}</b>
                         </CategoryWrapper>
                         <TitleWrapper>{title}</TitleWrapper>
-                        <TagContainer>태그들</TagContainer>
+                        <TagContainer>
+                            {fundingTagResponseDtos.map((tag, index) => (
+                                <TagButton
+                                    key={index}
+                                    width="auto"
+                                    text={`#...${tag.fundingTag}...`}
+                                />
+                            ))}
+                        </TagContainer>
                     </InfoHeaderContainer>
+                    <Line />
                     <InfoContentContainer>내용</InfoContentContainer>
                     <TextBox text="fuck" colorType="secondary" />
                     <PriceContainer>
                         <OriginalPriceWrapper>{price}</OriginalPriceWrapper>
                         <FundingPriceBox>
-                            <TagButton width="10%" tagDescription={`${discountRate}% 할인`} />
+                            <TagButton width="10%" text={`${discountRate}% 할인`} />
                             <FundingPriceWrapper>{discountPrice}</FundingPriceWrapper>
                         </FundingPriceBox>
                     </PriceContainer>
