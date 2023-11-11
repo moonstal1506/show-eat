@@ -7,7 +7,7 @@ import styled from "@emotion/styled";
 import useUserState from "@hooks/useUserState";
 import useSellerState from "@hooks/useSellerState";
 import { getTotalStatistic } from "@apis/statistics";
-import { StatisticsType } from "@customTypes/apiProps";
+import { TotalStatisticsType } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 const TotalContainer = styled("div")`
@@ -38,7 +38,7 @@ const TableWrapper = styled("div")`
 
 /* Total Statistics Page */
 function TotalStats() {
-    const [statistics, setStatistics] = useState<StatisticsType | null>(null);
+    const [statistics, setStatistics] = useState<TotalStatisticsType | null>(null);
     const [seller] = useSellerState();
     const [user] = useUserState();
     console.log(user);
@@ -76,7 +76,7 @@ function TotalStats() {
 
     return (
         <TotalContainer>
-            <BusinessName>야미화니 커피</BusinessName>
+            <BusinessName>{statistics?.businessName}</BusinessName>
             <TableWrapper>
                 <Table headerWidth="50%" gap="1.5em" headers={headers} contents={contents} />
             </TableWrapper>

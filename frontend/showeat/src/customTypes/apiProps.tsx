@@ -16,7 +16,8 @@ export interface CouponType {
     remainingDays: number;
 }
 
-export interface StatisticsType {
+export interface TotalStatisticsType {
+    businessName: string;
     totalFailFundingCnt: number;
     totalFundingParticipantsCnt: number;
     totalRevenue: number;
