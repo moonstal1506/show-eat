@@ -4,14 +4,22 @@ import { FetchProps } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Function for get Funding datas */
-interface GetMainPageListType {
-    type: string;
-}
-
-const getMainPageList = async ({ type }: GetMainPageListType) => {
+/* Function for Getting Funding Detail Data */
+const getFundingDetail = async (id: string) => {
     const props: FetchProps = {
-        url: `funding/home`,
+        url: `funding/${id}`,
+        method: "GET",
+        isAuth: false,
+    };
+    const result = await fetchGet(props);
+
+    return result;
+};
+
+/* Function for get Funding datas */
+const getMainPageList = async (type: string) => {
+    const props: FetchProps = {
+        url: "funding/home",
         method: "GET",
         isAuth: false,
         params: { type },
@@ -35,7 +43,7 @@ const getMyFundings = async (page: number) => {
     return result;
 };
 
-/* Function for get My Fundings */
+/* Function for get My Bookmark Fundings */
 const getBookmarkFundings = async (page: number) => {
     const props: FetchProps = {
         url: `funding/user/bookmark`,
@@ -54,6 +62,43 @@ const postBookmark = async (fundingId: number) => {
         url: `bookmark/${fundingId}`,
         method: "POST",
         data: {},
+        isAuth: true,
+    };
+
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+/* Function for Create Funding */
+interface CreateFundingProps {
+    category: string;
+    description: string;
+    endDate: string;
+    maxLimit: number;
+    minLimit: number;
+    tags: string[];
+    title: string;
+    menuRequestDtos: {
+        discountPrice: number;
+        menuId: number;
+    };
+}
+
+const createFunding = async ({
+    category,
+    description,
+    endDate,
+    maxLimit,
+    minLimit,
+    tags,
+    title,
+    menuRequestDtos,
+}: CreateFundingProps) => {
+    const props: FetchProps = {
+        url: `funding`,
+        method: "POST",
+        data: { category, description, endDate, tags, title, menuRequestDtos, maxLimit, minLimit },
         isAuth: true,
     };
 
@@ -121,6 +166,7 @@ const getFavoriteFundings = async (page: number) => {
 
 /* Export */
 export {
+    getFundingDetail,
     getMainPageList,
     getMyFundings,
     getBookmarkFundings,
@@ -130,4 +176,5 @@ export {
     getUserFundings,
     postHeart,
     getFavoriteFundings,
+    createFunding,
 };
