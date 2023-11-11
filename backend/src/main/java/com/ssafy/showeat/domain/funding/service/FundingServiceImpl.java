@@ -119,7 +119,7 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public FundingResponseDto getFunding(Long fundingId , User loginUser) {
+	public FundingResponseDto getFunding(Long fundingId) {
 		log.info("FundingServiceImpl_getFunding ||  펀딩 조회");
 
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
@@ -182,7 +182,7 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto, User user) {
+	public Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto) {
 		log.info("FundingServiceImpl_searchFunding || 펀딩 검색");
 		validateSearch(searchFundingRequestDto);
 
@@ -197,7 +197,7 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public List<FundingListResponseDto> getFundingByType(String type, User user) {
+	public List<FundingListResponseDto> getFundingByType(String type) {
 		log.info("FundingServiceImpl_getFundingByType || 홈 화면 종류별 펀딩 조회");
 		validateSortType(type);
 
@@ -208,7 +208,7 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public Page<FundingListResponseDto> getFundingByCategory(String category, String sortType, int page, User user) {
+	public Page<FundingListResponseDto> getFundingByCategory(String category, String sortType, int page) {
 		log.info("FundingServiceImpl_getFundingByCategory || 홈 화면 음식 카테고리별 펀딩 조회");
 		Pageable pageable = PageRequest.of(page, 12);
 		Page<Funding> fundingList = fundingRepository.findByCategory(category, sortType, pageable);

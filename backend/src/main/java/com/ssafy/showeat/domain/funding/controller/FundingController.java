@@ -63,8 +63,8 @@ public class FundingController {
 		@ApiResponse(code = 452, message = "해당 펀딩이 존재하지 않음"),
 	})
 	@GetMapping("/{fundingId}")
-	public ResponseResult getFunding(@PathVariable Long fundingId , HttpServletRequest request){
-		return new SingleResponseResult<>(fundingService.getFunding(fundingId,userService.getUserFromRequest(request)));
+	public ResponseResult getFunding(@PathVariable Long fundingId){
+		return new SingleResponseResult<>(fundingService.getFunding(fundingId));
 	}
 
 	@ApiOperation(value = "펀딩 참여" , notes = "펀딩에 참여합니다.")
@@ -103,11 +103,11 @@ public class FundingController {
 	})
 	@GetMapping("/business/{page}/{state}")
 	public ResponseResult getFundingList(
-		HttpServletRequest request,
 		@PathVariable String state,
-		@PathVariable int page
+		@PathVariable int page,
+		HttpServletRequest request
 	) {
-		return new PageResponseResult<>(fundingService.getFundingList(FundingIsActive.valueOf(state), page, userService.getUserFromRequest(request)));
+		return new PageResponseResult<>(fundingService.getFundingList(FundingIsActive.valueOf(state), page , userService.getUserFromRequest(request)));
 	}
 
 	@ApiOperation(value = "사용자 참여 펀딩 조회", notes = "사용자가 자신이 참여한 펀딩을 조회합니다.")
@@ -145,9 +145,9 @@ public class FundingController {
 		@ApiResponse(code = 486, message = "해당 페이지는 조회할 정보가 없음"),
 	})
 	@GetMapping
-	public ResponseResult searchFunding(SearchFundingRequestDto searchFundingRequestDto , HttpServletRequest request) {
+	public ResponseResult searchFunding(SearchFundingRequestDto searchFundingRequestDto) {
 		log.info("FundingController_searchFunding");
-		return new PageResponseResult<>(fundingService.searchFunding(searchFundingRequestDto,userService.getUserFromRequest(request)));
+		return new PageResponseResult<>(fundingService.searchFunding(searchFundingRequestDto));
 	}
 
 	@ApiOperation(value = "종류별 펀딩 조회", notes = "홈화면에 보여줄 종류별 펀딩 조회")
@@ -157,9 +157,9 @@ public class FundingController {
 		@ApiResponse(code = 411, message = "유효하지 않은 종류(type)"),
 	})
 	@GetMapping("/home")
-	public ResponseResult getFundingInHome(@RequestParam String type , HttpServletRequest request) {
+	public ResponseResult getFundingInHome(@RequestParam String type) {
 		log.info("FundingController_getFundingInHome");
-		return new ListResponseResult<>(fundingService.getFundingByType(type,userService.getUserFromRequest(request)));
+		return new ListResponseResult<>(fundingService.getFundingByType(type));
 	}
 
 	@ApiOperation(value = "카테고리별 펀딩 조회", notes = "홈화면에 보여줄 종류별 펀딩 조회")
@@ -172,10 +172,10 @@ public class FundingController {
 	public ResponseResult getFundingInHomeByCategory(
 		@RequestParam String category,
 		@RequestParam String sortType,
-		@RequestParam int page,
-		HttpServletRequest request) {
+		@RequestParam int page
+		) {
 		log.info("FundingController_getFundingInHomeByCategory");
-		return new PageResponseResult<>(fundingService.getFundingByCategory(category,sortType,page,userService.getUserFromRequest(request)));
+		return new PageResponseResult<>(fundingService.getFundingByCategory(category,sortType,page));
 	}
 
 	@ApiOperation(value = "유저의 펀딩 참여여부,찜 여부 조회" , notes = "유저의 펀딩 참여여부,찜 여부 조회 합니다.")

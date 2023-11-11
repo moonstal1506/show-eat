@@ -18,12 +18,12 @@ public interface FundingService {
 	void createFunding(CreateFundingRequestDto createFundingRequestDto , User user);
 	void applyFunding(Long fundingId , User user);
 	void cancelFunding(Long fundingId , User user);
-	FundingResponseDto getFunding(Long fundingId , User user);
-	Page<FundingListResponseDto> getFundingList(FundingIsActive state, int pageable, User user);
+	FundingResponseDto getFunding(Long fundingId);
+	Page<FundingListResponseDto> getFundingList(FundingIsActive state, int pageable , User user);
 	Page<FundingListResponseDto> getUserFundingList(User user,int page);
 	Page<FundingListResponseDto> getUserFundingListByBookmark(User user,int page);
-	Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto,User user);
-	List<FundingListResponseDto> getFundingByType(String type,User user);
-	Page<FundingListResponseDto> getFundingByCategory(String category , String sortType , int page , User user);
+	Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto);
+	List<FundingListResponseDto> getFundingByType(String type);
+	Page<FundingListResponseDto> getFundingByCategory(String category , String sortType , int page);
 	FundingIsZzimAndIsParticipate getUserFundingIsZzimAndIsParticipate(Long fundingId,Long userId);
 }
