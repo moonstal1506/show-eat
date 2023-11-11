@@ -25,6 +25,9 @@ public class SellerResponseDto {
 	@ApiModelProperty(value = "셀러 소개문", example = "커피 맛집")
 	private String businessBio;
 
+	@ApiModelProperty(value = "상호 또는 법인명", example = "야미화니 커피")
+	private String businessName;
+
 	@ApiModelProperty(value = "셀러 운영 시간", example = "매일 오전 11시 ~ 익일 새벽 2시")
 	private String businessOperatingTime;
 

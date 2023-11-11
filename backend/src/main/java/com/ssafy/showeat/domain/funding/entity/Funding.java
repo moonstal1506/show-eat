@@ -167,6 +167,7 @@ public class Funding extends BaseTimeEntity {
 			.minLimit(fundingMinLimit)
 			.curCount(fundingCurCount)
 			.menu(fundingMenu)
+			.description(fundingDescription)
 			.price(fundingPrice)
 			.discountPrice(fundingDiscountPrice)
 			.discountRate(fundingDiscountRate)
