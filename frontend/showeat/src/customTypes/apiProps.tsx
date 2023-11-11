@@ -31,7 +31,7 @@ export interface FetchProps {
 export interface FetchOptionProps {
     method: "GET" | "POST" | "PATCH" | "DELETE";
     headers: Record<string, string>;
-    body?: string;
+    body?: string | FormData;
     credentials?: RequestCredentials;
     cache?: "force-cache" | "no-store";
     next?: {
@@ -42,8 +42,8 @@ export interface FetchOptionProps {
 
 export interface FundingType {
     fundingId: number;
-    title: string;
     businessName: string;
+    title: string;
     category: string;
     maxLimit: number;
     minLimit: number;
@@ -56,9 +56,11 @@ export interface FundingType {
     endDate: string;
     fundingIsActive: string;
     fundingIsSuccess: string;
+    fundingTagResponseDtos: string[];
     fundingImageResponseDtos: {
         imageId: number;
         imageUrl: string;
     }[];
+    bookmarkCount: number;
     fundingIsBookmark: boolean;
 }

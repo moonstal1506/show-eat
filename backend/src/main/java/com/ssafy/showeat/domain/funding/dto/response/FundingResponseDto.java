@@ -50,6 +50,9 @@ public class FundingResponseDto {
 	@ApiModelProperty(value = "펀딩 메뉴 할인률")
 	private int discountRate;
 
+	@ApiModelProperty(value = "펀딩 상세글")
+	private String description;
+
 	@ApiModelProperty(value = "펀딩 시작일")
 	private LocalDate startDate;
 
