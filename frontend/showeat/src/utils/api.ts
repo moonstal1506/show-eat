@@ -98,8 +98,6 @@ async function fetchModify(props: FetchProps) {
                 return JSON.stringify(data);
             }
             if (data instanceof FormData) {
-                console.log("마!!!!!!!");
-
                 return data;
             }
             return undefined;
@@ -120,8 +118,6 @@ async function fetchModify(props: FetchProps) {
     };
 
     try {
-        console.log(options, 1);
-
         const response = await fetch(`${ENDPOINT}${url}`, options);
         const fetchResult = await response.json();
         if (fetchResult && fetchResult.statusCode === 200) {
