@@ -3,7 +3,6 @@ import withAuth from "@libs/withAuth";
 import { ReactNode, useRef } from "react";
 import Webcam from "react-webcam";
 import jsQR from "jsqr";
-// import NextImage from "next/image";
 import styled from "@emotion/styled";
 import SingleLayout from "@/layouts/SingleLayout";
 import { TextButton } from "@/components/common/button";
@@ -67,12 +66,9 @@ const ButtonContainer = styled("div")`
 function Redeem() {
     const router = useRouter();
     const webcamRef = useRef<Webcam>(null);
-    // const [screenshot, setScreenshot] = useState<string | null>(null);
 
     const videoConstraints = {
-        // width: 480,
         height: 360,
-        // facingMode: "user", // 'user'는 프론트 카메라, 'environment'는 후면 카메라
     };
 
     const readQRCode = (imageSrc: string) => {
@@ -105,9 +101,7 @@ function Redeem() {
 
     const capture = () => {
         const imageSrc = webcamRef.current?.getScreenshot() || "";
-        // setScreenshot(imageSrc);
 
-        // 여기에서 QR 코드를 읽어오는 로직을 추가합니다.
         const qrCode = readQRCode(imageSrc);
         if (qrCode) {
             console.log("QR Code:", qrCode);
@@ -153,11 +147,6 @@ function Redeem() {
                     onClick={() => router.back()}
                 />
             </ButtonContainer>
-            {/* {screenshot && (
-                <div>
-                    <NextImage src={screenshot} alt="screenshot" width={200} height={200} />
-                </div>
-            )} */}
         </RedeemContainer>
     );
 }
