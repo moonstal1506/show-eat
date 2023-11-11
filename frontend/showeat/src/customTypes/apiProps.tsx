@@ -24,6 +24,15 @@ export interface TotalStatisticsType {
     totalSuccessFundingCnt: number;
 }
 
+export interface MonthlyStatisticsType {
+    year: number;
+    month: number;
+    revenue: number;
+    successFundingCnt: number;
+    fundingParticipantsCnt: number;
+    failFundingCnt: number;
+}
+
 export interface FetchProps {
     url: string;
     method: "GET" | "POST" | "PATCH" | "DELETE";
