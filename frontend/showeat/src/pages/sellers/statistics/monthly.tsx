@@ -92,7 +92,7 @@ function MonthlyStats() {
                   `${filteredStatistics[0].fundingParticipantsCnt.toLocaleString()} 명`,
                   `${filteredStatistics[0].failFundingCnt.toLocaleString()} 회`,
               ]
-            : [];
+            : ["매출이 없습니다."]; // TODO: 매출이 없는 경우 테이블 없애기
     const decreaseMonth = () => {
         setCurrentMonth((prevMonth) => {
             if (prevMonth === 1) {
