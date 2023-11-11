@@ -57,6 +57,7 @@ public class BusinessMenu {
 
 	public BusinessMenuResponseDto toBusinessMenuResponseDto(){
 		return BusinessMenuResponseDto.builder()
+			.menuId(businessMenuId)
 			.menu(businessMenuName)
 			.price(businessMenuPrice)
 			.businessMenuImageResponseDtos(
