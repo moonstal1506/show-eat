@@ -66,10 +66,10 @@ function TotalStats() {
 
     const contents: (string | number)[] = statistics
         ? [
-              statistics.totalRevenue,
-              statistics.totalSuccessFundingCnt,
-              statistics.totalFundingParticipantsCnt,
-              statistics.totalFailFundingCnt,
+              `${statistics.totalRevenue} 원`,
+              `${statistics.totalSuccessFundingCnt} 회`,
+              `${statistics.totalFundingParticipantsCnt} 명`,
+              `${statistics.totalFailFundingCnt} 회`,
           ]
         : [];
 
