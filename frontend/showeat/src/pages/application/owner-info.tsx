@@ -1,4 +1,3 @@
-/* Import */
 import styled from "@emotion/styled";
 import { ChangeEvent, useState } from "react";
 import { TextInput } from "@components/common/input";
@@ -38,18 +37,14 @@ const InputBox = styled("div")`
     gap: 54px;
 `;
 
-function OwnerInfo() {
-    // States and Variables
+interface OwnerInfoProps {
+    onCeoChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onEmailChange: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+function OwnerInfo({ onCeoChange, onEmailChange }: OwnerInfoProps) {
     const [ceo, setCeo] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-
-    const handleCeoChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCeo(event.target.value.trim());
-    };
-
-    const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value.trim());
-    };
 
     return (
         <InputContainer>
@@ -62,7 +57,10 @@ function OwnerInfo() {
                     id="ceo"
                     value={ceo}
                     placeholder="쑈잇"
-                    onChange={handleCeoChange}
+                    onChange={(event) => {
+                        setCeo(event.target.value.trim());
+                        onCeoChange(event);
+                    }}
                 />
             </InputBox>
             <InputBox>
@@ -73,12 +71,14 @@ function OwnerInfo() {
                     id="email"
                     value={email}
                     placeholder="showeat@gmail.com"
-                    onChange={handleEmailChange}
+                    onChange={(event) => {
+                        setEmail(event.target.value.trim());
+                        onEmailChange(event);
+                    }}
                 />
             </InputBox>
         </InputContainer>
     );
 }
 
-/* Export */
 export default OwnerInfo;

@@ -1,12 +1,15 @@
-/* Import */
-import withAuth from "@libs/withAuth";
 import styled from "@emotion/styled";
+import withAuth from "@libs/withAuth";
 import SingleLayout from "@layouts/SingleLayout";
-import { ReactNode } from "react";
+import { ReactNode, ChangeEvent, useState } from "react";
 import TextButton from "@components/common/button/TextButton";
 import { useRouter } from "next/router";
-import OwnerInfo from "./owner-info";
 import SellerInfo from "./seller-info";
+import OwnerInfo from "./owner-info";
+
+interface StepBoxProps {
+    backgroundColor: string;
+}
 
 const HeaderContainer = styled("div")`
     display: flex;
@@ -31,7 +34,7 @@ const ProgressBox = styled("div")`
     align-items: center;
 `;
 
-const StepBox = styled("div")`
+const StepBox = styled("div")<StepBoxProps>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +48,6 @@ const StepLine = styled.div`
     width: 100px;
     height: 1px;
     flex-shrink: 0;
-
     border-radius: 2px;
     background-color: black;
 `;
@@ -64,7 +66,76 @@ const ButtonWrapper = styled("div")`
 
 function Registration() {
     const router = useRouter();
+    const [ceo, setCeo] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [businessName, setBusinessName] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>("");
+    const [businessNumber, setBusinessNumber] = useState<string>("");
+    const [businessAddress, setBusinessAddress] = useState<string>("");
+    const [zonecode, setZonecode] = useState<string>("");
+    const [businessAddressDetail, setBusinessAddressDetail] = useState<string>("");
+    const [businessPhone, setBusinessPhone] = useState<string>("");
+    const [fileName, setFileName] = useState<string>("");
+    const [formData, setFormData] = useState<FormData>(new FormData());
+
+    const handleCeoChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setCeo(event.target.value.trim());
+    };
+
+    const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value.trim());
+    };
+
+    const handleBusinessNameChange = (value: string) => {
+        setBusinessName(value);
+    };
+
+    const handleStartDateChange = (value: string) => {
+        setStartDate(value);
+    };
+
+    const handleBusinessNumberChange = (value: string) => {
+        setBusinessNumber(value);
+    };
+
+    const handleBusinessAddressChange = (value: string) => {
+        setBusinessAddress(value);
+    };
+
+    const handleZonecodeChange = (value: string) => {
+        setZonecode(value);
+    };
+
+    const handleBusinessAddressDetailChange = (value: string) => {
+        setBusinessAddressDetail(value);
+    };
+
+    const handleBusinessPhoneChange = (value: string) => {
+        setBusinessPhone(value);
+    };
+
+    const handleFileNameChange = (value: string) => {
+        setFileName(value);
+    };
+
+    const handleFormDataChange = (value: FormData) => {
+        setFormData(value);
+    };
+
     const handleButtonClick = () => {
+        console.log(
+            ceo,
+            email,
+            businessName,
+            startDate,
+            businessNumber,
+            businessAddress,
+            zonecode,
+            businessAddressDetail,
+            businessPhone,
+            fileName,
+            formData,
+        );
         router.replace("/sellers/profile/seller-info");
     };
 
@@ -81,8 +152,18 @@ function Registration() {
                 </ProgressBox>
             </HeaderContainer>
             <ResultBox>
-                <OwnerInfo />
-                <SellerInfo />
+                <OwnerInfo onCeoChange={handleCeoChange} onEmailChange={handleEmailChange} />
+                <SellerInfo
+                    onBusinessNameChange={handleBusinessNameChange}
+                    onStartDateChange={handleStartDateChange}
+                    onBusinessNumberChange={handleBusinessNumberChange}
+                    onBusinessAddressChange={handleBusinessAddressChange}
+                    onZonecodeChange={handleZonecodeChange}
+                    onBusinessAddressDetailChange={handleBusinessAddressDetailChange}
+                    onBusinessPhoneChange={handleBusinessPhoneChange}
+                    onFileNameChange={handleFileNameChange}
+                    onFormDataChange={handleFormDataChange}
+                />
                 <ButtonWrapper>
                     <TextButton
                         type="submit"

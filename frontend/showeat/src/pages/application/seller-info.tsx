@@ -1,4 +1,3 @@
-/* Import */
 import styled from "@emotion/styled";
 import { ChangeEvent, useState, useRef, useEffect } from "react";
 import { TextInput } from "@components/common/input";
@@ -65,7 +64,29 @@ interface IAddr {
     zonecode: string;
 }
 
-function SellerInfo() {
+interface SellerInfoProps {
+    onBusinessNameChange: (value: string) => void;
+    onStartDateChange: (value: string) => void;
+    onBusinessNumberChange: (value: string) => void;
+    onBusinessAddressChange: (value: string) => void;
+    onZonecodeChange: (value: string) => void;
+    onBusinessAddressDetailChange: (value: string) => void;
+    onBusinessPhoneChange: (value: string) => void;
+    onFileNameChange: (value: string) => void;
+    onFormDataChange: (value: FormData) => void;
+}
+
+function SellerInfo({
+    onBusinessNameChange,
+    onStartDateChange,
+    onBusinessNumberChange,
+    onBusinessAddressChange,
+    onZonecodeChange,
+    onBusinessAddressDetailChange,
+    onBusinessPhoneChange,
+    onFileNameChange,
+    onFormDataChange,
+}: SellerInfoProps) {
     const [businessName, setBusinessName] = useState<string>("");
     const [startDate, setStartDate] = useState<string>("");
     const [businessNumber, setBusinessNumber] = useState<string>("");
@@ -77,31 +98,45 @@ function SellerInfo() {
     const [formData, setFormData] = useState<FormData>(new FormData());
 
     const handleBusinessNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setBusinessName(event.target.value.trim());
+        const value = event.target.value.trim();
+        setBusinessName(value);
+        onBusinessNameChange(value);
     };
 
     const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setStartDate(event.target.value.trim());
+        const value = event.target.value.trim();
+        setStartDate(value);
+        onStartDateChange(value);
     };
 
     const handleBusinessNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setBusinessNumber(event.target.value.trim());
+        const value = event.target.value.trim();
+        setBusinessNumber(value);
+        onBusinessNumberChange(value);
     };
 
     const handleZonecodeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setZonecode(event.target.value.trim());
+        const value = event.target.value.trim();
+        setZonecode(value);
+        onZonecodeChange(value);
     };
 
     const handleBusinessAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setBusinessAddress(event.target.value.trim());
+        const value = event.target.value.trim();
+        setBusinessAddress(value);
+        onBusinessAddressChange(value);
     };
 
     const handleBusinessAddressDetailChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setBusinessAddressDetail(event.target.value.trim());
+        const value = event.target.value.trim();
+        setBusinessAddressDetail(value);
+        onBusinessAddressDetailChange(value);
     };
 
     const handleBusinessPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setBusinessPhone(event.target.value.trim());
+        const value = event.target.value.trim();
+        setBusinessPhone(value);
+        onBusinessPhoneChange(value);
     };
 
     const businessRegistrationInputRef = useRef<HTMLInputElement>(null);
@@ -116,10 +151,13 @@ function SellerInfo() {
         const { files } = event.target;
         if (files && files.length > 0) {
             const selectedFile = files[0];
-            setFileName(selectedFile.name);
+            const value = selectedFile.name;
+            setFileName(value);
+            onFileNameChange(value);
             const newFormData = new FormData();
             newFormData.append("files", selectedFile);
             setFormData(newFormData);
+            onFormDataChange(newFormData);
             console.log(formData);
         }
     };
@@ -143,6 +181,8 @@ function SellerInfo() {
                 oncomplete(data: IAddr) {
                     setBusinessAddress(data.address);
                     setZonecode(data.zonecode);
+                    onBusinessAddressChange(data.address);
+                    onZonecodeChange(data.zonecode);
                 },
             }).open();
         }
@@ -248,5 +288,4 @@ function SellerInfo() {
     );
 }
 
-/* Export */
 export default SellerInfo;
