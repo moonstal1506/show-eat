@@ -1,6 +1,6 @@
 /* Import */
 import withAuth from "@libs/withAuth";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import jsQR from "jsqr";
 import styled from "@emotion/styled";
@@ -8,6 +8,7 @@ import SingleLayout from "@/layouts/SingleLayout";
 import { TextButton } from "@/components/common/button";
 import { useRouter } from "next/router";
 import getQRCode from "@/apis/qr";
+import Modal from "@/components/composite/modal";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -62,10 +63,44 @@ const ButtonContainer = styled("div")`
     max-width: 450px;
 `;
 
+const FailedModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const ModalTitleWrapper = styled("span")`
+    font-size: 30px;
+    font-weight: 700;
+
+    padding: 0.5em;
+`;
+
+const ModalDescriptionWrapper = styled("span")`
+    font-size: 18px;
+
+    padding: 3em;
+`;
+
+function FailedModal() {
+    return (
+        <FailedModalContainer>
+            <ModalTitleWrapper>인식 실패</ModalTitleWrapper>
+            <ModalDescriptionWrapper>QR 코드 인식에 실패했습니다.</ModalDescriptionWrapper>
+        </FailedModalContainer>
+    );
+}
+
 /* Seller Reading Redeem Page */
 function Redeem() {
     const router = useRouter();
     const webcamRef = useRef<Webcam>(null);
+
+    const [isOpen, setIsOpen] = useState(false);
 
     const videoConstraints = {
         height: 360,
@@ -107,9 +142,11 @@ function Redeem() {
             console.log("QR Code:", qrCode);
             getQRCode(imageSrc).then((res) => {
                 console.log(res);
+                // 임시로 써둔 코드, api 돌아오면 url을 통한거로 바꿀 것.
+                router.push(`/sellers/redeem/result/${imageSrc}`);
             });
         } else {
-            console.log("QR Code not found");
+            setIsOpen(true);
         }
     };
 
@@ -147,6 +184,17 @@ function Redeem() {
                     onClick={() => router.back()}
                 />
             </ButtonContainer>
+            <Modal
+                childComponent={FailedModal()}
+                width="500px"
+                height="300px"
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                buttonType="close"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+            />
         </RedeemContainer>
     );
 }
@@ -156,7 +204,7 @@ function Redeem() {
 /* Middleware */
 const RedeemWithAuth = withAuth({
     WrappedComponent: Redeem,
-    // guardType: "USER_ONLY",
+    guardType: "USER_ONLY",
 });
 
 // ----------------------------------------------------------------------------------------------------
