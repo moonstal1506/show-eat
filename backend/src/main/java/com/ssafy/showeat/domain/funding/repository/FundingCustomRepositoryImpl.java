@@ -1,7 +1,6 @@
 package com.ssafy.showeat.domain.funding.repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,17 +14,14 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.MathExpressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMonthlyStatResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessTotalStatResponseDto;
-import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.QBusiness;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
-import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
 import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.funding.entity.FundingCategory;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
@@ -110,6 +106,7 @@ public class FundingCustomRepositoryImpl implements FundingCustomRepository {
 			.select(
 				Projections.constructor(
 					BusinessTotalStatResponseDto.class,
+					funding.business.businessName,
 					ExpressionUtils.as(
 						new CaseBuilder()
 							.when(funding.fundingIsSuccess.eq(FundingIsSuccess.SUCCESS))
