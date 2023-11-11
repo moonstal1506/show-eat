@@ -72,10 +72,12 @@ public class FundingServiceImpl implements FundingService {
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 
-		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
-			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
-			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
-		}
+		BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
+		fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,createFundingRequestDto.getDiscountPrice()));
+//		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
+//			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
+//			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
+//		}
 	}
 
 	@Override
@@ -143,7 +145,7 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public Page<FundingListResponseDto> getUserFundingList(User user, int page) {
 		log.info("FundingServiceImpl_getUserFundingList ||  유저가 참여한 펀딩 리스트 조회");
-		Pageable pageable = PageRequest.of(page, 6 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Pageable pageable = PageRequest.of(page, 12 , Sort.by(Sort.Direction.DESC, "createdDate"));
 		Page<UserFunding> userFundings = userFundingRepository.findByUser(user, pageable);
 
 		List<FundingListResponseDto> result =
@@ -163,7 +165,7 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public Page<FundingListResponseDto> getUserFundingListByBookmark(User user, int page) {
 		log.info("FundingServiceImpl_getUserFundingListByBookmark ||  유저가 좋아요한 펀딩 리스트 조회");
-		Pageable pageable = PageRequest.of(page, 6 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Pageable pageable = PageRequest.of(page, 12 , Sort.by(Sort.Direction.DESC, "createdDate"));
 		Page<Bookmark> userBookmarkFundingList = bookmarkService.getUserBookmarkFundingList(user, page, pageable);
 
 		List<FundingListResponseDto> result = userBookmarkFundingList.getContent()
