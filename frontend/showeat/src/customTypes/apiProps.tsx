@@ -16,6 +16,13 @@ export interface CouponType {
     remainingDays: number;
 }
 
+export interface StatisticsType {
+    totalFailFundingCnt: number;
+    totalFundingParticipantsCnt: number;
+    totalRevenue: number;
+    totalSuccessFundingCnt: number;
+}
+
 export interface FetchProps {
     url: string;
     method: "GET" | "POST" | "PATCH" | "DELETE";
