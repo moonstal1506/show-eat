@@ -24,4 +24,5 @@ public class UserResDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private TokenDto tokenDto;
+    private Long businessId;
 }
