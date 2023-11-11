@@ -51,6 +51,7 @@ function TotalStats() {
             if (userId !== 0 || sellerId !== 0) {
                 const result = await getTotalStatistic(1); // TODO: 1 -> sellerId 로 변경
                 setStatistics(result.data);
+                console.log(result.data);
             }
         };
 
@@ -66,10 +67,10 @@ function TotalStats() {
 
     const contents: (string | number)[] = statistics
         ? [
-              `${statistics.totalRevenue} 원`,
-              `${statistics.totalSuccessFundingCnt} 회`,
-              `${statistics.totalFundingParticipantsCnt} 명`,
-              `${statistics.totalFailFundingCnt} 회`,
+              `${statistics.totalRevenue.toLocaleString()} 원`,
+              `${statistics.totalSuccessFundingCnt.toLocaleString()} 회`,
+              `${statistics.totalFundingParticipantsCnt.toLocaleString()} 명`,
+              `${statistics.totalFailFundingCnt.toLocaleString()} 회`,
           ]
         : [];
 
