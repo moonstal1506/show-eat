@@ -21,7 +21,7 @@ const userDefaultValue: UserType = {
     userNickname: "",
     userImgUrl: "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
     userAddress: "",
-    userBusiness: false,
+    userBusiness: 0,
     userMoney: 0,
     userPhone: "",
     visited: false,
