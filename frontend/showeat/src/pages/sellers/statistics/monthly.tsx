@@ -1,8 +1,12 @@
 import SellerLayout from "@layouts/SellerLayout";
 import withAuth from "@libs/withAuth";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Table from "@/components/common/table";
 import styled from "@emotion/styled";
+import useUserState from "@hooks/useUserState";
+import useSellerState from "@hooks/useSellerState";
+import { getMonthlyStatistic } from "@apis/statistics";
+import { MonthlyStatisticsType } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 const TotalContainer = styled("div")`
@@ -50,12 +54,45 @@ const DateLabel = styled("div")`
 
 /* Monthly Statistics Page */
 function MonthlyStats() {
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1); // 현재 월을 기준으로 설정
+    const [statistics, setStatistics] = useState<MonthlyStatisticsType[]>([]);
+    const [seller] = useSellerState();
+    const [user] = useUserState();
+    console.log(user);
+    console.log(seller);
+
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1); // 현재 월을 기준
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const headers = ["매출액", "성공 펀딩수", "성공 펀딩 참여자수", "실패 펀딩수"];
 
-    const contents = ["123,456,000 원", "3 회", "323 명", "1 회"];
+    useEffect(() => {
+        const fetchStatistics = async () => {
+            const { userId } = user;
+            const { sellerId } = seller;
+            if (userId !== 0 || sellerId !== 0) {
+                const result = await getMonthlyStatistic(1); // TODO: 1 -> sellerId 로 변경
+                setStatistics(result.data);
+                console.log("정보", result.data);
+            }
+        };
 
+        fetchStatistics();
+    }, [user]);
+
+    const headers: string[] = ["매출액", "성공 펀딩수", "성공 펀딩 참여자수", "실패 펀딩수"];
+
+    // TODO : 달력이랑 비교해서 가져와 지는지 확인하기
+    const filteredStatistics = statistics?.filter((item) => {
+        return item.year === currentYear && item.month === currentMonth;
+    });
+
+    const contents: (string | number)[] =
+        filteredStatistics && filteredStatistics.length > 0
+            ? [
+                  `${filteredStatistics[0].revenue} 원`,
+                  `${filteredStatistics[0].successFundingCnt} 회`,
+                  `${filteredStatistics[0].fundingParticipantsCnt} 명`,
+                  `${filteredStatistics[0].failFundingCnt} 회`,
+              ]
+            : [];
     const decreaseMonth = () => {
         setCurrentMonth((prevMonth) => {
             if (prevMonth === 1) {
