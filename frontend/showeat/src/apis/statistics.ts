@@ -4,7 +4,7 @@ import { FetchProps } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Function for Getting Coupon List */
+/* Functions for get Monthly Statistics */
 const getMonthlyStatistic = async (businessId: number) => {
     const props: FetchProps = {
         url: `business/stat/monthly/${businessId}`,
@@ -15,8 +15,7 @@ const getMonthlyStatistic = async (businessId: number) => {
 
     return result;
 };
-
-/* Function for Getting Coupon Information */
+/* Functions for get Total Statistics */
 const getTotalStatistic = async (businessId: number) => {
     const props: FetchProps = {
         url: `business/stat/total/${businessId}`,
