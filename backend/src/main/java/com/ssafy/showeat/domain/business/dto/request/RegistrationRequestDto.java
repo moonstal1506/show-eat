@@ -17,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "비즈니스 정보 DTO", description = "비즈니스 회원 인증시 필요한 정보")
-public class BusinessInfoRequestDto {
+public class RegistrationRequestDto {
 
     private final static String DEFAULT_BUSINESS_IMG_URL = "https://img.freepik.com/premium-photo/gold-sculture-of-a-cow_839169-25494.jpg";
 

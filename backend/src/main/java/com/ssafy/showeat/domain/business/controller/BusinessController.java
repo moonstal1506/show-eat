@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
@@ -47,10 +47,12 @@ public class BusinessController {
 	})
 	@PostMapping("/registration")
 	public ResponseResult verifyBusiness(
-		@RequestPart BusinessInfoRequestDto businessInfoRequestDto,
-		@RequestPart MultipartFile businessRegistration
-	) {
-		return new SingleResponseResult<>(businessService.verifyBusiness(businessInfoRequestDto, businessRegistration));
+		@RequestPart RegistrationRequestDto registrationRequestDto,
+		@RequestPart MultipartFile businessRegistration,
+		HttpServletRequest request
+	) throws IOException {
+		return new SingleResponseResult<>(businessService.verifyBusiness(registrationRequestDto,
+			businessRegistration, userService.getUserFromRequest(request)));
 	}
 
 	@ApiOperation(value = "업체 등록", notes = "업체를 등록합니다.")

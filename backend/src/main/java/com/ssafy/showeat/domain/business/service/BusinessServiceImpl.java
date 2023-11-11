@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.BusinessMenuResponseDto;
@@ -172,19 +172,29 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	public boolean verifyBusiness(BusinessInfoRequestDto businessInfoRequestDto, MultipartFile businessRegistration) {
+	public boolean verifyBusiness(
+		RegistrationRequestDto registrationRequestDto,
+		MultipartFile businessRegistration,
+		User loginUser
+	) throws IOException {
 		//사업자 등록증 ocr
 		ClovaOcrResponseDto clovaOcrResponseDto = clovaOcrService.readOcr(businessRegistration);
 
 		//업체 입력 정보와 ocr 일치 확인
-		checkOcrAndBusinessInfo(clovaOcrResponseDto, businessInfoRequestDto);
+		checkOcrAndBusinessInfo(clovaOcrResponseDto, registrationRequestDto);
 
 		//국세청 사업자등록정보 진위확인
-		return businessRegistrationService.verifyBusinessRegistration(businessInfoRequestDto);
+		if(businessRegistrationService.verifyBusinessRegistration(registrationRequestDto)){
+			String businessRegistrationUrl = s3Service.uploadBusinessImageToS3(businessRegistration);
+			businessRepository.save(registrationRequestDto.toEntity(businessRegistrationUrl, loginUser));
+			return true;
+		}
+
+		return false;
 	}
 
 	private void checkOcrAndBusinessInfo(ClovaOcrResponseDto clovaOcrResponseDto,
-		BusinessInfoRequestDto businessInfoRequestDto) {
+		RegistrationRequestDto registrationRequestDto) {
 		List<ImageInfo> images = clovaOcrResponseDto.getImages();
 		for (ImageInfo imageInfo : images) {
 			List<FieldInfo> fields = imageInfo.getFields();
@@ -194,17 +204,17 @@ public class BusinessServiceImpl implements BusinessService {
 			FieldInfo startDate = fields.get(3);
 
 			if(!businessNumber.getInferText().replaceAll("[^\\d]", "")
-				.equals(businessInfoRequestDto.getBusinessNumber())){
+				.equals(registrationRequestDto.getBusinessNumber())){
 				throw new InvalidRegistrationException("사업자등록번호가 일치하지 않습니다.");
 			}
-			if(!businessName.getInferText().equals(businessInfoRequestDto.getBusinessName())){
+			if(!businessName.getInferText().equals(registrationRequestDto.getBusinessName())){
 				throw new InvalidRegistrationException("상호명이 일치하지 않습니다.");
 			}
-			if(!businessCeo.getInferText().equals(businessInfoRequestDto.getBusinessCeo())){
+			if(!businessCeo.getInferText().equals(registrationRequestDto.getBusinessCeo())){
 				throw new InvalidRegistrationException("대표자명이 일치하지 않습니다.");
 			}
 			if(!startDate.getInferText().replaceAll("[^\\d]", "")
-				.equals(businessInfoRequestDto.getStartDate())){
+				.equals(registrationRequestDto.getStartDate())){
 				throw new InvalidRegistrationException("사업 시작일이 일치하지 않습니다.");
 			}
 		}
