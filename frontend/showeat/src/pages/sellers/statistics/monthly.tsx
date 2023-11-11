@@ -87,10 +87,10 @@ function MonthlyStats() {
     const contents: (string | number)[] =
         filteredStatistics && filteredStatistics.length > 0
             ? [
-                  `${filteredStatistics[0].revenue} 원`,
-                  `${filteredStatistics[0].successFundingCnt} 회`,
-                  `${filteredStatistics[0].fundingParticipantsCnt} 명`,
-                  `${filteredStatistics[0].failFundingCnt} 회`,
+                  `${filteredStatistics[0].revenue.toLocaleString()} 원`,
+                  `${filteredStatistics[0].successFundingCnt.toLocaleString()} 회`,
+                  `${filteredStatistics[0].fundingParticipantsCnt.toLocaleString()} 명`,
+                  `${filteredStatistics[0].failFundingCnt.toLocaleString()} 회`,
               ]
             : [];
     const decreaseMonth = () => {
