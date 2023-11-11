@@ -99,7 +99,73 @@ const createFunding = async ({
     return result;
 };
 
+/* Function for active Funding */
+const getActiveFunding = async (page: number, state: string) => {
+    const props: FetchProps = {
+        url: `funding/business/${page}/${state}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
+/* Function for Inactive Funding */
+const getInActiveFunding = async (page: number, state: string) => {
+    const props: FetchProps = {
+        url: `funding/business/${page}/${state}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
+/* Function for user Fundings */
+const getUserFundings = async (page: number) => {
+    const props: FetchProps = {
+        url: `funding/user/${page}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
+/* Function for heart */
+const postHeart = async (fundingId: number) => {
+    const props: FetchProps = {
+        url: `bookmark/${fundingId}`,
+        method: "POST",
+        data: {},
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+    return result;
+};
+
+/* Function for user favorite Fundings */
+const getFavoriteFundings = async (page: number) => {
+    const props: FetchProps = {
+        url: `funding/user/bookmark/${page}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getMainPageList, getMyFundings, getBookmarkFundings, postBookmark, createFunding };
+export {
+    getMainPageList,
+    getMyFundings,
+    getBookmarkFundings,
+    postBookmark,
+    getActiveFunding,
+    getInActiveFunding,
+    getUserFundings,
+    postHeart,
+    getFavoriteFundings,
+    createFunding,
+};

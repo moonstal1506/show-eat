@@ -1,4 +1,21 @@
 /* Export */
+export interface CouponType {
+    businessImgUrl: string;
+    businessName: string;
+    couponId: number;
+    couponPrice: number;
+    couponQrCodeImgUrl: string;
+    couponStatus: "ACTIVE" | "USED" | "EXPIRED";
+    couponType: "SINGLE" | "GIFTCARD";
+    expirationDate: string;
+    fundingDiscountPrice: number;
+    fundingImgUrl: string;
+    fundingMenu: string;
+    fundingPrice: number;
+    fundingTitle: string;
+    remainingDays: number;
+}
+
 export interface FetchProps {
     url: string;
     method: "GET" | "POST" | "PATCH" | "DELETE";
@@ -21,4 +38,27 @@ export interface FetchOptionProps {
         revalidate?: false | number;
         tags?: string[];
     };
+}
+
+export interface FundingType {
+    fundingId: number;
+    title: string;
+    businessName: string;
+    category: string;
+    maxLimit: number;
+    minLimit: number;
+    curCount: number;
+    menu: string;
+    price: number;
+    discountPrice: number;
+    discountRate: number;
+    startDate: string;
+    endDate: string;
+    fundingIsActive: string;
+    fundingIsSuccess: string;
+    fundingImageResponseDtos: {
+        imageId: number;
+        imageUrl: string;
+    }[];
+    fundingIsBookmark: boolean;
 }
