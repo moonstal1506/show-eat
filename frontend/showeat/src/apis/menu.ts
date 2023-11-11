@@ -26,13 +26,13 @@ const addNewMenu = async ({ menu, price, multipartFiles }: AddNewMenuType) => {
     // Create a new FormData instance
     const formData = new FormData();
 
-    // addNewMenu 함수 내에서 formData를 만들기 전에 로그로 확인
-    function logFormData(formData) {
-        formData.forEach((value, key) => {
-            console.log(`${key}, ${value}`);
-        });
-    }
-    logFormData(formData);
+    // // addNewMenu 함수 내에서 formData를 만들기 전에 로그로 확인
+    // function logFormData(formData) {
+    //     formData.forEach((value, key) => {
+    //         console.log(`${key}, ${value}`);
+    //     });
+    // }
+    // logFormData(formData);
 
     // Append JSON data as a string
     formData.append(
@@ -49,7 +49,7 @@ const addNewMenu = async ({ menu, price, multipartFiles }: AddNewMenuType) => {
     });
 
     // addNewMenu 함수 내에서 formData를 만든 후에 로그로 확인
-    logFormData(formData);
+    // logFormData(formData);
 
     const props: FetchProps = {
         url: "business/menu",
