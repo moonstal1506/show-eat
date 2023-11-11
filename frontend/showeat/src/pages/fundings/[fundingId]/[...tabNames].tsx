@@ -1,9 +1,11 @@
 /* Import */
-import { fundingTabMenuConfig } from "@configs/tabMenuConfig";
+import { fundingTabMenu } from "@configs/tabMenu";
+import { FundingType } from "@customTypes/apiProps";
 import { getFundingDetail } from "@apis/fundings";
 import { GetServerSideProps } from "next";
-import { ReactNode, useState } from "react";
+import ImageGallery from "@components/composite/imageGallery";
 import MainLayout from "@layouts/MainLayout";
+import { ReactNode, useState } from "react";
 import styled from "@emotion/styled";
 import { Tab, TabBar } from "@components/composite/tabBar";
 import { TagButton, TextButton } from "@components/common/button";
@@ -21,6 +23,7 @@ interface FundingParams {
 
 interface FundingTabProps {
     fundingId: string;
+    fundingData: FundingType;
     tabName: string;
 }
 
@@ -30,7 +33,7 @@ interface FundingTabProps {
 const FundingContainer = styled("div")`
     width: 100vw;
     box-sizing: border-box;
-    padding: 5em 10em;
+    padding: 5% 15%;
 `;
 
 const DetailContainer = styled("div")`
@@ -122,7 +125,7 @@ const ButtonContainer = styled("div")`
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     // States and Variables
     const { fundingId, tabNames } = params as FundingParams;
-    const allowedTabNames = fundingTabMenuConfig.map((tab) => tab.id);
+    const allowedTabNames = fundingTabMenu.map((tab) => tab.id);
 
     if (!fundingId || !tabNames || !allowedTabNames.includes(tabNames[0])) {
         return {
@@ -133,14 +136,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         };
     }
 
-    getFundingDetail(fundingId).then((result) => {
-        console.log(result);
-        console.log("대체 왜?");
-    });
+    const result = await getFundingDetail(fundingId);
+    const fundingData: FundingType = { fundingId: +fundingId, ...result.data };
 
     return {
         props: {
             fundingId,
+            fundingData,
             tabName: tabNames?.[0],
         },
     };
@@ -152,7 +154,27 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 function FundingTab(props: FundingTabProps) {
     // States and Variables
     const router = useRouter();
-    const { fundingId, tabName } = props;
+    const { fundingId, fundingData, tabName } = props;
+    const {
+        businessName,
+        title,
+        category,
+        maxLimit,
+        minLimit,
+        curCount,
+        menu,
+        price,
+        discountPrice,
+        discountRate,
+        startDate,
+        endDate,
+        fundingIsActive,
+        fundingIsSuccess,
+        fundingTagResponseDtos,
+        fundingImageResponseDtos,
+        bookmarkCount,
+        fundingIsBookmark,
+    } = fundingData;
     const [activeTab, setActiveTab] = useState<string>(tabName || "store");
 
     // Function for Handling Tab Click
@@ -165,31 +187,42 @@ function FundingTab(props: FundingTabProps) {
     return (
         <FundingContainer>
             <DetailContainer>
-                <ImageContainer>이미지</ImageContainer>
+                <ImageContainer>
+                    <ImageGallery
+                        images={["/assets/images/service-logo.png", "/assets/images/team-logo.svg"]}
+                    />
+                </ImageContainer>
                 <DetailBox>
                     <InfoHeaderContainer>
-                        <CategoryWrapper>카페/디저트 | 카페라떼</CategoryWrapper>
-                        <TitleWrapper>타이틀임다</TitleWrapper>
+                        <CategoryWrapper>
+                            {category} | {menu}
+                        </CategoryWrapper>
+                        <TitleWrapper>{title}</TitleWrapper>
                         <TagContainer>태그들</TagContainer>
                     </InfoHeaderContainer>
                     <InfoContentContainer>내용</InfoContentContainer>
-                    <TextBox text="fuck" />
+                    <TextBox text="fuck" colorType="secondary" />
                     <PriceContainer>
-                        <OriginalPriceWrapper>원래 가격</OriginalPriceWrapper>
+                        <OriginalPriceWrapper>{price}</OriginalPriceWrapper>
                         <FundingPriceBox>
-                            <TagButton width="10%" tagDescription="20% 할인" />
-                            <FundingPriceWrapper>펀딩 가격</FundingPriceWrapper>
+                            <TagButton width="10%" tagDescription={`${discountRate}% 할인`} />
+                            <FundingPriceWrapper>{discountPrice}</FundingPriceWrapper>
                         </FundingPriceBox>
                     </PriceContainer>
                     <ButtonContainer>
-                        <TextButton width="45%" text="펀딩 참여" />
-                        <TextButton width="25%" text="좋아요 수" fill="negative" />
-                        <TextButton width="25%" text="공유" fill="negative" />
+                        <TextButton width="45%" text="펀딩 참여" colorType="secondary" />
+                        <TextButton
+                            width="25%"
+                            text="좋아요 수"
+                            colorType="secondary"
+                            fill="negative"
+                        />
+                        <TextButton width="25%" text="공유" colorType="secondary" fill="negative" />
                     </ButtonContainer>
                 </DetailBox>
             </DetailContainer>
             <TabBar>
-                {fundingTabMenuConfig.map((tab) => (
+                {fundingTabMenu.map((tab) => (
                     <Tab
                         key={tab.id}
                         width="30%"
