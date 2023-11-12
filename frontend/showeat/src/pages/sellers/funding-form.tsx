@@ -650,11 +650,7 @@ function FundingForm() {
                         <TagsContainer>
                             {tags.data.map((one, idx) => (
                                 <TagContainer key={`${one}-${idx}`}>
-                                    <TagButton
-                                        tagDescription={one}
-                                        colorType="primary"
-                                        width="80px"
-                                    />
+                                    <TagButton text={one} colorType="primary" width="80px" />
                                     <DeleteIconWrapper
                                         src="/assets/icons/delete-icon.svg"
                                         alt="delete-tag"

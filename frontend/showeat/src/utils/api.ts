@@ -68,6 +68,7 @@ async function fetchModify(props: FetchProps) {
         url,
         method,
         data,
+        params = {},
         isAuth,
         contentType = "json",
         cache = true,
@@ -92,12 +93,15 @@ async function fetchModify(props: FetchProps) {
         }
     }
 
+    const queryString: string = params ? `?${new URLSearchParams(params).toString()}` : "";
+
     const handleData = () => {
         if (data) {
             if (contentType === "json") {
                 return JSON.stringify(data);
             }
             if (data instanceof FormData) {
+                // if (contentType === "file") {
                 return data;
             }
             return undefined;
@@ -118,7 +122,7 @@ async function fetchModify(props: FetchProps) {
     };
 
     try {
-        const response = await fetch(`${ENDPOINT}${url}`, options);
+        const response = await fetch(`${ENDPOINT}${url}${queryString}`, options);
         const fetchResult = await response.json();
         if (fetchResult && fetchResult.statusCode === 200) {
             return fetchResult;
