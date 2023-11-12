@@ -1,8 +1,18 @@
 /* Import */
-import Table from "@/components/common/table";
+import Table from "@components/common/table";
+// import { CardCarousel } from "@components/composite/carousel";
+import { BusinessType, FundingType } from "@customTypes/apiProps";
 import TextBox from "@components/common/textBox";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
+interface FundingStoreTabProps {
+    businessData: BusinessType;
+    fundingData: FundingType[];
+}
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -50,6 +60,13 @@ const SubTitleWrapper = styled("div")`
     font-weight: 700;
 `;
 
+const CarouselWrapper = styled("div")`
+    // Layout Attribute
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 const InfoContainer = styled("div")`
     // Layout Attribute
     display: flex;
@@ -63,7 +80,7 @@ const InfoContainer = styled("div")`
 const MapWrapper = styled("div")`
     // Box Model Attribute
     width: 100%;
-    height: 285px;
+    height: 420px;
 
     // Style Attribute
     border: 1px solid ${(props) => props.theme.colors.gray2};
@@ -73,8 +90,21 @@ const MapWrapper = styled("div")`
 // ----------------------------------------------------------------------------------------------------
 
 /* Funding Store Tab Component */
-function FundingStoreTab() {
+function FundingStoreTab(props: FundingStoreTabProps) {
+    // States and Variables
     const { kakao } = window;
+    const { businessData, fundingData } = props;
+    const {
+        businessAddress,
+        businessBio,
+        businessCeo,
+        businessClosedDays,
+        businessEmail,
+        businessName,
+        businessNumber,
+        businessOperatingTime,
+        businessPhone,
+    } = businessData;
     const businessInfoHeader: string[] = [
         "상호명",
         "운영시간",
@@ -86,49 +116,51 @@ function FundingStoreTab() {
         "사업자 등록번호",
     ];
     const businessInfoContent: string[] = [
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
-        "야미화니 커피",
+        businessName,
+        businessOperatingTime,
+        businessClosedDays,
+        `${businessPhone}`,
+        businessAddress,
+        businessCeo,
+        businessEmail,
+        `${businessNumber}`,
     ];
 
-    const latitude = 33.450701;
-    const longitude = 126.570667;
+    console.log(fundingData);
+
+    // Function for Loading Kakao Map API
     useEffect(() => {
         kakao.maps.load(() => {
-            const container = document.getElementById("map");
-            const options = {
-                center: new kakao.maps.LatLng(37.5012767241426, 127.039600248343),
-            };
-            const map = new kakao.maps.Map(container as HTMLElement, options);
             const geocoder = new kakao.maps.services.Geocoder();
-            geocoder.addressSearch("서울특별시 강남구 역삼동 테헤란로 212", (result, status) => {
+            const mapContainer = document.getElementById("map");
+            const options = {
+                center: new kakao.maps.LatLng(37.5012, 127.0396),
+            };
+            const sellerMap = new kakao.maps.Map(mapContainer as HTMLElement, options);
+
+            geocoder.addressSearch(businessAddress, (result, status) => {
                 if (status === kakao.maps.services.Status.OK) {
-                    const coords = new kakao.maps.LatLng(+result[0].y, +result[0].x);
-
+                    const newLocation = new kakao.maps.LatLng(+result[0].y, +result[0].x);
                     const marker = new kakao.maps.Marker({
-                        map,
-                        position: coords,
+                        map: sellerMap,
+                        position: newLocation,
                     });
-
-                    const infowindow = new kakao.maps.InfoWindow({
-                        content:
-                            '<div style="width: 150px; padding: 6px 0; text-align: center; font-weight: 700">야미화니 커피</div>',
+                    const infoWindow = new kakao.maps.InfoWindow({
+                        content: `<div style="width: 150px; padding: 6px 0; text-align: center; font-weight: 700">${businessName}</div>`,
                     });
-                    infowindow.open(map, marker);
-                    map.setCenter(coords);
+                    infoWindow.open(sellerMap, marker);
+                    sellerMap.setCenter(newLocation);
                 }
             });
         });
-    }, [latitude, longitude]);
+    }, []);
 
     return (
         <StoreContainer>
-            <TitleWrapper>야미화니 커피</TitleWrapper>
+            <TitleWrapper>{businessName}</TitleWrapper>
+            <CarouselWrapper>
+                {/* <CardCarousel width={960} height={400} cardList={fundingData} /> */}
+            </CarouselWrapper>
             <SubTitleWrapper>셀러의 다른 펀딩</SubTitleWrapper>
             <SubTitleWrapper>영업 정보</SubTitleWrapper>
             <InfoContainer>
@@ -136,11 +168,12 @@ function FundingStoreTab() {
                     headerWidth="30%"
                     headers={businessInfoHeader}
                     contents={businessInfoContent}
+                    gap="1em"
                 />
                 <MapWrapper id="map" />
             </InfoContainer>
             <SubTitleWrapper>영업 안내</SubTitleWrapper>
-            <TextBox text="야미화니 커피입니다. 만나서 반가워요! 저희는 280년 전통의 커피집이에요." />
+            <TextBox text={businessBio} />
         </StoreContainer>
     );
 }
