@@ -72,6 +72,8 @@ public class FundingServiceImpl implements FundingService {
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 
+		validateCategoryType(createFundingRequestDto.getCategory());
+
 		BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
 		fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,createFundingRequestDto.getDiscountPrice()));
 //		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
@@ -125,7 +127,7 @@ public class FundingServiceImpl implements FundingService {
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
 		int bookmarkCount = bookmarkService.getBookmarkCountByFundingId(fundingId);
 
-		return funding.toFundingResponseDto(bookmarkCount);
+		return funding.toFundingResponseDto(bookmarkCount , funding.getBusiness().getBusinessId());
 	}
 
 	private void fundingValidation(Funding funding , User loginUser){
@@ -228,7 +230,7 @@ public class FundingServiceImpl implements FundingService {
 
 		return FundingIsZzimAndIsParticipate.builder()
 			.fundingIsZzim(bookmarkService.isBookmark(userId,fundingId))
-			.fundingIsParticipate(userFundingRepository.existsByUserIdAndFundingId(userId,fundingId))
+			.fundingIsParticipate(userFundingRepository.existsByUser_UserIdAndFunding_FundingId(userId,fundingId))
 			.build();
 	}
 

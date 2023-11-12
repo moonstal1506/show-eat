@@ -104,6 +104,7 @@ public class Business extends BaseDateEntity {
 	public SellerResponseDto toSellerResponseDto() {
 		return SellerResponseDto.builder()
 			.businessId(businessId)
+			.businessName(businessName)
 			.businessImgUrl(businessImgUrl)
 			.businessBio(businessBio)
 			.businessOperatingTime(businessOperatingTime)

@@ -16,6 +16,23 @@ export interface CouponType {
     remainingDays: number;
 }
 
+export interface TotalStatisticsType {
+    businessName: string;
+    totalFailFundingCnt: number;
+    totalFundingParticipantsCnt: number;
+    totalRevenue: number;
+    totalSuccessFundingCnt: number;
+}
+
+export interface MonthlyStatisticsType {
+    year: number;
+    month: number;
+    revenue: number;
+    successFundingCnt: number;
+    fundingParticipantsCnt: number;
+    failFundingCnt: number;
+}
+
 export interface FetchProps {
     url: string;
     method: "GET" | "POST" | "PATCH" | "DELETE";
@@ -52,11 +69,15 @@ export interface FundingType {
     price: number;
     discountPrice: number;
     discountRate: number;
+    description: string;
     startDate: string;
     endDate: string;
-    fundingIsActive: string;
-    fundingIsSuccess: string;
-    fundingTagResponseDtos: string[];
+    fundingIsActive: "ACTIVE" | "INACTIVE";
+    fundingIsSuccess: "SUCCESS" | "FAIL" | "UNDECIDED";
+    fundingTagResponseDtos: {
+        tagId: number;
+        fundingTag: string;
+    }[];
     fundingImageResponseDtos: {
         imageId: number;
         imageUrl: string;
