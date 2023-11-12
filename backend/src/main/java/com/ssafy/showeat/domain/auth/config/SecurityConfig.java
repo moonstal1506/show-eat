@@ -69,8 +69,8 @@ public class SecurityConfig {
                 .antMatchers("/api/auth/login/**").permitAll()
                 .antMatchers("/api/funding/**").permitAll()
                 .antMatchers("/api/business/seller/**").permitAll()
-                .antMatchers("/api/review/**").permitAll()
-                .antMatchers("/api/funding/business/{page}/active/**").permitAll()
+                .antMatchers("/api/review").permitAll()
+                .antMatchers("/api/funding/business/*/active").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity
