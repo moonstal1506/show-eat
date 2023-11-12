@@ -34,7 +34,7 @@ public class BookMarkServiceImpl implements BookmarkService{
 		log.info("BookMarkServiceImpl_addBookMark || 관심 펀딩 추가 또는 삭제");
 		Funding funding = fundingRepository.findById(fundingId).get();
 
-		if(bookmarkRepository.existsByUserIdAndFundingId(loginUser.getUserId(),funding.getFundingId()))
+		if(bookmarkRepository.existsByUser_UserIdAndFunding_FundingId(loginUser.getUserId(),funding.getFundingId()))
 			bookmarkRepository.delete(bookmarkRepository.findByUserAndFunding(loginUser,funding));
 		else
 			bookmarkRepository.save(Bookmark.builder().user(loginUser).funding(funding).build());
@@ -43,7 +43,7 @@ public class BookMarkServiceImpl implements BookmarkService{
 	@Override
 	public boolean isBookmark(Long userId, Long fundingId) {
 		log.info("BookMarkServiceImpl_isBookmark || 유저의 펀딩 참여 여부");
-		if(bookmarkRepository.existsByUserIdAndFundingId(userId,fundingId))
+		if(bookmarkRepository.existsByUser_UserIdAndFunding_FundingId(userId,fundingId))
 			return true;
 		return false;
 	}

@@ -158,9 +158,10 @@ public class Funding extends BaseTimeEntity {
 		this.fundingIsSuccess = FundingIsSuccess.SUCCESS;
 	}
 
-	public FundingResponseDto toFundingResponseDto(int bookemarkCount){
+	public FundingResponseDto toFundingResponseDto(int bookemarkCount , Long businessId){
 		return FundingResponseDto.builder()
 			.title(fundingTitle)
+			.businessId(businessId)
 			.businessName(fundingBusinessName)
 			.category(fundingCategory.name())
 			.maxLimit(fundingMaxLimit)
