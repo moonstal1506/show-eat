@@ -26,6 +26,42 @@ const getBusinessRegiInfo = async (sellerId: number) => {
 };
 
 /* Function for Setting Information at First */
+const pathSellerBio = async (businessBio: string) => {
+    const props: FetchProps = {
+        url: "business/seller/bio",
+        method: "PATCH",
+        data: { businessBio },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+const pathSellerOperatingTime = async (operatingTime: string) => {
+    const props: FetchProps = {
+        url: "business/seller/operating-time",
+        method: "PATCH",
+        data: { operatingTime },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+const pathSellerClosedDays = async (businessClosedDays: string) => {
+    const props: FetchProps = {
+        url: "business/seller/closed-days",
+        method: "PATCH",
+        data: { businessClosedDays },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
 const patchSettingInfo = async (
     userId: number,
     userNickname: string,
@@ -44,4 +80,11 @@ const patchSettingInfo = async (
 };
 
 /* Export */
-export { getSellerInfo, getBusinessRegiInfo, patchSettingInfo };
+export {
+    getSellerInfo,
+    getBusinessRegiInfo,
+    pathSellerBio,
+    pathSellerOperatingTime,
+    pathSellerClosedDays,
+    patchSettingInfo,
+};

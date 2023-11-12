@@ -6,7 +6,14 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import useSellerState from "@/hooks/useSellerState";
 import { TextButton } from "@components/common/button";
-import { getSellerInfo, getBusinessRegiInfo } from "@/apis/seller";
+import {
+    getSellerInfo,
+    getBusinessRegiInfo,
+    pathSellerBio,
+    pathSellerOperatingTime,
+    pathSellerClosedDays,
+} from "@/apis/seller";
+import { TextArea } from "@/components/common/input";
 // ----------------------------------------------------------------------------------------------------
 
 const SellerInfoContainer = styled("div")`
@@ -203,8 +210,13 @@ function SellerInfo() {
     // 현재 활성화된 탭을 추적하는 state
     const [seller] = useSellerState();
     const [activeTab, setActiveTab] = useState("seller");
-    const [isEditing, setIsEditing] = useState(false);
+    const [isBioEditing, setIsBioEditing] = useState(false);
+    const [isOperatingTimeEditing, setIsOperatingTimeEditing] = useState(false);
+    const [isClosedDaysEditing, setIsClosedDaysEditing] = useState(false);
+
     const [businessBio, setBusinessBio] = useState("");
+    const [businessOperatingTime, setBusinessOperatingTime] = useState("");
+    const [businessClosedDays, setBusinessClosedDays] = useState("");
 
     const [sellerState, setSellerState] = useState({
         businessBio: "ㅋ",
@@ -250,15 +262,54 @@ function SellerInfo() {
 
     // 수정 모드로 전환
     const handleBusinessBioEdit = () => {
-        setIsEditing(true);
+        setIsBioEditing(true);
     };
 
     const handleBusinessBioSave = () => {
-        setSellerState((prev) => ({
-            ...prev,
-            businessBio,
-        }));
-        setIsEditing(false); // 수정 모드 종료
+        pathSellerBio(businessBio).then((result) => {
+            if (result.statusCode === 200) {
+                setSellerState((prev) => ({
+                    ...prev,
+                    businessBio,
+                }));
+            }
+        });
+
+        setIsBioEditing(false); // 수정 모드 종료
+    };
+
+    const handleBusinessOperatingTimeEdit = () => {
+        setIsOperatingTimeEditing(true);
+    };
+
+    const handleBusinessOperatingTimeSave = () => {
+        pathSellerOperatingTime(businessOperatingTime).then((result) => {
+            if (result.statusCode === 200) {
+                setSellerState((prev) => ({
+                    ...prev,
+                    businessOperatingTime,
+                }));
+            }
+        });
+
+        setIsOperatingTimeEditing(false); // 수정 모드 종료
+    };
+
+    const handleBusinessClosedDaysEdit = () => {
+        setIsClosedDaysEditing(true);
+    };
+
+    const handleBusinessClosedDaysSave = () => {
+        pathSellerClosedDays(businessClosedDays).then((result) => {
+            if (result.statusCode === 200) {
+                setSellerState((prev) => ({
+                    ...prev,
+                    businessClosedDays,
+                }));
+            }
+        });
+
+        setIsClosedDaysEditing(false); // 수정 모드 종료
     };
 
     let content;
@@ -290,7 +341,7 @@ function SellerInfo() {
                     <SellerInfoTitleContainer>
                         <SellerInfoTitleWrapper>셀러 소개문</SellerInfoTitleWrapper>
                         <ChangeSellerInfoWrapper>
-                            {isEditing ? (
+                            {isBioEditing ? (
                                 <TextButton
                                     text="저장"
                                     width="140px"
@@ -312,11 +363,13 @@ function SellerInfo() {
                         </ChangeSellerInfoWrapper>
                     </SellerInfoTitleContainer>
 
-                    {isEditing ? (
-                        <textarea
-                            value={sellerState.businessBio}
-                            onChange={(e) => setBusinessBio(e.target.value)}
-                            // 추가 스타일링 및 속성
+                    {isBioEditing ? (
+                        <TextArea
+                            maxLength={200}
+                            setTextValue={setBusinessBio}
+                            fontSize="16px"
+                            labelFontSize="14px"
+                            error={false}
                         />
                     ) : (
                         <SellerInfoContentWrapper>
@@ -329,38 +382,80 @@ function SellerInfo() {
                     <SellerInfoTitleContainer>
                         <SellerInfoTitleWrapper>셀러 운영 시간</SellerInfoTitleWrapper>
                         <ChangeSellerInfoWrapper>
-                            <TextButton
-                                text="수정"
-                                width="140px"
-                                height="40px"
-                                fontSize={20}
-                                colorType="primary"
-                                // onClick={handleCreateFunding}
-                            />
+                            {isOperatingTimeEditing ? (
+                                <TextButton
+                                    text="저장"
+                                    width="140px"
+                                    height="40px"
+                                    fontSize={20}
+                                    colorType="primary"
+                                    onClick={handleBusinessOperatingTimeSave}
+                                />
+                            ) : (
+                                <TextButton
+                                    text="수정"
+                                    width="140px"
+                                    height="40px"
+                                    fontSize={20}
+                                    colorType="primary"
+                                    onClick={handleBusinessOperatingTimeEdit}
+                                />
+                            )}
                         </ChangeSellerInfoWrapper>
                     </SellerInfoTitleContainer>
-                    <SellerInfoContentWrapper>
-                        {sellerState.businessOperatingTime}
-                    </SellerInfoContentWrapper>
+                    {isOperatingTimeEditing ? (
+                        <TextArea
+                            maxLength={200}
+                            setTextValue={setBusinessOperatingTime}
+                            fontSize="16px"
+                            labelFontSize="14px"
+                            error={false}
+                        />
+                    ) : (
+                        <SellerInfoContentWrapper>
+                            {sellerState.businessOperatingTime}
+                        </SellerInfoContentWrapper>
+                    )}
                 </SellerDetailInfoContainer>
 
                 <SellerDetailInfoContainer>
                     <SellerInfoTitleContainer>
                         <SellerInfoTitleWrapper>셀러 휴무일 정보</SellerInfoTitleWrapper>
                         <ChangeSellerInfoWrapper>
-                            <TextButton
-                                text="수정"
-                                width="140px"
-                                height="40px"
-                                fontSize={20}
-                                colorType="primary"
-                                // onClick={handleCreateFunding}
-                            />
+                            {isClosedDaysEditing ? (
+                                <TextButton
+                                    text="저장"
+                                    width="140px"
+                                    height="40px"
+                                    fontSize={20}
+                                    colorType="primary"
+                                    onClick={handleBusinessClosedDaysSave}
+                                />
+                            ) : (
+                                <TextButton
+                                    text="수정"
+                                    width="140px"
+                                    height="40px"
+                                    fontSize={20}
+                                    colorType="primary"
+                                    onClick={handleBusinessClosedDaysEdit}
+                                />
+                            )}
                         </ChangeSellerInfoWrapper>
                     </SellerInfoTitleContainer>
-                    <SellerInfoContentWrapper>
-                        {sellerState.businessClosedDays}
-                    </SellerInfoContentWrapper>
+                    {isClosedDaysEditing ? (
+                        <TextArea
+                            maxLength={200}
+                            setTextValue={setBusinessClosedDays}
+                            fontSize="16px"
+                            labelFontSize="14px"
+                            error={false}
+                        />
+                    ) : (
+                        <SellerInfoContentWrapper>
+                            {sellerState.businessClosedDays}
+                        </SellerInfoContentWrapper>
+                    )}
                 </SellerDetailInfoContainer>
 
                 <SellerDetailInfoContainer>
