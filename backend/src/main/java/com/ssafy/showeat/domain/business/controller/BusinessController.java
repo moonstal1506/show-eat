@@ -140,12 +140,12 @@ public class BusinessController {
 	})
 	@PostMapping("/menu")
 	public ResponseResult registMenu(
-		@RequestPart RegistMenuRequestDto registMenuRequestDto,
-//		@RequestPart(value = "file",required = false) List<MultipartFile> multipartFiles,
+		RegistMenuRequestDto registMenuRequestDto,
+		@RequestPart(value = "multipartFiles" , required = false) List<MultipartFile> multipartFiles,
 		HttpServletRequest request
 	) throws IOException {
 		User user = userService.getUserFromRequest(request);
-		businessService.registMenu(registMenuRequestDto, null , user);
+		businessService.registMenu(registMenuRequestDto, multipartFiles , user);
 		return new ListResponseResult<>(businessService.getMenuList(user));
 	}
 

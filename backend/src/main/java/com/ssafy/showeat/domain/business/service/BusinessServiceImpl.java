@@ -121,7 +121,7 @@ public class BusinessServiceImpl implements BusinessService {
 		log.info("BusinessServiceImpl_registMenu || 업체 메뉴 등록");
 		log.info(registMenuRequestDto.getMenu());
 
-		for (MultipartFile multipartFile : registMenuRequestDto.getMultipartFiles()) {
+		for (MultipartFile multipartFile : multipartFiles) {
 			log.info(multipartFile.getOriginalFilename());
 		}
 

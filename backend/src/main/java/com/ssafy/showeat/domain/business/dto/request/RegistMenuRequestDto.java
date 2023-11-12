@@ -12,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ApiModel(value = "메뉴 등록 DTO" , description = "업주가 메뉴 등록시 필요한 정보")
 public class RegistMenuRequestDto {
 
@@ -23,8 +20,6 @@ public class RegistMenuRequestDto {
 
 	@ApiModelProperty(value = "메뉴 원가", example = "6000")
 	private int price;
-
-	List<MultipartFile> multipartFiles;
 
 	public BusinessMenu toEntity(){
 		return BusinessMenu.builder()
