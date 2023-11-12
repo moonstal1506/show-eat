@@ -6,6 +6,7 @@ import {
     FundingShareModal,
 } from "@components/custom/modal";
 import { fundingTabMenu } from "@configs/tabMenu";
+import { FundingStoreTab } from "@components/custom/tab";
 import { FundingType } from "@customTypes/apiProps";
 import {
     deleteFundingJoin,
@@ -13,6 +14,7 @@ import {
     getFundingUserDetail,
     postFundingJoin,
 } from "@apis/fundings";
+import getBusinessInfo from "@apis/business";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { HeartBlankIcon, HeartFullIcon, ShareIcon } from "public/assets/icons";
@@ -74,7 +76,7 @@ const DetailBox = styled("div")`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1em;
+    gap: 1.5em;
 
     // Box Model Attribute
     width: 50%;
@@ -142,7 +144,7 @@ const PriceContainer = styled("div")`
     // Layout Attribute
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 0.5em;
 
     // Box Model Attribute
     width: 100%;
@@ -183,6 +185,12 @@ const ButtonContainer = styled("div")`
     width: 100%;
 `;
 
+const TabContainer = styled("div")`
+    // Box Model Attribute
+    width: 100%;
+    margin-top: 5em;
+`;
+
 const ModalContainer = styled("div")`
     // Box Model Attribute
     width: 0;
@@ -206,8 +214,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
         };
     }
 
-    const result = await getFundingDetail(fundingId);
-    const fundingData: FundingType = { fundingId: +fundingId, ...result.data };
+    const fundingResult = await getFundingDetail(fundingId);
+    const fundingData: FundingType = { fundingId: +fundingId, ...fundingResult.data };
+
+    const businessResult = await getBusinessInfo(fundingData.businessId);
+    // const businessData: BusinessType =
+    console.log(businessResult);
+    console.log(businessResult.data.sellerMenuResponseDtos);
 
     return {
         props: {
@@ -477,7 +490,9 @@ function FundingTab(props: FundingTabProps) {
                     />
                 ))}
             </TabBar>
-            <div>{activeTab === "store" ? <div>상점</div> : <div>리뷰</div>}</div>
+            <TabContainer>
+                {activeTab === "store" ? <FundingStoreTab /> : <div>리뷰</div>}
+            </TabContainer>
             <ModalContainer>
                 <Modal
                     width="400px"

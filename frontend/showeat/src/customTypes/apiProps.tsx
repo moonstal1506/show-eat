@@ -59,6 +59,7 @@ export interface FetchOptionProps {
 
 export interface FundingType {
     fundingId: number;
+    businessId: number;
     businessName: string;
     title: string;
     category: string;
