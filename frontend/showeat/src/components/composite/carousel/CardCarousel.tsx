@@ -1,43 +1,23 @@
 /* Import */
+import Card from "@components/composite/card";
+import { FundingType } from "@customTypes/apiProps";
 import styled from "@emotion/styled";
 import Image from "next/image";
-import Slider from "react-slick";
 import { keyframes } from "@emotion/react";
+import postBookmark from "@apis/bookmark";
+import Slider from "react-slick";
 import { useRef } from "react";
 import { useRouter } from "next/router";
-import { postBookmark } from "@/apis/fundings";
-import Card from "../card";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
-interface CarouselProps {
+interface CardCarouselProps {
     width: number;
     height: number;
-    title: string;
-    description: string;
-    cardDatas: {
-        fundingId: number;
-        title: string;
-        businessName: string;
-        category: string;
-        maxLimit: number;
-        minLimit: number;
-        curCount: number;
-        menu: string;
-        price: number;
-        discountPrice: number;
-        discountRate: number;
-        startDate: string;
-        endDate: string;
-        fundingIsActive: string;
-        fundingIsSuccess: string;
-        fundingImageResponseDtos: {
-            imageId: number;
-            imageUrl: string;
-        }[];
-        fundingIsBookmark: boolean;
-    }[];
+    title?: string;
+    description?: string;
+    cardList: FundingType[];
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -61,7 +41,7 @@ to {
 }
 `;
 
-const CarouselContainer = styled("div")<Partial<CarouselProps>>`
+const CarouselContainer = styled("div")<Partial<CardCarouselProps>>`
     width: ${(props) => `${props.width}px`};
     height: ${(props) => `${props.height}px`};
 
@@ -69,17 +49,17 @@ const CarouselContainer = styled("div")<Partial<CarouselProps>>`
     margin: 4em 0;
 `;
 
-const CarouselHeaderContainer = styled("div")`
+const HeaderContainer = styled("div")`
     display: flex;
     flex-direction: column;
 `;
 
-const CarouselTitleWrapper = styled("span")`
+const TitleWrapper = styled("span")`
     font-size: 26px;
     font-weight: 700;
 `;
 
-const CarouselDescriptionWrapper = styled("span")`
+const DescriptionWrapper = styled("span")`
     font-size: 16px;
     font-weight: 500;
     color: ${(props) => props.theme.colors.gray4};
@@ -88,7 +68,7 @@ const CarouselDescriptionWrapper = styled("span")`
     padding-bottom: 2em;
 `;
 
-const CarouselCardsContainer = styled("div")<Partial<CarouselProps>>`
+const CardContainer = styled("div")<Partial<CardCarouselProps>>`
     width: ${(props) => `${props.width}px`};
     height: ${(props) => `${props.height}px`};
 
@@ -100,7 +80,7 @@ const CarouselCardsContainer = styled("div")<Partial<CarouselProps>>`
     user-select: none;
 `;
 
-const CarouselCardWrapper = styled("div")<Partial<CarouselProps>>`
+const CardWrapper = styled("div")<Partial<CardCarouselProps>>`
     width: ${(props) => `${props.width}px`};
     height: ${(props) => `${props.height}px`};
 
@@ -183,14 +163,12 @@ const RightArrowWrapper = styled("div")<{ height: number }>`
     }
 `;
 
-const ArrowImageWrapper = styled(Image)`
-    //
-`;
-
 // ----------------------------------------------------------------------------------------------------
 
 /* Card Carousel Component */
-function CardCarousel({ width, height, title, description, cardDatas }: CarouselProps) {
+function CardCarousel(props: CardCarouselProps) {
+    const { width, height, title = "", description = "", cardList } = props;
+    const router = useRouter();
     const settings = {
         infinite: true,
         speed: 300,
@@ -200,9 +178,6 @@ function CardCarousel({ width, height, title, description, cardDatas }: Carousel
         autoplaySpeed: 5000,
         arrows: false,
     };
-
-    const router = useRouter();
-
     const sliderRef = useRef<Slider | null>(null);
 
     const goToPrev = () => {
@@ -222,18 +197,21 @@ function CardCarousel({ width, height, title, description, cardDatas }: Carousel
     };
 
     const handleBookmark = (fundingId: number) => {
-        postBookmark(fundingId);
+        postBookmark(fundingId.toString());
+        router.reload();
     };
+
     return (
         <CarouselContainer width={width} height={height}>
-            <CarouselHeaderContainer>
-                <CarouselTitleWrapper>{title}</CarouselTitleWrapper>
-                <CarouselDescriptionWrapper>{description}</CarouselDescriptionWrapper>
-            </CarouselHeaderContainer>
-
-            <CarouselCardsContainer width={width} height={height}>
+            {title && (
+                <HeaderContainer>
+                    <TitleWrapper>{title}</TitleWrapper>
+                    <DescriptionWrapper>{description}</DescriptionWrapper>
+                </HeaderContainer>
+            )}
+            <CardContainer width={width} height={height}>
                 <LeftArrowWrapper height={height} onClick={goToPrev}>
-                    <ArrowImageWrapper
+                    <Image
                         src="/assets/icons/left-arrow-icon.svg"
                         alt="carousel-left-arrow"
                         width={40}
@@ -241,31 +219,27 @@ function CardCarousel({ width, height, title, description, cardDatas }: Carousel
                     />
                 </LeftArrowWrapper>
                 <Slider {...settings} ref={sliderRef}>
-                    {cardDatas.map((cardData, idx) => (
-                        <CarouselCardWrapper
-                            key={`${cardData}-${idx}`}
-                            width={width}
-                            height={height}
-                        >
+                    {cardList.map((card, index) => (
+                        <CardWrapper key={index} width={width} height={height}>
                             <Card
-                                fundingData={cardData}
-                                onFundingClick={() => handleCard(cardData.fundingId)}
+                                fundingData={card}
+                                onFundingClick={() => handleCard(card.fundingId)}
                                 onBookmark={() => {
-                                    handleBookmark(cardData.fundingId);
+                                    handleBookmark(card.fundingId);
                                 }}
                             />
-                        </CarouselCardWrapper>
+                        </CardWrapper>
                     ))}
                 </Slider>
                 <RightArrowWrapper height={height} onClick={goToNext}>
-                    <ArrowImageWrapper
+                    <Image
                         src="/assets/icons/right-arrow-icon.svg"
                         alt="carousel-right-arrow"
                         width={40}
                         height={40}
                     />
                 </RightArrowWrapper>
-            </CarouselCardsContainer>
+            </CardContainer>
         </CarouselContainer>
     );
 }

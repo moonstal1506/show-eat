@@ -414,7 +414,7 @@ function Home() {
                                         height={400}
                                         title={carouselData.title}
                                         description={carouselData.description}
-                                        cardDatas={fundingDatas}
+                                        cardList={fundingDatas}
                                     />
                                 </CarouselWrapper>
                             ))}
@@ -425,7 +425,7 @@ function Home() {
                                     height={400}
                                     title={carouselData.title}
                                     description={carouselData.description}
-                                    cardDatas={fundingDatas}
+                                    cardList={fundingDatas}
                                 />
                             </CarouselWrapper>
                         ))}
