@@ -84,7 +84,7 @@ const ModalTitleWrapper = styled("span")`
 const ModalDescriptionWrapper = styled("span")`
     font-size: 18px;
 
-    padding: 3em;
+    padding: 2em;
 `;
 
 // ----------------------------------------------------------------------------------------------------
