@@ -87,8 +87,8 @@ public class BusinessController {
 	})
 	@PatchMapping("/seller/profile")
 	public ResponseResult updateBusinessImg(@RequestPart MultipartFile businessImg , HttpServletRequest request) throws IOException {
-		businessService.updateBusinessImg(businessImg , userService.getUserFromRequest(request));
-		return ResponseResult.successResponse;
+		String imgUrl = businessService.updateBusinessImg(businessImg, userService.getUserFromRequest(request));
+		return new SingleResponseResult<>(imgUrl);
 	}
 
 	@ApiOperation(value = "셀러 소개 수정", notes = "셀러 소개를 수정합니다.")

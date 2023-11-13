@@ -16,7 +16,7 @@ import com.ssafy.showeat.domain.user.entity.User;
 
 public interface BusinessService {
 
-	void updateBusinessImg(MultipartFile businessImg , User user) throws IOException;
+	String updateBusinessImg(MultipartFile businessImg , User user) throws IOException;
 
 	void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles , User user) throws IOException;
 

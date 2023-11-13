@@ -1,5 +1,6 @@
 package com.ssafy.showeat.domain.funding.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,9 +53,25 @@ public class FundingController {
 	public ResponseResult createFunding(@Valid @RequestBody CreateFundingRequestDto createFundingRequestDto ,
 		HttpServletRequest request
 	){
-		fundingService.createFunding(createFundingRequestDto , userService.getUserFromRequest(request));
+		Long fundingId = fundingService.createFunding(createFundingRequestDto, userService.getUserFromRequest(request));
+		return new SingleResponseResult<>(fundingId);
+	}
+
+	@ApiOperation(value = "금액권 펀딩에 이미지 추가" , notes = "금액권 펀딩에 이미지 추가합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "금액권 펀딩에 이미지 추가 성공"),
+		@ApiResponse(code = 400, message = "금액권 펀딩에 이미지 추가 실패"),
+		@ApiResponse(code = 451, message = "업주가 아닌 사람은 펀딩에 이미지 추가할 수 없음")
+	})
+	@PostMapping("/image")
+	public ResponseResult addImageToFunding(@PathVariable Long fundingId ,
+		@RequestPart(value = "multipartFile" , required = false) MultipartFile multipartFile,
+		HttpServletRequest request
+	) throws IOException {
+		fundingService.addImageToFunding(fundingId,multipartFile,userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
+
 
 	@ApiOperation(value = "펀딩 조회" , notes = "펀딩을 상세 조회 합니다.")
 	@ApiResponses(value = {

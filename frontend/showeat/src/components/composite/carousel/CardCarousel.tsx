@@ -221,9 +221,6 @@ function CardCarousel(props: CardCarouselProps) {
                 });
 
                 setCardList(updatedCardList);
-
-                console.log(res);
-                console.log(fundingId);
             }
         });
     };
@@ -255,6 +252,7 @@ function CardCarousel(props: CardCarouselProps) {
                                     onBookmark={() => {
                                         handleBookmark(cardData.fundingId);
                                     }}
+                                    inCarousel
                                 />
                             </CardWrapper>
                         ))

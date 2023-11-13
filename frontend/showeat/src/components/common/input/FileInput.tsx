@@ -3,7 +3,7 @@ import { changeFontWeight } from "@utils/format";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { SetStateAction, useRef } from "react";
-import { modifyBusinessInfo } from "@apis/business";
+import { pathSellerImg } from "@apis/seller";
 import { TextButton } from "../button";
 
 // ----------------------------------------------------------------------------------------------------
@@ -169,14 +169,14 @@ function FileInput({
 
     const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = e.target;
-
+        console.log("handleUploadFiles");
         if (files) {
             const fileList = Array.from(files);
-
             if (fileList.length + uploadedFiles.length <= count) {
                 setUploadedFiles([...uploadedFiles, ...fileList]);
                 if (modifyProfile) {
-                    modifyBusinessInfo(uploadedFiles).then(() => {
+                    pathSellerImg(fileList).then((result) => {
+                        console.log(result);
                         setUploadedFiles([]);
                     });
                 }

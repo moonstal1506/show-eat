@@ -52,10 +52,9 @@ public class Funding extends BaseTimeEntity {
 	private FundingType fundingType;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 100)
+	@Column(length = 100)
 	private FundingCategory fundingCategory;
 
-	@Column(nullable = false)
 	private int fundingMaxLimit;
 
 	@Column(nullable = false)
@@ -76,10 +75,9 @@ public class Funding extends BaseTimeEntity {
 	@Column(nullable = false)
 	private int fundingDiscountRate;
 
-	@Column(nullable = false, length = 100)
+	@Column(length = 100)
 	private String fundingMenu;
 
-	@Column(nullable = false)
 	private int fundingPrice;
 
 	@Column(nullable = false)
@@ -160,6 +158,14 @@ public class Funding extends BaseTimeEntity {
 	public void changeFundingStatusByMaxApply(){
 		this.fundingIsActive = FundingIsActive.INACTIVE;
 		this.fundingIsSuccess = FundingIsSuccess.SUCCESS;
+	}
+
+	public void addFundingImage(String imageUrl){
+		this.getFundingImages().add(
+			FundingImage.builder()
+				.fundingImgUrl(imageUrl)
+				.build()
+		);
 	}
 
 	public FundingResponseDto toFundingResponseDto(int bookemarkCount , Long businessId){

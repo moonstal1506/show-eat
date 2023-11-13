@@ -26,10 +26,12 @@ const getBusinessRegiInfo = async (sellerId: number) => {
 };
 
 /* Function for Setting Information at First */
-const pathSellerImg = async (businessImg: File) => {
+const pathSellerImg = async (file: File[]) => {
     const formData = new FormData();
 
-    formData.append(`businessImg`, businessImg);
+    formData.append(`businessImg`, file[0]);
+
+    console.log(formData.get("businessImg"));
 
     const props: FetchProps = {
         url: "business/seller/profile",
