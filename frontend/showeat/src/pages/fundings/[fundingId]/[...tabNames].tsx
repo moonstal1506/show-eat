@@ -227,7 +227,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     businessData.businessAddress = "서울특별시 강남구 역삼동 테헤란로 212";
 
     const businessFundingResult = await getSellerActiveFunding(0);
-    const businessFundingData: FundingType[] = businessFundingResult.data;
+    const businessFundingData: FundingType[] =
+        businessFundingResult ?? (businessFundingResult.data || null);
 
     return {
         props: {

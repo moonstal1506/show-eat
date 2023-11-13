@@ -1,6 +1,6 @@
 /* Import */
 import Table from "@components/common/table";
-// import { CardCarousel } from "@components/composite/carousel";
+import { CardCarousel } from "@components/composite/carousel";
 import { BusinessType, FundingType } from "@customTypes/apiProps";
 import TextBox from "@components/common/textBox";
 import styled from "@emotion/styled";
@@ -94,6 +94,7 @@ function FundingStoreTab(props: FundingStoreTabProps) {
     // States and Variables
     const { kakao } = window;
     const { businessData, fundingData } = props;
+
     const {
         businessAddress,
         businessBio,
@@ -158,10 +159,14 @@ function FundingStoreTab(props: FundingStoreTabProps) {
     return (
         <StoreContainer>
             <TitleWrapper>{businessName}</TitleWrapper>
-            <CarouselWrapper>
-                {/* <CardCarousel width={960} height={400} cardList={fundingData} /> */}
-            </CarouselWrapper>
             <SubTitleWrapper>셀러의 다른 펀딩</SubTitleWrapper>
+            <CarouselWrapper>
+                {fundingData !== 520 ? (
+                    <CardCarousel width={960} height={400} cardList={fundingData} />
+                ) : (
+                    <div>진행 중인 다른 펀딩이 없소.</div>
+                )}
+            </CarouselWrapper>
             <SubTitleWrapper>영업 정보</SubTitleWrapper>
             <InfoContainer>
                 <Table
