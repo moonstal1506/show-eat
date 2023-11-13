@@ -12,7 +12,7 @@ import { changeFontWeight } from "@utils/format";
 import Modal from "@components/composite/modal";
 import FileInput from "@components/common/input/FileInput";
 import { addNewMenu, getMenuList } from "@apis/menu";
-import { createFunding } from "@/apis/fundings";
+import { createFunding, postGiftcardImage } from "@/apis/fundings";
 import { useRouter } from "next/router";
 
 // ----------------------------------------------------------------------------------------------------
@@ -596,10 +596,14 @@ function FundingForm() {
                 title: textFormData[0].data,
                 discountPrice: parseFloat(giftcardData.discountPrice),
                 price: parseFloat(giftcardData.originPrice),
-                multipartFile: giftcardImage[0],
             }).then((res) => {
                 console.log(res);
-                router.push("/sellers/profile/seller-info");
+                if (res.statusCode === 200) {
+                    postGiftcardImage(giftcardImage[0], res.data).then((res2) => {
+                        console.log("Gift Card Image : ", res2);
+                        router.push("/sellers/profile/seller-info");
+                    });
+                }
             });
         }
     };
