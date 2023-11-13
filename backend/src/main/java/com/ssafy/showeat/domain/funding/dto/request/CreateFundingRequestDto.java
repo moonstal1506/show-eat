@@ -13,6 +13,7 @@ import com.ssafy.showeat.domain.funding.entity.FundingImage;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
 import com.ssafy.showeat.domain.funding.entity.FundingTag;
+import com.ssafy.showeat.domain.funding.entity.FundingType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -51,6 +52,9 @@ public class CreateFundingRequestDto {
 	@ApiModelProperty(value = "메뉴 아이디" , example = "1")
 	private Long menuId;
 
+	@ApiModelProperty(value = "원가" , example = "8000")
+	private int price;
+
 	@ApiModelProperty(value = "할인가" , example = "5000")
 	private int discountPrice;
 
@@ -60,10 +64,9 @@ public class CreateFundingRequestDto {
 	@ApiModelProperty(value = "검색용 태그")
 	private List<String> tags;
 
-	public Funding createFunding(
+	public Funding createMenuFunding(
 			Business business,
-			BusinessMenu businessMenu,
-			int discountPrice){
+			BusinessMenu businessMenu){
 
 		double discountRate = ((double) (businessMenu.getBusinessMenuPrice() - discountPrice) / businessMenu.getBusinessMenuPrice() ) * 100;
 
@@ -72,6 +75,7 @@ public class CreateFundingRequestDto {
 			.fundingBusinessName(business.getBusinessName())
 			.fundingMaxLimit(maxLimit)
 			.fundingMinLimit(minLimit)
+			.fundingType(FundingType.valueOf(fundingType))
 			.fundingCategory(FundingCategory.valueOf(category))
 			.fundingCurCount(0)
 			.fundingTotalAmount(0)
@@ -92,6 +96,37 @@ public class CreateFundingRequestDto {
 			.map(businessMenuImage -> FundingImage.builder()
 				.fundingImgUrl(businessMenuImage.getBusinessMenuImageUrl())
 				.build()).forEach(fundingImage -> funding.addFundingImage(fundingImage));
+
+		tags.stream()
+			.map(s -> FundingTag.builder().fundingTag(s).build())
+			.forEach(fundingTag -> funding.addFundingTag(fundingTag));
+
+		return funding;
+	}
+
+	public Funding createGifrCardFunding(Business business){
+		double discountRate = ((double) (price - discountPrice) / price ) * 100;
+
+		Funding funding = Funding.builder()
+			.fundingTitle(title)
+			.fundingBusinessName(business.getBusinessName())
+			.fundingMaxLimit(maxLimit)
+			.fundingMinLimit(minLimit)
+			.fundingType(FundingType.valueOf(fundingType))
+			.fundingCategory(FundingCategory.valueOf(category))
+			.fundingCurCount(0)
+			.fundingTotalAmount(0)
+			.fundingPrice(price)
+			.fundingIsActive(FundingIsActive.ACTIVE)
+			.fundingIsSuccess(FundingIsSuccess.UNDECIDED)
+			.fundingDiscountPrice(discountPrice)
+			.fundingDiscountRate((int) Math.round(discountRate))
+			.fundingDescription(description)
+			.fundingEndDate(endDate)
+			.business(business)
+			.fundingTags(new ArrayList<>())
+			.fundingImages(new ArrayList<>())
+			.build();
 
 		tags.stream()
 			.map(s -> FundingTag.builder().fundingTag(s).build())

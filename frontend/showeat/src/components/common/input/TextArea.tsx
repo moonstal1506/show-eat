@@ -1,6 +1,6 @@
 /* Import */
 import styled from "@emotion/styled";
-import { TextInputProps } from "@components/common/input/TextInput";
+import { InputProps } from "@customTypes/commonProps";
 
 // ----------------------------------------------------------------------------------------------------
 
