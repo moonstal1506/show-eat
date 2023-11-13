@@ -19,7 +19,7 @@ const UserInfoContainer = styled("div")`
     margin-top: 70px;
     margin-left: 100px;
     gap: 40px;
-    margin-bottom: 100px;
+    margin-bottom: 150px;
 `;
 
 const MyInfoContainer = styled("div")`
