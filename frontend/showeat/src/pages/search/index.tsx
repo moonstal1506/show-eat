@@ -9,307 +9,40 @@ import {
     //  useEffect,
 } from "react";
 import withAuth from "@libs/withAuth";
-import SearchBar from "@/components/composite/searchBar/SearchBar";
+import SearchBar from "@components/composite/searchBar/SearchBar";
 import { TextButton, ScrollButton } from "@components/common/button";
-import Card from "@/components/composite/card";
+import Card from "@components/composite/card";
 import { useRouter } from "next/router";
 import { CheckBox } from "@components/common/input";
-import MultiSlider from "@/components/composite/multiSlider/MultiSlider";
+// import MultiSlider from "@components/composite/multiSlider/MultiSlider";
+import { GetServerSideProps } from "next";
+import addressList from "@configs/addressList";
+import menuCategoryList from "@configs/menuCategoryList";
+import { searchFundings } from "@apis/fundings";
+import { FundingType } from "@customTypes/apiProps";
 // import useUserState from "@hooks/useUserState";
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Temporary Data */
-const fundingDatas = [
-    {
-        fundingId: 1,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1324,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 1,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1324,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 1,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1324,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 1,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1324,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-    {
-        fundingId: 2,
-        title: "Latte is horse",
-        businessName: "야미화니커피",
-        category: "카페",
-        maxLimit: 20,
-        minLimit: 10,
-        curCount: 12,
-        menu: "카페라떼",
-        price: 2500,
-        discountPrice: 2000,
-        discountRate: 20,
-        startDate: "2023-10-20",
-        endDate: "2023-11-30",
-        fundingIsActive: "ACTIVE",
-        fundingIsSuccess: "SUCCESS",
-        fundingImageResponseDtos: [
-            {
-                imageId: 1325,
-                imageUrl: "/assets/images/ad/dog.jpeg",
-            },
-        ],
-        fundingIsBookmark: true,
-    },
-];
+/* Type */
+interface SearchParams {
+    keyword?: string | undefined;
+    category?: string[] | undefined;
+    address?: string[] | undefined;
+    searchType?: string[] | undefined;
+    sortType?: string | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
+}
+
+interface SearchResultDataProps {
+    searchResultData: FundingType[];
+    keyword?: string | undefined;
+    category?: string[] | undefined;
+    address?: string[] | undefined;
+    searchType?: string[] | undefined;
+    sortType?: string | undefined;
+}
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -443,59 +176,59 @@ const FilterTitleWrapper = styled("span")`
     font-weight: 700;
 `;
 
-const PriceRangeContainer = styled("div")`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+// const PriceRangeContainer = styled("div")`
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
 
-    width: 100%;
+//     width: 100%;
 
-    padding: 2em 2em;
-    box-sizing: border-box;
+//     padding: 2em 2em;
+//     box-sizing: border-box;
 
-    border: 1px solid ${(props) => props.theme.colors.gray3};
-    border-radius: 10px;
-`;
+//     border: 1px solid ${(props) => props.theme.colors.gray3};
+//     border-radius: 10px;
+// `;
 
-const PriceRangeInputContainer = styled("div")`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
+// const PriceRangeInputContainer = styled("div")`
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// `;
 
-const PriceInputContainer = styled("div")`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`;
+// const PriceInputContainer = styled("div")`
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+// `;
 
-const PriceLabeltWrapper = styled("span")`
-    font-weight: 700;
-`;
+// const PriceLabeltWrapper = styled("span")`
+//     font-weight: 700;
+// `;
 
-const PriceInputWrapper = styled("div")`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+// const PriceInputWrapper = styled("div")`
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
 
-    padding: 1em 2em;
+//     padding: 1em 2em;
 
-    border: 1px solid ${(props) => props.theme.colors.gray3};
-    border-radius: 10px;
-`;
+//     border: 1px solid ${(props) => props.theme.colors.gray3};
+//     border-radius: 10px;
+// `;
 
-const PriceSpaceWrapper = styled("div")`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+// const PriceSpaceWrapper = styled("div")`
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
 
-    width: 100px;
+//     width: 100px;
 
-    font-size: 50px;
-    font-weight: 300;
-`;
+//     font-size: 50px;
+//     font-weight: 300;
+// `;
 
 const FilterBodyContainer = styled("div")`
     display: grid;
@@ -553,6 +286,19 @@ const SearchCardWrapper = styled("div")`
     align-items: center;
 `;
 
+const NoSearchResultWrapper = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 100%;
+    min-height: 300px;
+
+    font-size: 30px;
+    font-weight: 700;
+`;
+
 const MoreButtonWrapper = styled("div")`
     display: flex;
     justify-content: center;
@@ -565,71 +311,86 @@ const MoreButtonWrapper = styled("div")`
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Search Component */
-function Search() {
-    const [filterCondition, setFilterCondition] = useState([
-        { value: "BUSINESS_NAME", text: "상호명", isChecked: false },
-        { value: "FUNDING_MENU", text: "펀딩 메뉴", isChecked: false },
-        { value: "FUNDING_TAG", text: "검색용 태그", isChecked: false },
-    ]);
-    const [filterCategory, setFilterCategory] = useState([
-        { value: "KOREAN", text: "한식", isChecked: false },
-        { value: "CHINESE", text: "중식", isChecked: false },
-        { value: "JAPANESE_SUSHI", text: "일식/회", isChecked: false },
-        { value: "WESTERN", text: "양식", isChecked: false },
-        { value: "CHICKEN_BURGER", text: "치킨/버거", isChecked: false },
-        { value: "ASIAN", text: "아시안", isChecked: false },
-        { value: "SNACKS_LATE_NIGHT", text: "분식/야식", isChecked: false },
-        {
-            value: "CAFE_DESSERT",
-            text: "카페/디저트",
-            isChecked: false,
-        },
-    ]);
-    const [filterAddress, setFilterAddress] = useState([
-        {
-            value: "서울특별시 강남구",
-            text: "강남구",
-            isChecked: false,
-        },
-        { value: "서울특별시 강동구", text: "강동구", isChecked: false },
-        { value: "서울특별시 강북구", text: "강북구", isChecked: false },
-        { value: "서울특별시 강서구", text: "강서구", isChecked: false },
-        { value: "서울특별시 관악구", text: "관악구", isChecked: false },
-        { value: "서울특별시 광진구", text: "광진구", isChecked: false },
-        { value: "서울특별시 구로구", text: "구로구", isChecked: false },
-        { value: "서울특별시 금천구", text: "금천구", isChecked: false },
-        { value: "서울특별시 노원구", text: "노원구", isChecked: false },
-        { value: "서울특별시 도봉구", text: "도봉구", isChecked: false },
-        { value: "서울특별시 동대문구", text: "동대문구", isChecked: false },
-        { value: "서울특별시 동작구", text: "동작구", isChecked: false },
-        { value: "서울특별시 마포구", text: "마포구", isChecked: false },
-        { value: "서울특별시 서대문구", text: "서대문구", isChecked: false },
-        { value: "서울특별시 서초구", text: "서초구", isChecked: false },
-        { value: "서울특별시 성동구", text: "성동구", isChecked: false },
-        { value: "서울특별시 성북구", text: "성북구", isChecked: false },
-        { value: "서울특별시 송파구", text: "송파구", isChecked: false },
-        { value: "서울특별시 양천구", text: "양천구", isChecked: false },
-        { value: "서울특별시 영등포구", text: "영등포구", isChecked: false },
-        { value: "서울특별시 용산구", text: "용산구", isChecked: false },
-        { value: "서울특별시 은평구", text: "은평구", isChecked: false },
-        { value: "서울특별시 종로구", text: "종로구", isChecked: false },
-        { value: "서울특별시 중구", text: "중구", isChecked: false },
-        { value: "서울특별시 중랑구", text: "중랑구", isChecked: false },
-    ]);
+/* Server Side Rendering */
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    // States and Variables
+    const { keyword, category, address, min, max, searchType, sortType } =
+        context.query as SearchParams;
 
+    const result = await searchFundings({
+        keyword,
+        category,
+        address,
+        min,
+        max,
+        searchType,
+        sortType,
+        page: 0,
+    });
+    const searchResultData = result.data.content || [];
+
+    return {
+        props: {
+            searchResultData,
+            keyword,
+            category,
+            address,
+            searchType,
+            sortType,
+        },
+    };
+};
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Search Component */
+function Search({
+    searchResultData,
+    keyword,
+    category,
+    address,
+    searchType,
+    sortType,
+}: SearchResultDataProps) {
+    const router = useRouter();
     const sortList = [
         { type: "POPULARITY", text: "👍 인기 대박" },
         { type: "CLOSING_SOON", text: "⏰ 마감 임박" },
         { type: "LOW_PRICE", text: "💸 저렴한 가격" },
         { type: "HIGH_DISCOUNT_RATE", text: "📈 높은 할인율" },
-        // { text: "😍 높은 재방문율" },
     ];
 
-    const router = useRouter();
+    const [filterTypes, setFilterTypes] = useState(
+        [
+            { value: "BUSINESS_NAME", text: "상호명", isChecked: false },
+            { value: "FUNDING_MENU", text: "펀딩 메뉴", isChecked: false },
+            { value: "FUNDING_TAG", text: "검색용 태그", isChecked: false },
+        ].map((one) => ({
+            ...one,
+            isChecked: searchType && searchType.includes(one.value),
+        })),
+    );
+
+    const [filterCategory, setFilterCategory] = useState(
+        menuCategoryList.map((one) => ({
+            ...one,
+            isChecked: category && category.includes(one.value),
+        })),
+    );
+
+    const [filterAddress, setFilterAddress] = useState(
+        addressList.map((one) => ({
+            address: one,
+            isChecked: address && address.includes(one),
+        })),
+    );
+
+    // const [filterMoney, setFilterMoney] = useState({ min: 0, max: 10000000 });
+    const [fundingDatas, setFundingDatas] = useState<FundingType[]>(searchResultData);
 
     const [isFilterd, setIsFiltered] = useState<boolean>(false);
-    const [isSelectedSort, setIsSelectedSort] = useState<string>("POPULARITY");
+    const [isSelectedSort, setIsSelectedSort] = useState<string>(sortType || "POPULARITY");
+    const [pageNum, setPageNum] = useState(1);
 
     const handleSort = (type: string) => {
         setIsSelectedSort(type);
@@ -642,6 +403,21 @@ function Search() {
     const handleBookmark = (fundingId: number) => {
         // postBookmark(fundingId);
         console.log(fundingId);
+    };
+
+    const handleMoreButton = () => {
+        const result = searchFundings({
+            keyword,
+            category: filterCategory.filter((one) => one.isChecked).map((one) => one.value),
+            address: filterAddress.filter((one) => one.isChecked).map((one) => one.address),
+            min: 0,
+            max: 100000000,
+            searchType: filterTypes.filter((one) => one.isChecked).map((one) => one.value),
+            sortType: isSelectedSort,
+            page: pageNum,
+        });
+
+        result;
     };
 
     return (
@@ -686,7 +462,7 @@ function Search() {
                                 <FilterOneContainer>
                                     <FilterTitleWrapper>검색 조건</FilterTitleWrapper>
                                     <FilterBodyContainer>
-                                        {filterCondition.map((filter) => (
+                                        {filterTypes.map((filter) => (
                                             <CheckBox
                                                 key={`${filter.text}`}
                                                 text={filter.text}
@@ -695,13 +471,13 @@ function Search() {
                                                 id={`${filter.text}`}
                                                 isChecked={filter.isChecked}
                                                 onToggle={() => {
-                                                    const filterIdx = filterCondition.findIndex(
+                                                    const filterIdx = filterTypes.findIndex(
                                                         (item) => item.value === filter.value,
                                                     );
-                                                    const updatedConditions = [...filterCondition];
-                                                    updatedConditions[filterIdx].isChecked =
-                                                        !filterCondition[filterIdx].isChecked;
-                                                    setFilterCondition(updatedConditions);
+                                                    const updatedTypess = [...filterTypes];
+                                                    updatedTypess[filterIdx].isChecked =
+                                                        !filterTypes[filterIdx].isChecked;
+                                                    setFilterTypes(updatedTypess);
                                                 }}
                                             />
                                         ))}
@@ -712,11 +488,11 @@ function Search() {
                                     <FilterBodyContainer>
                                         {filterCategory.map((filter) => (
                                             <CheckBox
-                                                key={`${filter.text}`}
-                                                text={filter.text}
+                                                key={`${filter.value}`}
+                                                text={filter.value}
                                                 width="100%"
                                                 fontSize="14px"
-                                                id={`${filter.text}`}
+                                                id={`${filter.value}`}
                                                 isChecked={filter.isChecked}
                                                 onToggle={() => {
                                                     const filterIdx = filterCategory.findIndex(
@@ -736,15 +512,15 @@ function Search() {
                                     <FilterBodyContainer>
                                         {filterAddress.map((filter) => (
                                             <CheckBox
-                                                key={`${filter.text}`}
-                                                text={filter.text}
+                                                key={`${filter.address}`}
+                                                text={filter.address}
                                                 width="100%"
                                                 fontSize="14px"
-                                                id={`${filter.text}`}
+                                                id={`${filter.address}`}
                                                 isChecked={filter.isChecked}
                                                 onToggle={() => {
                                                     const filterIdx = filterAddress.findIndex(
-                                                        (item) => item.value === filter.value,
+                                                        (item) => item.address === filter.address,
                                                     );
                                                     const updatedAddresss = [...filterAddress];
                                                     updatedAddresss[filterIdx].isChecked =
@@ -755,7 +531,7 @@ function Search() {
                                         ))}
                                     </FilterBodyContainer>
                                 </FilterOneContainer>
-                                <FilterOneContainer>
+                                {/* <FilterOneContainer>
                                     <FilterTitleWrapper>펀딩 가격</FilterTitleWrapper>
 
                                     <PriceRangeContainer>
@@ -772,7 +548,7 @@ function Search() {
                                         </PriceRangeInputContainer>
                                         <MultiSlider />
                                     </PriceRangeContainer>
-                                </FilterOneContainer>
+                                </FilterOneContainer> */}
                                 <TextButton colorType="secondary" text="상세 검색" width="300px" />
                             </FilterSlideInContainer>
                         </FilterContainer>
@@ -788,17 +564,21 @@ function Search() {
                             </SortButtonWrapper>
                         ))}
                     </SortContainer>
-                    <SearchBodyContainer>
-                        {fundingDatas.map((data, idx) => (
-                            <SearchCardWrapper key={`${data.title}-${idx}`}>
-                                <Card
-                                    fundingData={data}
-                                    onFundingClick={() => handleCard(data.fundingId)}
-                                    onBookmark={() => handleBookmark(data.fundingId)}
-                                />
-                            </SearchCardWrapper>
-                        ))}
-                    </SearchBodyContainer>
+                    {fundingDatas && fundingDatas.length > 0 ? (
+                        <SearchBodyContainer>
+                            {fundingDatas.map((data, idx) => (
+                                <SearchCardWrapper key={`${data.title}-${idx}`}>
+                                    <Card
+                                        fundingData={data}
+                                        onFundingClick={() => handleCard(data.fundingId)}
+                                        onBookmark={() => handleBookmark(data.fundingId)}
+                                    />
+                                </SearchCardWrapper>
+                            ))}
+                        </SearchBodyContainer>
+                    ) : (
+                        <NoSearchResultWrapper>검색 결과가 없습니다.</NoSearchResultWrapper>
+                    )}
                     <MoreButtonWrapper>
                         <TextButton
                             text="더 보기"

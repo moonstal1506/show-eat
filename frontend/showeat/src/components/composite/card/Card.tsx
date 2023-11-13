@@ -322,8 +322,10 @@ function Card({ fundingData, onFundingClick, onBookmark, inCarousel = false }: C
                 <CardImageWrapper
                     className="card-image"
                     src={
-                        fundingData.fundingImageResponseDtos[0].imageUrl ||
-                        "/assets/images/service-logo.png"
+                        fundingData.fundingImageResponseDtos &&
+                        fundingData.fundingImageResponseDtos.length > 0
+                            ? fundingData.fundingImageResponseDtos[0].imageUrl
+                            : "/assets/images/service-logo.png"
                     }
                     alt="card-img"
                     fill

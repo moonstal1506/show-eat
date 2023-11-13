@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const promises = typesList.map((type) => getMainPageList(type));
 
     const results = await Promise.all(promises);
-    const fundingListData: FundingType[][] = results.map((result) => result.data);
+    const fundingListData: FundingType[][] = results.map((result) => result.data) || [[]];
 
     return {
         props: {

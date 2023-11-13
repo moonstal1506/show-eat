@@ -49,10 +49,14 @@ async function fetchGet(props: FetchProps) {
             tags,
         },
     };
+    console.log(url);
+    console.log(params);
 
     try {
         const response = await fetch(`${ENDPOINT}${url}${queryString}`, options);
         const fetchResult = await response.json();
+        console.log(fetchResult);
+
         if (fetchResult && fetchResult.statusCode === 200) {
             return fetchResult;
         }
