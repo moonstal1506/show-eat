@@ -1,5 +1,6 @@
 package com.ssafy.showeat.domain.funding.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.showeat.domain.bookmark.entity.Bookmark;
 import com.ssafy.showeat.domain.bookmark.service.BookmarkService;
@@ -50,6 +52,7 @@ import com.ssafy.showeat.global.exception.LackPointUserFundingException;
 import com.ssafy.showeat.global.exception.NotExistBusinessException;
 import com.ssafy.showeat.global.exception.NotExistFundingException;
 import com.ssafy.showeat.global.exception.NotExistPageFundingException;
+import com.ssafy.showeat.global.s3.S3Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,10 +68,11 @@ public class FundingServiceImpl implements FundingService {
 	private final BusinessMenuRepository businessMenuRepository;
 	private final BookmarkService bookmarkService;
 	private final CouponService couponService;
+	private final S3Service s3Service;
 
 	@Override
 	@Transactional
-	public void createFunding(CreateFundingRequestDto createFundingRequestDto , User loginUser) {
+	public Long createFunding(CreateFundingRequestDto createFundingRequestDto , User loginUser) {
 		log.info("FundingServiceImpl_createFunding || 업주가 펀딩을 생성");
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
@@ -76,9 +80,9 @@ public class FundingServiceImpl implements FundingService {
 
 		if(createFundingRequestDto.getFundingType().equals(FundingType.MENU.name())){
 			BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
-			fundingRepository.save(createFundingRequestDto.createMenuFunding(business,businessMenu));
+			return fundingRepository.save(createFundingRequestDto.createMenuFunding(business,businessMenu)).getFundingId();
 		}else{
-			fundingRepository.save(createFundingRequestDto.createGifrCardFunding(business));
+			return fundingRepository.save(createFundingRequestDto.createGifrCardFunding(business)).getFundingId();
 		}
 
 //		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
@@ -247,6 +251,16 @@ public class FundingServiceImpl implements FundingService {
 			.fundingIsZzim(bookmarkService.isBookmark(userId,fundingId))
 			.fundingIsParticipate(userFundingRepository.existsByUser_UserIdAndFunding_FundingId(userId,fundingId))
 			.build();
+	}
+
+	@Override
+	@Transactional
+	public void addImageToFunding(Long fundingId, MultipartFile multipartFile,  User user) throws IOException {
+		log.info("FundingServiceImpl_AddImageToFunding || 금액권 펀딩에 이미지 추가");
+
+		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
+		String imageUrl = s3Service.updateFundingImageToS3(multipartFile);
+		funding.addFundingImage(imageUrl);
 	}
 
 	@Override

@@ -76,11 +76,12 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
-	public void updateBusinessImg(MultipartFile businessImg , User loginUser) throws IOException {
+	public String updateBusinessImg(MultipartFile businessImg , User loginUser) throws IOException {
 		log.info("BusinessServiceImpl_updateBusinessImg || 셀러 프로필 변경");
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistUserException::new);
 		String businessImgUrl = s3Service.uploadBusinessImageToS3(businessImg);
 		business.updateImgUrl(businessImgUrl);
+		return business.getBusinessImgUrl();
 	}
 
 	@Override
