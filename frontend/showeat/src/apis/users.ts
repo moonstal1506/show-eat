@@ -34,7 +34,19 @@ const patchSettingInfo = async (
     return result;
 };
 
+const patchNickname = async (userId: number, userNickname: string) => {
+    const props: FetchProps = {
+        url: "users/nickname",
+        method: "PATCH",
+        data: { userId, userNickname },
+        isAuth: true,
+    };
+    console.log(userId, userNickname);
+    const result = await fetchModify(props);
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getUserInfo, patchSettingInfo };
+export { getUserInfo, patchSettingInfo, patchNickname };
