@@ -108,7 +108,7 @@ function StatisticsTab(props: StatisticsTabProps) {
 // ----------------------------------------------------------------------------------------------------
 
 /* Middleware */
-const StatisticsTabWithAuth = withAuth({ WrappedComponent: StatisticsTab });
+const StatisticsTabWithAuth = withAuth({ WrappedComponent: StatisticsTab, guardType: "USER_ONLY" });
 
 // ----------------------------------------------------------------------------------------------------
 
