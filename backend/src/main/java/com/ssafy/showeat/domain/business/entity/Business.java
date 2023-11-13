@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
 import com.ssafy.showeat.domain.business.dto.response.RegistrationResponseDto;
 import com.ssafy.showeat.domain.business.dto.response.SellerResponseDto;
 import com.ssafy.showeat.domain.user.entity.User;
@@ -150,5 +151,15 @@ public class Business extends BaseDateEntity {
 
 	public void updateClosedDays(String businessClosedDays) {
 		this.businessClosedDays = businessClosedDays;
+	}
+
+	public void updateBusiness(RegistrationRequestDto registrationRequestDto, String businessRegistrationUrl) {
+		this.businessName = registrationRequestDto.getBusinessName();
+		this.businessNumber = registrationRequestDto.getBusinessNumber();
+		this.businessAddress = registrationRequestDto.getNewBusinessAddress();
+		this.businessPhone = registrationRequestDto.getBusinessPhone();
+		this.businessCeo = registrationRequestDto.getCeo();
+		this.businessEmail = registrationRequestDto.getEmail();
+		this.businessRegistrationUrl = businessRegistrationUrl;
 	}
 }
