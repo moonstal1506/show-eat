@@ -314,8 +314,6 @@ function SellerInfo() {
         setIsClosedDaysEditing(false); // 수정 모드 종료
     };
 
-    const handleFileSave = () => {};
-
     let content;
     if (activeTab === "seller") {
         content = (
