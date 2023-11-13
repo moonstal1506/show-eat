@@ -65,7 +65,7 @@ public class FundingController {
 	})
 	@PostMapping("/image")
 	public ResponseResult addImageToFunding(@PathVariable Long fundingId ,
-		@RequestPart(value = "multipartFiles" , required = false) MultipartFile multipartFile,
+		@RequestPart(value = "multipartFile" , required = false) MultipartFile multipartFile,
 		HttpServletRequest request
 	) throws IOException {
 		fundingService.addImageToFunding(fundingId,multipartFile,userService.getUserFromRequest(request));
