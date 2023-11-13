@@ -67,6 +67,7 @@ const postFundingJoin = async (fundingId: string) => {
 
 /* Function for Create Funding */
 interface CreateFundingProps {
+    fundingType: string;
     category: string;
     description: string;
     endDate: string;
@@ -75,10 +76,12 @@ interface CreateFundingProps {
     tags: string[];
     title: string;
     discountPrice: number;
-    menuId: number;
+    price?: number;
+    menuId?: number;
 }
 
 const createFunding = async ({
+    fundingType,
     category,
     description,
     endDate,
@@ -88,11 +91,13 @@ const createFunding = async ({
     title,
     menuId,
     discountPrice,
+    price,
 }: CreateFundingProps) => {
     const props: FetchProps = {
         url: `funding`,
         method: "POST",
         data: {
+            fundingType,
             category,
             description,
             endDate,
@@ -102,11 +107,13 @@ const createFunding = async ({
             discountPrice,
             maxLimit,
             minLimit,
+            price,
         },
         isAuth: true,
     };
 
     const result = await fetchModify(props);
+    console.log(222, result);
 
     return result;
 };
