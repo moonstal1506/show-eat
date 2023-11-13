@@ -30,7 +30,6 @@ const SearchBarContainer = styled("div")`
     align-items: center;
 
     height: 180px;
-    margin-bottom: 5em;
 `;
 
 const SearchInputWrapper = styled("div")`

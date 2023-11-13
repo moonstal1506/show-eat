@@ -226,7 +226,7 @@ function CardCarousel(props: CardCarouselProps) {
     };
 
     return (
-        <CarouselContainer width={width} height={height}>
+        <CarouselContainer width={width} height={height} title={title}>
             {title && (
                 <HeaderContainer>
                     <TitleWrapper>{title}</TitleWrapper>
