@@ -23,26 +23,27 @@ seoul_districts = [
 ]
 
 business_data = []
-for user in user_data:
+for user in range(1,101):
+    name = fake.user_name()
     row = {
         'business_name': fake.company(),
         'business_img_url': "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
         'business_phone': fake.phone_number().replace('-',''),
-        'business_ceo': user['user_nickname'],
+        'business_ceo': name,
         'business_email' : fake.email(),
         'business_money' : fake.pyint(min_value=1000000, max_value=10000000),
         'business_funding_count' : fake.pyint(min_value=1, max_value=10),
         'business_supporter_count' : fake.pyint(min_value=0, max_value=100),
         'business_address' : "서울특별시 " + random.choice(seoul_districts),
-        'business_account_holder' : user['user_nickname'],
+        'business_account_holder' : name,
         'business_account' : f"{fake.random_number(digits=3)}-{fake.random_number(digits=3)}-{fake.random_number(digits=6)}",
-        'business_number' : fake.pyint(min_value=0, max_value=100000000),
+        'business_number' : fake.pyint(min_value=10000, max_value=100000000),
         'business_registration_url' : fake.sentence(),
         'bank_book_url' : fake.sentence(), 
         'business_bio' : fake.catch_phrase(), 
         'business_operating_time' : fake.sentence(),
         'business_closed_days' : fake.sentence(), 
-        'user_id' : fake.pyint(min_value=2, max_value=100),
+        'user_id' : user,
         'created_date' : datetime.now(),
         'modified_date' : datetime.now()
     }

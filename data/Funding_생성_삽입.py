@@ -33,9 +33,9 @@ with open('business.csv', 'r') as business_file:
 fake = Faker('ko_KR')
 
 funding_data = []
-for busienss in business_data:
+for busienssId in range(5,105):
     for i in range(random.randint(5,6)):
-        business_id = fake.pyint(min_value=52, max_value=150)
+        
         funding_discount_price = fake.pyint(min_value=10000, max_value=49999)
         funding_price = fake.pyint(min_value=50000, max_value=100000)
         funding_discount_rate =  ((funding_price - funding_discount_price) / funding_price) * 100
@@ -64,7 +64,7 @@ for busienss in business_data:
             'funding_end_date' : date.today() + timedelta(days=random.randint(1, 30)),
             'funding_is_active': "ACTIVE",
             'funding_is_success': "UNDECIDED",
-            'business_id': business_id,
+            'business_id': busienssId,
             'created_date' : datetime.now(),
             'modified_date' : datetime.now()
         }

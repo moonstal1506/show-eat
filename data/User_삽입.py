@@ -15,8 +15,8 @@ cursor = conn.cursor()
 
 # 더미 데이터 생성 및 삽입 쿼리
 insert_query = """
-INSERT INTO user (user_nickname, user_img_url, user_address, user_business,user_money,user_phone,visited,credential_id,created_date,modified_date)
-VALUES (%s, %s, %s, %s, %s ,%s , %s , %s , %s , %s)
+INSERT INTO user (user_nickname, user_img_url, user_address, user_business,user_money,user_phone,visited,created_date,modified_date)
+VALUES (%s, %s, %s, %s, %s ,%s  , %s , %s , %s)
 """
 
 # 데이터 호출
@@ -25,7 +25,7 @@ print(User데이터)
 
 # 데이터프레임을 순회하며 데이터를 삽입
 for index, row in User데이터.iterrows():
-    data = (row["user_nickname"], row["user_img_url"], row["user_address"], row["user_business"],row["user_money"],row["user_phone"],row["visited"],row["credential_id"],row["created_date"],row["modified_date"])
+    data = (row["user_nickname"], row["user_img_url"], row["user_address"], row["user_business"],row["user_money"],row["user_phone"],row["visited"],row["created_date"],row["modified_date"])
     cursor.execute(insert_query, data)
 
 # 변경사항을 커밋
