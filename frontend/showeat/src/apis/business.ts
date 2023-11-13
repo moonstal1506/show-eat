@@ -1,5 +1,5 @@
 /* Import */
-import { fetchModify } from "@utils/api";
+import { fetchGet, fetchModify } from "@utils/api";
 import { FetchProps } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
@@ -20,11 +20,23 @@ const postBusinessInfo = async (
     };
 
     const result = await fetchModify(props);
-
     return result;
 };
+
+/* Function for Getting Business Information */
+const getBusinessInfo = async (businessId: number) => {
+    const props: FetchProps = {
+        url: `business/seller/${businessId}`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
+/* Function for Modify Business Information */
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default postBusinessInfo;
+export { getBusinessInfo, postBusinessInfo };

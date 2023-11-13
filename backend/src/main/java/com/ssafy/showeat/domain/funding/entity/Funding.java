@@ -49,9 +49,12 @@ public class Funding extends BaseTimeEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 100)
+	private FundingType fundingType;
+
+	@Enumerated(EnumType.STRING)
+	@Column(length = 100)
 	private FundingCategory fundingCategory;
 
-	@Column(nullable = false)
 	private int fundingMaxLimit;
 
 	@Column(nullable = false)
@@ -72,10 +75,9 @@ public class Funding extends BaseTimeEntity {
 	@Column(nullable = false)
 	private int fundingDiscountRate;
 
-	@Column(nullable = false, length = 100)
+	@Column(length = 100)
 	private String fundingMenu;
 
-	@Column(nullable = false)
 	private int fundingPrice;
 
 	@Column(nullable = false)
@@ -158,15 +160,25 @@ public class Funding extends BaseTimeEntity {
 		this.fundingIsSuccess = FundingIsSuccess.SUCCESS;
 	}
 
-	public FundingResponseDto toFundingResponseDto(int bookemarkCount , boolean isBookmark){
+	public void addFundingImage(String imageUrl){
+		this.getFundingImages().add(
+			FundingImage.builder()
+				.fundingImgUrl(imageUrl)
+				.build()
+		);
+	}
+
+	public FundingResponseDto toFundingResponseDto(int bookemarkCount , Long businessId){
 		return FundingResponseDto.builder()
 			.title(fundingTitle)
+			.businessId(businessId)
 			.businessName(fundingBusinessName)
 			.category(fundingCategory.name())
 			.maxLimit(fundingMaxLimit)
 			.minLimit(fundingMinLimit)
 			.curCount(fundingCurCount)
 			.menu(fundingMenu)
+			.description(fundingDescription)
 			.price(fundingPrice)
 			.discountPrice(fundingDiscountPrice)
 			.discountRate(fundingDiscountRate)
@@ -175,7 +187,6 @@ public class Funding extends BaseTimeEntity {
 			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(fundingIsSuccess)
 			.bookmarkCount(bookemarkCount)
-			.fundingIsBookmark(isBookmark)
 			.fundingTagResponseDtos(
 					this.fundingTags
 						.stream()
@@ -190,7 +201,7 @@ public class Funding extends BaseTimeEntity {
 			.build();
 	}
 
-	public FundingListResponseDto toFundingListResponseDto(boolean isBookmark) {
+	public FundingListResponseDto toFundingListResponseDto() {
 		return FundingListResponseDto.builder()
 			.fundingId(fundingId)
 			.title(fundingTitle)
@@ -207,7 +218,6 @@ public class Funding extends BaseTimeEntity {
 			.endDate(fundingEndDate)
 			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(fundingIsSuccess)
-			.fundingIsBookmark(isBookmark)
 			.fundingImageResponseDtos(
 				this.fundingImages
 					.stream()

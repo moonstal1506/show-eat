@@ -85,6 +85,24 @@ public class S3Service {
 		return amazonS3Client.getUrl(bucketName+"/qr", uuidName).toString();
 	}
 
+	public String updateFundingImageToS3(MultipartFile image) throws IOException {
+		String originalName = image.getOriginalFilename(); // 파일 이름
+		String uuidName = getUuidFileName(originalName); // UUID 파일이름
+		long size = image.getSize(); // 파일 크기
+
+		ObjectMetadata objectMetaData = new ObjectMetadata();
+		objectMetaData.setContentType(image.getContentType());
+		objectMetaData.setContentLength(size);
+
+		// S3에 업로드
+		amazonS3Client.putObject(
+			new PutObjectRequest(bucketName+"/funding", uuidName, image.getInputStream(), objectMetaData)
+				.withCannedAcl(CannedAccessControlList.PublicRead)
+		);
+
+		return amazonS3Client.getUrl(bucketName+"/funding", uuidName).toString();
+	}
+
 	public String getUuidFileName(String fileName) {
 		String name = fileName.substring(fileName.indexOf(".") + 1);
 		return UUID.randomUUID().toString() + "." + name;

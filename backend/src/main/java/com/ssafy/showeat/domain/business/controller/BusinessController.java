@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ssafy.showeat.domain.business.dto.request.UpdateSellerInfoRequestDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
+import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
@@ -86,9 +88,9 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 프로필 수정 실패"),
 	})
 	@PatchMapping("/seller/profile")
-	public ResponseResult updateBusinessImg(@RequestPart MultipartFile businessImg) throws IOException {
-		businessService.updateBusinessImg(businessImg);
-		return ResponseResult.successResponse;
+	public ResponseResult updateBusinessImg(@RequestPart MultipartFile businessImg , HttpServletRequest request) throws IOException {
+		String imgUrl = businessService.updateBusinessImg(businessImg, userService.getUserFromRequest(request));
+		return new SingleResponseResult<>(imgUrl);
 	}
 
 	@ApiOperation(value = "셀러 소개 수정", notes = "셀러 소개를 수정합니다.")
@@ -97,8 +99,8 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 소개 수정 실패"),
 	})
 	@PatchMapping("/seller/bio")
-	public ResponseResult updateBusinessBio(@RequestBody String businessBio) {
-		businessService.updateBusinessBio(businessBio);
+	public ResponseResult updateBusinessBio(@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto , HttpServletRequest request) {
+		businessService.updateBusinessBio(updateSellerInfoRequestDto.getBusinessBio() , userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -108,8 +110,8 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 운영시간 수정 실패"),
 	})
 	@PatchMapping("/seller/operating-time")
-	public ResponseResult updateBusinessOperatingTime(@RequestBody String operatingTime) {
-		businessService.updateBusinessOperatingTime(operatingTime);
+	public ResponseResult updateBusinessOperatingTime(@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto , HttpServletRequest request) {
+		businessService.updateBusinessOperatingTime(updateSellerInfoRequestDto.getOperatingTime() , userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -119,8 +121,8 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 휴무일 수정 실패"),
 	})
 	@PatchMapping("/seller/closed-days")
-	public ResponseResult updateBusinessClosedDays(@RequestBody String businessClosedDays) {
-		businessService.updateBusinessClosedDays(businessClosedDays);
+	public ResponseResult updateBusinessClosedDays(@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto , HttpServletRequest request) {
+		businessService.updateBusinessClosedDays(updateSellerInfoRequestDto.getBusinessClosedDays() , userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -141,12 +143,13 @@ public class BusinessController {
 	})
 	@PostMapping("/menu")
 	public ResponseResult registMenu(
-		@RequestPart RegistMenuRequestDto registMenuRequestDto,
-		@RequestPart List<MultipartFile> multipartFiles,
+		RegistMenuRequestDto registMenuRequestDto,
+		@RequestPart(value = "multipartFiles" , required = false) List<MultipartFile> multipartFiles,
 		HttpServletRequest request
 	) throws IOException {
-		businessService.registMenu(registMenuRequestDto, multipartFiles , userService.getUserFromRequest(request));
-		return ResponseResult.successResponse;
+		User user = userService.getUserFromRequest(request);
+		businessService.registMenu(registMenuRequestDto, multipartFiles , user);
+		return new ListResponseResult<>(businessService.getMenuList(user));
 	}
 
 	@ApiOperation(value = "업체 메뉴 조회", notes = "업주가 메뉴를 조회합니다.")
