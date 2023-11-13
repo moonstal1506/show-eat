@@ -49,9 +49,12 @@ public class Funding extends BaseTimeEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 100)
+	private FundingType fundingType;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 100)
 	private FundingCategory fundingCategory;
 
-	@Column(nullable = false)
 	private int fundingMaxLimit;
 
 	@Column(nullable = false)
@@ -72,10 +75,9 @@ public class Funding extends BaseTimeEntity {
 	@Column(nullable = false)
 	private int fundingDiscountRate;
 
-	@Column(nullable = false, length = 100)
+	@Column(length = 100)
 	private String fundingMenu;
 
-	@Column(nullable = false)
 	private int fundingPrice;
 
 	@Column(nullable = false)

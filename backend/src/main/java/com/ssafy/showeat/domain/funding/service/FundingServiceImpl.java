@@ -32,6 +32,7 @@ import com.ssafy.showeat.domain.funding.entity.FundingCategory;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
 import com.ssafy.showeat.domain.funding.entity.FundingSearchType;
 import com.ssafy.showeat.domain.funding.entity.FundingSortType;
+import com.ssafy.showeat.domain.funding.entity.FundingType;
 import com.ssafy.showeat.domain.funding.entity.UserFunding;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.funding.repository.UserFundingRepository;
@@ -71,11 +72,15 @@ public class FundingServiceImpl implements FundingService {
 		log.info("FundingServiceImpl_createFunding || 업주가 펀딩을 생성");
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
-
 		validateCategoryType(createFundingRequestDto.getCategory());
 
-		BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
-		fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,createFundingRequestDto.getDiscountPrice()));
+		if(createFundingRequestDto.getFundingType().equals(FundingType.MENU.name())){
+			BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
+			fundingRepository.save(createFundingRequestDto.createMenuFunding(business,businessMenu));
+		}else{
+			fundingRepository.save(createFundingRequestDto.createGifrCardFunding(business));
+		}
+
 //		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
 //			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
 //			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
@@ -222,6 +227,16 @@ public class FundingServiceImpl implements FundingService {
 			throw new NotExistPageFundingException();
 
 		return fundingList.map(funding -> funding.toFundingListResponseDto());
+	}
+
+	@Override
+	public List<FundingListResponseDto> getBusinessFundingList(Long businessId) {
+		log.info("FundingServiceImpl_getBusinessFundingList || 업체의 펀딩 목록 조회");
+
+		return fundingRepository.findByBusiness_BusinessIdAndFundingIsActive(businessId,FundingIsActive.ACTIVE)
+			.stream()
+			.map(funding -> funding.toFundingListResponseDto())
+			.collect(Collectors.toList());
 	}
 
 	@Override
