@@ -266,6 +266,7 @@ function FundingTab(props: FundingTabProps) {
         bookmarkCount,
     } = fundingData;
     const [activeTab, setActiveTab] = useState<string>(tabName || "store");
+    const [favoriteCount, setFavoriteCount] = useState<number>(bookmarkCount);
     const [errorCode, setErrorCode] = useState<number>(0);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isJoined, setIsJoined] = useState<boolean>(false);
@@ -295,7 +296,8 @@ function FundingTab(props: FundingTabProps) {
                 setIsCancelErrorModalOpen(true);
                 return;
             }
-            router.reload();
+            setIsCancelModalOpen(false);
+            setIsJoined(false);
         });
     };
 
@@ -307,13 +309,18 @@ function FundingTab(props: FundingTabProps) {
                 setIsApplyErrorModalOpen(true);
                 return;
             }
-            router.reload();
+            setIsJoined(true);
         });
     };
 
     // Function for Removing Favorite Funding
     const handleFavorite = () => {
         postBookmark(fundingId).then(() => {
+            if (isFavorite) {
+                setFavoriteCount((prev) => prev - 1);
+            } else {
+                setFavoriteCount((prev) => prev + 1);
+            }
             setIsFavorite((prev) => !prev);
         });
     };
@@ -471,7 +478,7 @@ function FundingTab(props: FundingTabProps) {
                                 <TextButton
                                     width="25%"
                                     onClick={handleFavorite}
-                                    text={bookmarkCount.toString()}
+                                    text={favoriteCount.toString()}
                                     colorType="secondary"
                                     fill="negative"
                                     icon={<HeartFullIcon />}
@@ -480,7 +487,7 @@ function FundingTab(props: FundingTabProps) {
                                 <TextButton
                                     width="25%"
                                     onClick={handleFavorite}
-                                    text={bookmarkCount.toString()}
+                                    text={favoriteCount.toString()}
                                     colorType="secondary"
                                     fill="negative"
                                     icon={<HeartBlankIcon />}

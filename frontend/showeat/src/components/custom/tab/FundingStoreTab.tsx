@@ -2,6 +2,7 @@
 import { CardCarousel } from "@components/composite/carousel";
 import { BusinessType, FundingType } from "@customTypes/apiProps";
 import { formatBusinessNumber, formatPhoneNumber } from "@utils/format";
+import Image from "next/image";
 import styled from "@emotion/styled";
 import Table from "@components/common/table";
 import TextBox from "@components/common/textBox";
@@ -65,8 +66,22 @@ const SubTitleWrapper = styled("div")`
 const CarouselWrapper = styled("div")`
     // Layout Attribute
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1em;
+`;
+
+const TextWrapper = styled("div")`
+    // Text Attribute
+    font-weight: 700;
+    font-size: 30px;
+    color: ${(props) => props.theme.colors.gray4};
+    span {
+        font-size: 30px;
+        font-weight: 900;
+        color: ${(props) => props.theme.colors.secondary3};
+    }
 `;
 
 const InfoContainer = styled("div")`
@@ -162,8 +177,19 @@ function FundingStoreTab(props: FundingStoreTabProps) {
             <TitleWrapper>{businessName}</TitleWrapper>
             <SubTitleWrapper>셀러의 다른 펀딩</SubTitleWrapper>
             <CarouselWrapper>
-                {fundingData.length === 0 ? (
-                    <div>진행 중인 다른 펀딩이 없소.</div>
+                {fundingList.length === 0 ? (
+                    <>
+                        <Image
+                            src="/assets/images/crying-cook-cow.png"
+                            width={150}
+                            height={150}
+                            alt="crying-cook-cow"
+                            priority
+                        />
+                        <TextWrapper>
+                            현재 진행 중인 <span>{businessName}</span>의 펀딩이 없소!
+                        </TextWrapper>
+                    </>
                 ) : (
                     <CardCarousel
                         width={960}
