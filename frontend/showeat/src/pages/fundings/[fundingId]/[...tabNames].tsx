@@ -7,7 +7,7 @@ import {
     FundingShareModal,
 } from "@components/custom/modal";
 import { fundingTabMenu } from "@configs/tabMenu";
-import { FundingStoreTab } from "@components/custom/tab";
+import { FundingReviewTab, FundingStoreTab } from "@components/custom/tab";
 import { BusinessType, FundingType } from "@customTypes/apiProps";
 import {
     deleteFundingJoin,
@@ -266,6 +266,7 @@ function FundingTab(props: FundingTabProps) {
         bookmarkCount,
     } = fundingData;
     const [activeTab, setActiveTab] = useState<string>(tabName || "store");
+    const [joinCount, setJoinCount] = useState<number>(curCount);
     const [favoriteCount, setFavoriteCount] = useState<number>(bookmarkCount);
     const [errorCode, setErrorCode] = useState<number>(0);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -298,6 +299,7 @@ function FundingTab(props: FundingTabProps) {
             }
             setIsCancelModalOpen(false);
             setIsJoined(false);
+            setJoinCount((prev) => prev - 1);
         });
     };
 
@@ -310,6 +312,7 @@ function FundingTab(props: FundingTabProps) {
                 return;
             }
             setIsJoined(true);
+            setJoinCount((prev) => prev + 1);
         });
     };
 
@@ -410,7 +413,7 @@ function FundingTab(props: FundingTabProps) {
                             <InfoContentBox>
                                 <div>
                                     <b>최소 참여 인원</b>&nbsp;&nbsp; | &nbsp;&nbsp;
-                                    <b>{curCount}명</b> / {minLimit}명
+                                    <b>{joinCount}명</b> / {minLimit}명
                                 </div>
                                 {fundingIsActive === "ACTIVE" ? (
                                     <TagButton
@@ -436,11 +439,11 @@ function FundingTab(props: FundingTabProps) {
                                 <InfoContentBox>
                                     <div>
                                         <b>최대 참여 인원</b>&nbsp;&nbsp; | &nbsp;&nbsp;
-                                        <b>{curCount}명</b> / {maxLimit}명
+                                        <b>{joinCount}명</b> / {maxLimit}명
                                     </div>
                                     <TagButton
                                         width="auto"
-                                        text={`...${maxLimit - curCount}명... 남음`}
+                                        text={`...${maxLimit - joinCount}명... 남음`}
                                         colorType="secondary"
                                         textColor="white"
                                     />
@@ -523,7 +526,7 @@ function FundingTab(props: FundingTabProps) {
                             fundingData={businessFundingData}
                         />
                     ) : (
-                        <div>리뷰</div>
+                        <FundingReviewTab />
                     )}
                 </TabContainer>
                 <ModalContainer>
