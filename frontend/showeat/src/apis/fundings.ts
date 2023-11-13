@@ -1,6 +1,7 @@
 /* Import */
 import { fetchGet, fetchModify } from "@utils/api";
 import { FetchProps } from "@customTypes/apiProps";
+import addressList from "@/configs/addressList";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -78,6 +79,7 @@ interface CreateFundingProps {
     discountPrice: number;
     price?: number;
     menuId?: number;
+    multipartFile?: File;
 }
 
 const createFunding = async ({
@@ -92,6 +94,7 @@ const createFunding = async ({
     menuId,
     discountPrice,
     price,
+    multipartFile,
 }: CreateFundingProps) => {
     const props: FetchProps = {
         url: `funding`,
@@ -108,6 +111,7 @@ const createFunding = async ({
             maxLimit,
             minLimit,
             price,
+            multipartFile,
         },
         isAuth: true,
     };
@@ -162,6 +166,62 @@ const getFavoriteFundings = async (page: number) => {
     return result;
 };
 
+/* Function for Search Fundings */
+interface SearchFundingsProps {
+    keyword?: string | undefined;
+    category?: string[] | undefined;
+    address?: string[] | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
+    searchType?: string[] | undefined;
+    sortType?: string | undefined;
+    page: number | undefined;
+}
+
+const searchFundings = async ({
+    keyword,
+    category = [
+        "KOREAN",
+        "CHINESE",
+        "JAPANESE_SUSHI",
+        "WESTERN",
+        "CHICKEN_BURGER",
+        "ASIAN",
+        "SNACKS_LATE_NIGHT",
+        "CAFE_DESSERT",
+    ],
+    address = addressList,
+    min = 0,
+    max = 100000000,
+    searchType = ["BUSINESS_NAME", "FUNDING_MENU", "FUNDING_TAG"],
+    sortType = "POPULARITY",
+    page,
+}: SearchFundingsProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params: Record<string, any> = {
+        keyword,
+        category: category && category.length > 0 ? category : undefined,
+        address: address && address.length > 0 ? address : undefined,
+        min,
+        max,
+        searchType: searchType && searchType.length > 0 ? searchType : undefined,
+        sortType,
+        page,
+    };
+
+    Object.keys(params).forEach((key) => params[key] === undefined && delete params[key]);
+
+    const props: FetchProps = {
+        url: `funding`,
+        method: "GET",
+        isAuth: false,
+        params,
+    };
+
+    const result = await fetchGet(props);
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
@@ -176,4 +236,5 @@ export {
     getUserFundings,
     getFavoriteFundings,
     createFunding,
+    searchFundings,
 };

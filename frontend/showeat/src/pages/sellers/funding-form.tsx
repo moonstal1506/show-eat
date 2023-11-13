@@ -596,9 +596,10 @@ function FundingForm() {
                 title: textFormData[0].data,
                 discountPrice: parseFloat(giftcardData.discountPrice),
                 price: parseFloat(giftcardData.originPrice),
+                multipartFile: giftcardImage[0],
             }).then((res) => {
                 console.log(res);
-                // router.push("/sellers/profile/seller-info");
+                router.push("/sellers/profile/seller-info");
             });
         }
     };
