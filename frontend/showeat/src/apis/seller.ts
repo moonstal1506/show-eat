@@ -28,7 +28,6 @@ const getBusinessRegiInfo = async (sellerId: number) => {
 /* Function for Setting Information at First */
 const pathSellerImg = async (file: File[]) => {
     const formData = new FormData();
-    console.log(file);
 
     formData.append(`businessImg`, file[0]);
 
