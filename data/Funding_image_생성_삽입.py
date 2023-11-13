@@ -16,12 +16,11 @@ with open('funding.csv', 'r') as funding_file:
 fake = Faker('ko_KR')
 
 funding_image_data = []
-for funding in funding_data:
+for fundingId in range(2,562):
     for i in range(random.randint(1, 3)):
-        funding_id = fake.pyint(min_value=600, max_value=1100)
         row = {
             'funding_img_url': "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
-            'funding_id': funding_id,
+            'funding_id': fundingId,
             'created_date' : datetime.now(),
             'modified_date' : datetime.now()
         }

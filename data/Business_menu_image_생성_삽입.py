@@ -16,9 +16,9 @@ with open('business_menu.csv', 'r') as business_menu_file:
 fake = Faker('ko_KR')
 
 business_menu_image_data = []
-for busienss_menu in business_menu_data:
+for k in range(1,294):
     for i in range(random.randint(1, 3)):
-        business_menu_id = fake.pyint(min_value=3, max_value=300)
+        business_menu_id = k
         row = {
             'business_menu_image_url': "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
             'business_menu_id': business_menu_id
