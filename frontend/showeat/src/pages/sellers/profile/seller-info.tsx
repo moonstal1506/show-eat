@@ -1,7 +1,7 @@
 /* Import */
 import SellerLayout from "@layouts/SellerLayout";
 import withAuth from "@libs/withAuth";
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import useSellerState from "@/hooks/useSellerState";
@@ -324,17 +324,9 @@ function SellerInfo() {
                     </SellerProfileImageTitleWrapper>
                     <SellerProfileImageChangeContainer>
                         <ProfileImageWrapper>
-                            <ProfileImage src={seller.sellerImgUrl} alt="profile-img" fill />
+                            <ProfileImage src={sellerState.businessImgUrl} alt="profile-img" fill />
                         </ProfileImageWrapper>
                         <ChangeSellerProfileImageWrapper>
-                            {/* <TextButton
-                                text="사진 변경"
-                                width="140px"
-                                height="40px"
-                                fontSize={20}
-                                colorType="primary"
-                                onClick={handleFileSave}
-                            /> */}
                             <FileInput
                                 count={1}
                                 color="primary"
@@ -344,6 +336,7 @@ function SellerInfo() {
                                 buttonDescription="수정"
                                 uploadedFiles={uploadedFiles}
                                 setUploadedFiles={setUploadedFiles}
+                                modifyProfile
                             />
                         </ChangeSellerProfileImageWrapper>
                     </SellerProfileImageChangeContainer>
