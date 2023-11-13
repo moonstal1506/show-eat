@@ -12,6 +12,15 @@ with open('user.csv', 'r') as user_file:
 # 더미 데이터 생성을 위한 Faker 객체 생성 (한국어로 설정)
 fake = Faker('ko_KR')
 
+seoul_districts = [
+    "강남구", "강동구", "강북구", "강서구", 
+    "관악구", "광진구", "구로구", "금천구", 
+    "노원구", "도봉구", "동대문구", "동작구", 
+    "마포구", "서대문구", "서초구", "성동구", 
+    "성북구", "송파구", "양천구", "영등포구", 
+    "용산구", "은평구", "종로구", "중구", "중랑구"
+]
+
 business_data = []
 for user in user_data:
     row = {
@@ -23,7 +32,7 @@ for user in user_data:
         'business_money' : fake.pyint(min_value=1000000, max_value=10000000),
         'business_funding_count' : fake.pyint(min_value=1, max_value=10),
         'business_supporter_count' : fake.pyint(min_value=0, max_value=100),
-        'business_address' : fake.address(),
+        'business_address' : "서울특별시 " + random.choice(seoul_districts),
         'business_account_holder' : user['user_nickname'],
         'business_account' : f"{fake.random_number(digits=3)}-{fake.random_number(digits=3)}-{fake.random_number(digits=6)}",
         'business_number' : fake.pyint(min_value=0, max_value=100000000),
