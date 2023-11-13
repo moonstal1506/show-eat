@@ -2,7 +2,7 @@
 import BuyerLayout from "@layouts/BuyerLayout";
 import withAuth from "@libs/withAuth";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { patchNickname } from "@apis/users";
+import { patchNickname, patchPhone } from "@apis/users";
 import useUserState from "@/hooks/useUserState";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -115,6 +115,16 @@ function BuyerProfile() {
             }));
         });
     };
+
+    const handlePhoneSubmit = () => {
+        const rawPhone = phone.replace(/-/g, "");
+        patchPhone(user.userId, rawPhone).then(() => {
+            setUser((prevState) => ({
+                ...prevState,
+                userPhone: phone,
+            }));
+        });
+    };
     return (
         <UserInfoContainer>
             <MyInfoContainer>나의 정보</MyInfoContainer>
@@ -185,7 +195,7 @@ function BuyerProfile() {
                         height="40px"
                         fontSize={20}
                         colorType="primary"
-                        onClick={() => {}}
+                        onClick={handlePhoneSubmit}
                     />
                 </MenuWrapper>
             </PhoneContainer>

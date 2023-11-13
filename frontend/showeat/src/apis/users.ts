@@ -46,7 +46,17 @@ const patchNickname = async (userId: number, userNickname: string) => {
     return result;
 };
 
+const patchPhone = async (userId: number, userPhone: string) => {
+    const props: FetchProps = {
+        url: "users/phone",
+        method: "PATCH",
+        data: { userId, userPhone },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+    return result;
+};
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getUserInfo, patchSettingInfo, patchNickname };
+export { getUserInfo, patchSettingInfo, patchNickname, patchPhone };
