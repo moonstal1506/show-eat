@@ -11,7 +11,13 @@ const fundingTabMenu = [
     { id: "review", labelText: "리뷰", redirectUrl: "/fundings/[fundingId]/review" },
 ];
 
+/* Statistics Tab Menu Config */
+const statisticsTabMenu = [
+    { id: "monthly", labelText: "월별 매출", redirectUrl: "/sellers/statistics/monthly" },
+    { id: "total", labelText: "누적 매출", redirectUrl: "/sellers/statistics/total" },
+];
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { buyersCouponsTabMenu, fundingTabMenu };
+export { buyersCouponsTabMenu, fundingTabMenu, statisticsTabMenu };
