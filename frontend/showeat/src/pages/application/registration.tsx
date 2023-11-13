@@ -12,6 +12,17 @@ interface StepBoxProps {
     backgroundColor: string;
 }
 
+interface RegistrationRequestDto {
+    ceo: string;
+    email: string;
+    businessName: string;
+    startDate: string;
+    businessNumber: string;
+    newBusinessAddress: string;
+    businessPhone: string;
+    formData: FormData;
+}
+
 const HeaderContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -124,21 +135,10 @@ function Registration() {
     };
 
     const handleButtonClick = () => {
-        console.log(
-            ceo,
-            email,
-            businessName,
-            startDate,
-            businessNumber,
-            businessAddress,
-            zonecode,
-            businessAddressDetail,
-            businessPhone,
-            fileName,
-            formData,
-        );
+        console.log(fileName);
+
         const newBusinessAddress = `${zonecode} ${businessAddress} ${businessAddressDetail}`;
-        const registrationRequestDto: RegistrationRequestDto = {
+        postBusinessInfo(
             ceo,
             email,
             businessName,
@@ -146,13 +146,16 @@ function Registration() {
             businessNumber,
             newBusinessAddress,
             businessPhone,
-        };
-        postBusinessInfo(formData).then(
-            (data: any, registrationRequestDto: RegistrationRequestDto) => {
-                console.log(data);
-                // router.replace("/sellers/profile/seller-info");
-            },
-        );
+            formData,
+        ).then((res) => {
+            if (res.data) {
+                alert("사업자 인증 성공");
+                router.replace("/sellers/profile/seller-info");
+            }
+            if (res === 520) {
+                alert("사업자 인증 실패");
+            }
+        });
     };
 
     return (

@@ -6,17 +6,30 @@ import { FetchProps } from "@customTypes/apiProps";
 
 /* Function for Verify Business */
 const postBusinessInfo = async (
-    registrationRequestDto: RegistrationRequestDto,
-    businessRegistration: FormData,
+    ceo: string,
+    email: string,
+    businessName: string,
+    startDate: string,
+    businessNumber: string,
+    newBusinessAddress: string,
+    businessPhone: string,
+    formData: FormData,
 ) => {
     const props: FetchProps = {
         url: `business/registration`,
         method: "POST",
-        data: {
-            registrationRequestDto,
-            businessRegistration,
-        },
         isAuth: true,
+        contentType: "file", // or "multipart/form-data"
+        params: {
+            ceo,
+            email,
+            businessName,
+            startDate,
+            businessNumber,
+            newBusinessAddress,
+            businessPhone,
+        },
+        data: formData,
     };
 
     const result = await fetchModify(props);
@@ -33,8 +46,6 @@ const getBusinessInfo = async (businessId: number) => {
     const result = await fetchGet(props);
     return result;
 };
-
-/* Function for Modify Business Information */
 
 // ----------------------------------------------------------------------------------------------------
 

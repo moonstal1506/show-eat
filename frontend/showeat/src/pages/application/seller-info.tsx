@@ -155,7 +155,7 @@ function SellerInfo({
             setFileName(value);
             onFileNameChange(value);
             const newFormData = new FormData();
-            newFormData.append("files", selectedFile);
+            newFormData.append("businessRegistration", selectedFile);
             setFormData(newFormData);
             onFormDataChange(newFormData);
             console.log(formData);
