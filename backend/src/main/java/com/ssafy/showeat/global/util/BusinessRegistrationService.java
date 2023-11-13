@@ -38,7 +38,7 @@ public class BusinessRegistrationService {
 			Map<String, String> business = new HashMap<>();
 			business.put("b_no", businessRegistration.getBusinessNumber());
 			business.put("start_dt", businessRegistration.getStartDate());
-			business.put("p_nm", businessRegistration.getBusinessCeo());
+			business.put("p_nm", businessRegistration.getCeo());
 			business.put("p_nm2", "");
 			business.put("b_nm", businessRegistration.getBusinessName());
 			business.put("corp_no", "");

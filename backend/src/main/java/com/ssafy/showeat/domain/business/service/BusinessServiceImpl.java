@@ -209,7 +209,7 @@ public class BusinessServiceImpl implements BusinessService {
 			if(!businessName.getInferText().equals(registrationRequestDto.getBusinessName())){
 				throw new InvalidRegistrationException("상호명이 일치하지 않습니다.");
 			}
-			if(!businessCeo.getInferText().equals(registrationRequestDto.getBusinessCeo())){
+			if(!businessCeo.getInferText().equals(registrationRequestDto.getCeo())){
 				throw new InvalidRegistrationException("대표자명이 일치하지 않습니다.");
 			}
 			if(!startDate.getInferText().replaceAll("[^\\d]", "")

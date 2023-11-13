@@ -62,19 +62,19 @@ public class Business extends BaseDateEntity {
 	@Column(nullable = false, length = 100)
 	private String businessAddress;
 
-	@Column(nullable = false, length = 10)
+	@Column
 	private String businessAccountHolder;
 
-	@Column(nullable = false, length = 100)
+	@Column
 	private String businessAccount;
 
 	@Column(nullable = false)
-	private int businessNumber;
+	private String businessNumber;
 
 	@Column(nullable = false, length = 1000)
 	private String businessRegistrationUrl;
 
-	@Column(nullable = false, length = 1000)
+	@Column
 	private String bankBookUrl;
 
 	@Column
@@ -110,7 +110,7 @@ public class Business extends BaseDateEntity {
 			.businessOperatingTime(businessOperatingTime)
 			.businessClosedDays(businessClosedDays)
 			.businessPhone(businessPhone)
-			.businessNumber(businessNumber)
+			.businessNumber(Integer.parseInt(businessNumber))
 			.businessCeo(businessCeo)
 			.businessAddress(businessAddress)
 			.businessEmail(businessEmail)
@@ -126,7 +126,7 @@ public class Business extends BaseDateEntity {
 		return RegistrationResponseDto.builder()
 			.businessId(businessId)
 			.businessName(businessName)
-			.businessNumber(businessNumber)
+			.businessNumber(Integer.parseInt(businessNumber))
 			.businessAddress(businessAddress)
 			.businessPhone(businessPhone)
 			.businessCeo(businessCeo)
