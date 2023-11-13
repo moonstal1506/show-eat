@@ -1,12 +1,12 @@
 /* Import */
 import Card from "@components/composite/card";
 import { FundingType } from "@customTypes/apiProps";
-import styled from "@emotion/styled";
 import Image from "next/image";
 import { keyframes } from "@emotion/react";
 import postBookmark from "@apis/bookmark";
 import Slider from "react-slick";
-import { useRef } from "react";
+import styled from "@emotion/styled";
+import { useRef, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 
 // ----------------------------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ interface CardCarouselProps {
     title?: string;
     description?: string;
     cardList: FundingType[];
+    setCardList: Dispatch<SetStateAction<FundingType[]>>;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -126,7 +127,7 @@ const LeftArrowWrapper = styled("div")<{ height: number }>`
     }
 `;
 
-const RightArrowWrapper = styled("div")<{ height: number }>`
+const RightArrowWrapper = styled("div")<Partial<CardCarouselProps>>`
     width: 50px;
     height: ${(props) => `${props.height}px`};
 
@@ -163,17 +164,30 @@ const RightArrowWrapper = styled("div")<{ height: number }>`
     }
 `;
 
+const NoDataWrapper = styled("div")<Partial<CardCarouselProps>>`
+    width: ${(props) => `${props.width}px`};
+    height: ${(props) => `${props.height}px`};
+
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+
+    font-size: 26px;
+    font-weight: 700;
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Card Carousel Component */
 function CardCarousel(props: CardCarouselProps) {
-    const { width, height, title = "", description = "", cardList } = props;
+    const { width, height, title = "", description = "", cardList, setCardList } = props;
     const router = useRouter();
     const settings = {
         infinite: true,
         speed: 300,
-        slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToShow: cardList && cardList.length >= 3 ? 3 : 1,
+        slidesToScroll: cardList && cardList.length >= 3 ? 3 : 1,
         autoplay: true,
         autoplaySpeed: 5000,
         arrows: false,
@@ -197,8 +211,21 @@ function CardCarousel(props: CardCarouselProps) {
     };
 
     const handleBookmark = (fundingId: number) => {
-        postBookmark(fundingId.toString());
-        router.reload();
+        postBookmark(fundingId.toString()).then((res) => {
+            if (res.statusCode === 200) {
+                const updatedCardList = cardList.map((cardData) => {
+                    if (cardData.fundingId === fundingId) {
+                        return { ...cardData, fundingIsBookmark: !cardData.fundingIsBookmark };
+                    }
+                    return cardData;
+                });
+
+                setCardList(updatedCardList);
+
+                console.log(res);
+                console.log(fundingId);
+            }
+        });
     };
 
     return (
@@ -219,19 +246,25 @@ function CardCarousel(props: CardCarouselProps) {
                     />
                 </LeftArrowWrapper>
                 <Slider {...settings} ref={sliderRef}>
-                    {cardList.map((card, index) => (
-                        <CardWrapper key={index} width={width} height={height}>
-                            <Card
-                                fundingData={card}
-                                onFundingClick={() => handleCard(card.fundingId)}
-                                onBookmark={() => {
-                                    handleBookmark(card.fundingId);
-                                }}
-                            />
-                        </CardWrapper>
-                    ))}
+                    {cardList && cardList.length > 0 ? (
+                        cardList.map((cardData, index) => (
+                            <CardWrapper key={index} width={width} height={height}>
+                                <Card
+                                    fundingData={cardData}
+                                    onFundingClick={() => handleCard(cardData.fundingId)}
+                                    onBookmark={() => {
+                                        handleBookmark(cardData.fundingId);
+                                    }}
+                                />
+                            </CardWrapper>
+                        ))
+                    ) : (
+                        <NoDataWrapper width={width} height={height}>
+                            데이터가 없습니다.
+                        </NoDataWrapper>
+                    )}
                 </Slider>
-                <RightArrowWrapper height={height} onClick={goToNext}>
+                <RightArrowWrapper height={height} onClick={goToNext} cardList={cardList}>
                     <Image
                         src="/assets/icons/right-arrow-icon.svg"
                         alt="carousel-right-arrow"
