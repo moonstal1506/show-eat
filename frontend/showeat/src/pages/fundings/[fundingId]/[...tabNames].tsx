@@ -1,6 +1,7 @@
 /* Import */
 import { calcExpiryDate, calcRemainTime, formatDate, formatMoney } from "@utils/format";
 import {
+    FundingApplyErrorModal,
     FundingCancelErrorModal,
     FundingCancelModal,
     FundingShareModal,
@@ -222,9 +223,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
     const businessResult = await getBusinessInfo(fundingData.businessId);
     const businessData: BusinessType = businessResult.data;
-    // console.log(businessResult);
-    // console.log(businessResult.data.sellerMenuResponseDtos);
-    businessData.businessAddress = "서울특별시 강남구 역삼동 테헤란로 212";
 
     const businessFundingResult = await getSellerFundingList(fundingData.businessId);
     const businessFundingData: FundingType[] = businessFundingResult.data;
@@ -271,6 +269,7 @@ function FundingTab(props: FundingTabProps) {
     const [errorCode, setErrorCode] = useState<number>(0);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isJoined, setIsJoined] = useState<boolean>(false);
+    const [isApplyErrorModalOpen, setIsApplyErrorModalOpen] = useState<boolean>(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
     const [isCancelErrorModalOpen, setIsCancelErrorModalOpen] = useState<boolean>(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
@@ -302,7 +301,12 @@ function FundingTab(props: FundingTabProps) {
 
     // Function for Applying Funding
     const applyFunding = () => {
-        postFundingJoin(fundingId).then(() => {
+        postFundingJoin(fundingId).then((result) => {
+            if (typeof result === "number") {
+                setErrorCode(result);
+                setIsApplyErrorModalOpen(true);
+                return;
+            }
             router.reload();
         });
     };
@@ -310,7 +314,7 @@ function FundingTab(props: FundingTabProps) {
     // Function for Removing Favorite Funding
     const handleFavorite = () => {
         postBookmark(fundingId).then(() => {
-            router.reload();
+            setIsFavorite((prev) => !prev);
         });
     };
 
@@ -421,7 +425,7 @@ function FundingTab(props: FundingTabProps) {
                                     />
                                 )}
                             </InfoContentBox>
-                            {maxLimit && (
+                            {maxLimit !== 0 && (
                                 <InfoContentBox>
                                     <div>
                                         <b>최대 참여 인원</b>&nbsp;&nbsp; | &nbsp;&nbsp;
@@ -537,6 +541,18 @@ function FundingTab(props: FundingTabProps) {
                         childComponent={<FundingCancelErrorModal errorCode={errorCode} />}
                         buttonType="confirm"
                         buttonWidth="40%"
+                    />
+                    <Modal
+                        width="400px"
+                        height="auto"
+                        isOpen={isApplyErrorModalOpen}
+                        setIsOpen={setIsApplyErrorModalOpen}
+                        modalTitle="펀딩 참여 실패"
+                        childComponent={<FundingApplyErrorModal errorCode={errorCode} />}
+                        buttonType={errorCode === 484 ? "submit" : "confirm"}
+                        buttonWidth="40%"
+                        onSubmit={() => router.push("/buyers/pay")}
+                        submitButtonText="이동"
                     />
                     <Modal
                         width="500px"
