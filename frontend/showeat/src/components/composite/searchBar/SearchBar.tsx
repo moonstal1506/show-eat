@@ -2,37 +2,13 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
+import menuCategoryList from "@/configs/menuCategoryList";
 import { TextInput } from "../../common/input";
 import { MenuButton } from "../../common/button";
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Type */
-// interface SearchBarProps {
-//     keyword: string;
-//     searchType: string[];
-//     page: number;
-//     category?: string[];
-//     address?: string[];
-//     maxPrice?: number;
-//     minPrice?: number;
-//     sortType?: string;
-// }
-
-// ----------------------------------------------------------------------------------------------------
-
 /* Style */
-const menuCategory = [
-    { eng: "KOREAN", kr: "한식", imageUrl: "/assets/images/cook-cow.png" },
-    { eng: "CHINESE", kr: "중식", imageUrl: "/assets/images/customer-cow.png" },
-    { eng: "JAPANESE_SUSHI", kr: "일식/회", imageUrl: "/assets/images/cook-cow.png" },
-    { eng: "WESTERN", kr: "양식", imageUrl: "/assets/images/customer-cow.png" },
-    { eng: "CHICKEN_BURGER", kr: "치킨/버거", imageUrl: "/assets/images/cook-cow.png" },
-    { eng: "ASIAN", kr: "아시안", imageUrl: "/assets/images/customer-cow.png" },
-    { eng: "SNACKS_LATE_NIGHT", kr: "분식/야식", imageUrl: "/assets/images/cook-cow.png" },
-    { eng: "CAFE_DESSERT", kr: "카페/디저트", imageUrl: "/assets/images/customer-cow.png" },
-];
-
 const SearchBarContainer = styled("div")`
     display: inline-flex;
     flex-direction: column;
@@ -65,8 +41,6 @@ function SearchBar() {
 
     const handleSearchTextChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value);
-        console.log(searchText);
-        // router.push("/search");
     };
 
     const handleEnterKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -79,8 +53,8 @@ function SearchBar() {
         router.push(`/search?keyword=${encodeURIComponent(searchText)}`);
     };
 
-    const handleMenuButton = (menu: string) => {
-        console.log(menu);
+    const handleMenuButton = (category: string) => {
+        router.push(`search?category=${encodeURIComponent(category)}`);
     };
 
     return (
@@ -98,13 +72,13 @@ function SearchBar() {
                 />
             </SearchInputWrapper>
             <IconMenuContainer>
-                {menuCategory.map((menu) => (
+                {menuCategoryList.map((category) => (
                     <MenuButton
-                        key={menu.eng}
+                        key={category.id}
                         width="40px"
-                        imageUrl={menu.imageUrl}
-                        menuName={menu.kr}
-                        onClick={() => handleMenuButton(menu.eng)}
+                        imageUrl="/assets/images/cook-cow.png"
+                        menuName={category.value}
+                        onClick={() => handleMenuButton(category.id)}
                     />
                 ))}
             </IconMenuContainer>
