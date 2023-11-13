@@ -46,8 +46,8 @@ const CarouselContainer = styled("div")<Partial<CardCarouselProps>>`
     width: ${(props) => `${props.width}px`};
     height: ${(props) => `${props.height}px`};
 
-    padding: 1em 0;
-    margin: 4em 0;
+    padding: ${(props) => (props.title ? "1em 0" : "0")};
+    margin: ${(props) => (props.title ? "4em 0" : "0")};
 `;
 
 const HeaderContainer = styled("div")`
