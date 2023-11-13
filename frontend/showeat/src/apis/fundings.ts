@@ -169,6 +169,17 @@ const getFavoriteFundings = async (page: number) => {
     return result;
 };
 
+const getFundingReview = async (fundingId: number, page: number) => {
+    const props: FetchProps = {
+        url: `review`,
+        method: "GET",
+        isAuth: true,
+        params: { fundingId: fundingId.toString(), page: page.toString() },
+    };
+    const result = await fetchGet(props);
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
@@ -184,4 +195,5 @@ export {
     getUserFundings,
     getFavoriteFundings,
     createFunding,
+    getFundingReview,
 };
