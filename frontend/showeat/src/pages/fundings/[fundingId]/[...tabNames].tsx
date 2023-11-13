@@ -12,10 +12,10 @@ import {
     deleteFundingJoin,
     getFundingDetail,
     getFundingUserDetail,
-    getSellerActiveFunding,
+    getSellerFundingList,
     postFundingJoin,
 } from "@apis/fundings";
-import getBusinessInfo from "@apis/business";
+import { getBusinessInfo } from "@apis/business";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { HeartBlankIcon, HeartFullIcon, ShareIcon } from "public/assets/icons";
@@ -226,9 +226,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     // console.log(businessResult.data.sellerMenuResponseDtos);
     businessData.businessAddress = "서울특별시 강남구 역삼동 테헤란로 212";
 
-    const businessFundingResult = await getSellerActiveFunding(0);
-    const businessFundingData: FundingType[] =
-        businessFundingResult ?? (businessFundingResult.data || null);
+    const businessFundingResult = await getSellerFundingList(fundingData.businessId);
+    const businessFundingData: FundingType[] = businessFundingResult.data;
 
     return {
         props: {
@@ -508,6 +507,7 @@ function FundingTab(props: FundingTabProps) {
                 <TabContainer>
                     {activeTab === "store" ? (
                         <FundingStoreTab
+                            fundingId={+fundingId}
                             businessData={businessData}
                             fundingData={businessFundingData}
                         />

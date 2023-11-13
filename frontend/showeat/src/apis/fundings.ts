@@ -143,7 +143,19 @@ const getSellerActiveFunding = async (page: number) => {
     const props: FetchProps = {
         url: `funding/business/${page}/ACTIVE`,
         method: "GET",
-        isAuth: false,
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+
+    return result;
+};
+
+/* Function for Getting Active Funding List of Seller */
+const getSellerFundingList = async (businessId: number) => {
+    const props: FetchProps = {
+        url: `funding/business/active/${businessId}`,
+        method: "GET",
+        isAuth: true,
     };
     const result = await fetchGet(props);
 
@@ -196,6 +208,7 @@ export {
     getBookmarkFundings,
     postFundingJoin,
     getSellerActiveFunding,
+    getSellerFundingList,
     getSellerInactiveFunding,
     getUserFundings,
     getFavoriteFundings,

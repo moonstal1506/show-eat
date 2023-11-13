@@ -4,12 +4,13 @@ import { CardCarousel } from "@components/composite/carousel";
 import { BusinessType, FundingType } from "@customTypes/apiProps";
 import TextBox from "@components/common/textBox";
 import styled from "@emotion/styled";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
 interface FundingStoreTabProps {
+    fundingId: number;
     businessData: BusinessType;
     fundingData: FundingType[];
 }
@@ -36,7 +37,7 @@ const TitleWrapper = styled("div")`
 
     // Box Model Attribute
     width: 100%;
-    min-height: 170px;
+    aspect-ratio: 36 / 5;
     box-sizing: border-box;
 
     // Style Attribute
@@ -93,11 +94,12 @@ const MapWrapper = styled("div")`
 function FundingStoreTab(props: FundingStoreTabProps) {
     // States and Variables
     const { kakao } = window;
-    const { businessData, fundingData } = props;
-
+    const { fundingId, businessData, fundingData } = props;
+    const filteredFundingList = fundingData.filter((funding) => funding.fundingId !== fundingId);
+    const [fundingList, setFundingList] = useState<FundingType[]>(filteredFundingList);
     const {
-        businessAddress,
         businessBio,
+        businessAddress,
         businessCeo,
         businessClosedDays,
         businessEmail,
@@ -126,8 +128,6 @@ function FundingStoreTab(props: FundingStoreTabProps) {
         businessEmail,
         `${businessNumber}`,
     ];
-
-    console.log(fundingData);
 
     // Function for Loading Kakao Map API
     useEffect(() => {
@@ -161,10 +161,15 @@ function FundingStoreTab(props: FundingStoreTabProps) {
             <TitleWrapper>{businessName}</TitleWrapper>
             <SubTitleWrapper>셀러의 다른 펀딩</SubTitleWrapper>
             <CarouselWrapper>
-                {fundingData !== 520 ? (
-                    <CardCarousel width={960} height={400} cardList={fundingData} />
-                ) : (
+                {fundingData.length === 0 ? (
                     <div>진행 중인 다른 펀딩이 없소.</div>
+                ) : (
+                    <CardCarousel
+                        width={960}
+                        height={400}
+                        cardList={fundingList}
+                        setCardList={setFundingList}
+                    />
                 )}
             </CarouselWrapper>
             <SubTitleWrapper>영업 정보</SubTitleWrapper>
