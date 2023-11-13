@@ -17,6 +17,11 @@ categories = [
     "CAFE_DESSERT"
 ]
 
+type = [
+    "GIFT_CARD",
+    "MENU"
+]
+
 # Business 정보를 읽어옴
 business_data = []
 with open('business.csv', 'r') as business_file:
@@ -44,6 +49,7 @@ for busienss in business_data:
         row = {
             'funding_title': fake.word(),
             'funding_business_name': fake.company(),
+            'funding_type' : random.choice(type),
             'funding_category': random.choice(categories),
             'funding_max_limit': funding_max_limit,
             'funding_min_limit': funding_min_limit,
@@ -66,7 +72,7 @@ for busienss in business_data:
 
 # 더미 데이터 생성 및 CSV 파일로 저장
 with open('funding.csv', 'w', newline='', encoding='cp949') as csvfile:
-    fieldnames = ['funding_title', 'funding_business_name', 'funding_category','funding_max_limit', 'funding_min_limit', 'funding_cur_count',
+    fieldnames = ['funding_title', 'funding_business_name','funding_type','funding_category','funding_max_limit', 'funding_min_limit', 'funding_cur_count',
                   'participation_rate', 'funding_total_amount', 'funding_discount_price','funding_discount_rate','funding_menu', 'funding_price', 'funding_description',
                   'funding_end_date', 'funding_is_active', 'funding_is_success', 'business_id','created_date','modified_date'
                   ]
@@ -92,10 +98,10 @@ cursor = conn.cursor()
 
 # 더미 데이터 생성 및 삽입 쿼리
 insert_query = """
-INSERT INTO funding (funding_title, funding_business_name, funding_category,funding_max_limit, funding_min_limit, funding_cur_count,
+INSERT INTO funding (funding_title, funding_business_name,funding_type , funding_category,funding_max_limit, funding_min_limit, funding_cur_count,
                   participation_rate, funding_total_amount, funding_discount_price,funding_discount_rate,funding_menu, funding_price, funding_description,
                   funding_end_date,funding_is_active, funding_is_success, business_id,created_date,modified_date)
-VALUES (%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s ,%s)
+VALUES (%s, %s, %s, %s ,%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s,%s, %s, %s ,%s)
 """
 
 # 데이터 호출
@@ -104,7 +110,7 @@ Funding데이터 = pd.read_csv("funding.csv", encoding="cp949")
 
 # 데이터프레임을 순회하며 데이터를 삽입
 for index, row in Funding데이터.iterrows():
-    data = (row["funding_title"], row["funding_business_name"], row["funding_category"],
+    data = (row["funding_title"], row["funding_business_name"], row["funding_type"], row["funding_category"],
             row["funding_max_limit"], row["funding_min_limit"], row["funding_cur_count"],
             row["participation_rate"], row["funding_total_amount"], row["funding_discount_price"],row["funding_discount_rate"],
             row["funding_menu"], row["funding_price"], row["funding_description"],row["funding_end_date"],
