@@ -52,7 +52,7 @@ public class Funding extends BaseTimeEntity {
 	private FundingType fundingType;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 100)
+	@Column(length = 100)
 	private FundingCategory fundingCategory;
 
 	private int fundingMaxLimit;

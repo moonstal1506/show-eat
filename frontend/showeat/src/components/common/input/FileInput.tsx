@@ -169,14 +169,14 @@ function FileInput({
 
     const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = e.target;
-
+        console.log("handleUploadFiles");
         if (files) {
             const fileList = Array.from(files);
             if (fileList.length + uploadedFiles.length <= count) {
+                setUploadedFiles([...uploadedFiles, ...fileList]);
                 if (modifyProfile) {
                     pathSellerImg(fileList).then((result) => {
                         console.log(result);
-
                         setUploadedFiles([]);
                     });
                 }

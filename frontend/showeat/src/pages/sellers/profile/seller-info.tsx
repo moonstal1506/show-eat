@@ -1,7 +1,7 @@
 /* Import */
 import SellerLayout from "@layouts/SellerLayout";
 import withAuth from "@libs/withAuth";
-import { ReactNode, useState, useEffect } from "react";
+import { ChangeEvent, SetStateAction, ReactNode, useState, useEffect, use } from "react";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import useSellerState from "@/hooks/useSellerState";
@@ -13,9 +13,22 @@ import {
     pathSellerOperatingTime,
     pathSellerClosedDays,
 } from "@/apis/seller";
-import { TextArea } from "@/components/common/input";
+import { TextArea, TextInput } from "@/components/common/input";
 import FileInput from "@components/common/input/FileInput";
+import Modal from "@components/composite/modal";
+import { addNewMenu, deleteMenu } from "@apis/menu";
+
 // ----------------------------------------------------------------------------------------------------
+
+/* Type */
+interface ModalDataType {
+    menuName: string;
+    setMenuName: React.Dispatch<SetStateAction<string>>;
+    originPrice: string;
+    setOriginPrice: React.Dispatch<SetStateAction<string>>;
+    uploadedFiles: File[];
+    setUploadedFiles: React.Dispatch<SetStateAction<File[]>>;
+}
 
 const SellerInfoContainer = styled("div")`
     display: flex;
@@ -127,6 +140,12 @@ const ChangeSellerInfoWrapper = styled("div")`
     align-items: center;
 `;
 
+const SellerInfoMenuContentContainer = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 const SellerInfoContentWrapper = styled("div")`
     color: #000;
     font-family: Pretendard;
@@ -206,6 +225,147 @@ const BusinessRegiDetailInfoContentWrapper = styled("div")`
     line-height: normal;
 `;
 
+const DeleteIconWrapper = styled(Image)`
+    cursor: pointer;
+`;
+
+/* ------------------ 메뉴 모달 ----------------- */
+const ModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const ModalTitleWrapper = styled("span")`
+    font-size: 26px;
+    font-weight: 700;
+
+    padding-bottom: 1em;
+`;
+
+const ModalContentContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ModalInputContainer = styled("div")`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 670px;
+    height: 50px;
+`;
+
+const ModalFileInputContainer = styled("div")`
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+
+    width: 670px;
+    height: 180px;
+
+    padding-top: 0.5em;
+`;
+
+const InputTitleWrapper = styled("label")`
+    font-size: 18px;
+    font-weight: 700;
+
+    width: 100px;
+`;
+
+const FileInputTitleWrapper = styled("label")`
+    font-size: 18px;
+    font-weight: 700;
+
+    width: 100px;
+
+    padding-top: 0.4em;
+`;
+
+const InputWrapper = styled("div")`
+    width: 550px;
+`;
+
+const FileInputWrapper = styled("div")`
+    width: 550px;
+`;
+
+/* Add Menu Modal Component */
+function AddMenu({
+    menuName,
+    setMenuName,
+    originPrice,
+    setOriginPrice,
+    uploadedFiles,
+    setUploadedFiles,
+}: ModalDataType): ReactNode {
+    const changeMenuName = (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setMenuName(newValue);
+    };
+
+    const changeOriginPrice = (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        if (/^\d+$/.test(newValue) || newValue === "") {
+            setOriginPrice(newValue);
+        }
+    };
+
+    return (
+        <ModalContainer>
+            <ModalTitleWrapper>메뉴 추가</ModalTitleWrapper>
+            <ModalContentContainer>
+                <ModalInputContainer>
+                    <InputTitleWrapper htmlFor="menuName">메뉴 이름</InputTitleWrapper>
+                    <InputWrapper>
+                        <TextInput
+                            value={menuName}
+                            width="543px"
+                            id="menuName"
+                            onChange={changeMenuName}
+                        />
+                    </InputWrapper>
+                </ModalInputContainer>
+                <ModalInputContainer>
+                    <InputTitleWrapper htmlFor="originPrice">메뉴 원가</InputTitleWrapper>
+                    <InputWrapper>
+                        <TextInput
+                            value={originPrice}
+                            width="543px"
+                            id="originPrice"
+                            onChange={changeOriginPrice}
+                            unit="원"
+                        />
+                    </InputWrapper>
+                </ModalInputContainer>
+                <ModalFileInputContainer>
+                    <FileInputTitleWrapper htmlFor="menuImage">메뉴 사진</FileInputTitleWrapper>
+                    <FileInputWrapper>
+                        <FileInput
+                            count={5}
+                            color="primary"
+                            id="menuImage"
+                            buttonWidth="150px"
+                            buttonHeight="40px"
+                            buttonDescription="추가"
+                            uploadedFiles={uploadedFiles}
+                            setUploadedFiles={setUploadedFiles}
+                        />
+                    </FileInputWrapper>
+                </ModalFileInputContainer>
+            </ModalContentContainer>
+        </ModalContainer>
+    );
+}
+
 /* Seller Info Page */
 function SellerInfo() {
     // 현재 활성화된 탭을 추적하는 state
@@ -214,11 +374,18 @@ function SellerInfo() {
     const [isBioEditing, setIsBioEditing] = useState(false);
     const [isOperatingTimeEditing, setIsOperatingTimeEditing] = useState(false);
     const [isClosedDaysEditing, setIsClosedDaysEditing] = useState(false);
+    const [isMenuEditing, setIsMenuEditing] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [businessBio, setBusinessBio] = useState("");
     const [businessOperatingTime, setBusinessOperatingTime] = useState("");
     const [businessClosedDays, setBusinessClosedDays] = useState("");
+    const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [sellerMenuResponseDtos, setSellerMenuResponseDtos] = useState([]);
+
+    const [menuName, setMenuName] = useState("");
+    const [originPrice, setOriginPrice] = useState("");
 
     const [sellerState, setSellerState] = useState({
         businessBio: "ㅋ",
@@ -314,6 +481,66 @@ function SellerInfo() {
         setIsClosedDaysEditing(false); // 수정 모드 종료
     };
 
+    const handleMenuEdit = () => {
+        setIsMenuEditing(true);
+    };
+
+    const handleMenuAdd = () => {
+        console.log("추가");
+    };
+
+    const handleMenuSave = () => {
+        setIsMenuEditing(false); // 수정 모드 종료
+    };
+
+    const submitModalData = () => {
+        console.log(uploadedFiles);
+
+        addNewMenu({
+            menu: menuName,
+            price: originPrice,
+            multipartFiles: uploadedFiles,
+        }).then((res) => {
+            console.log(res.data);
+            if (res.statusCode === 200) {
+                const menuList = [];
+
+                res.data.forEach((item) => {
+                    console.log(item);
+                    const newItem = {
+                        menuId: item.menuId,
+                        menu: item.menu,
+                    };
+
+                    menuList.push(newItem);
+                });
+
+                setSellerState((prev) => ({
+                    ...prev,
+                    sellerMenuResponseDtos: menuList,
+                }));
+            }
+            setIsModalOpen(false);
+        });
+    };
+
+    const deleteMenuMethod = (one: string) => {
+        console.log(one.menuId);
+
+        deleteMenu(one.menuId).then((result) => {
+            if (result.statusCode === 200) {
+                const newMenus = sellerState.sellerMenuResponseDtos.filter((oneMenu) => {
+                    return oneMenu !== one;
+                });
+
+                setSellerState((prev) => ({
+                    ...prev,
+                    sellerMenuResponseDtos: newMenus,
+                }));
+            }
+        });
+    };
+
     let content;
     if (activeTab === "seller") {
         content = (
@@ -334,8 +561,8 @@ function SellerInfo() {
                                 buttonWidth="140px"
                                 buttonHeight="40px"
                                 buttonDescription="수정"
-                                uploadedFiles={uploadedFiles}
-                                setUploadedFiles={setUploadedFiles}
+                                uploadedFiles={uploadedProfileFiles}
+                                setUploadedFiles={setUploadedProfileFiles}
                                 modifyProfile
                             />
                         </ChangeSellerProfileImageWrapper>
@@ -467,17 +694,65 @@ function SellerInfo() {
                     <SellerInfoTitleContainer>
                         <SellerInfoTitleWrapper>셀러 메뉴 정보</SellerInfoTitleWrapper>
                         <ChangeSellerInfoWrapper>
-                            <TextButton
-                                text="수정"
-                                width="140px"
-                                height="40px"
-                                fontSize={20}
-                                colorType="primary"
-                                // onClick={handleCreateFunding}
-                            />
+                            {isMenuEditing ? (
+                                <>
+                                    <TextButton
+                                        text="추가"
+                                        width="140px"
+                                        height="40px"
+                                        fontSize={20}
+                                        colorType="primary"
+                                        onClick={() => setIsModalOpen(true)}
+                                    />
+                                    <span style={{ display: "inline-block", width: "10px" }} />
+                                    <TextButton
+                                        text="저장"
+                                        width="140px"
+                                        height="40px"
+                                        fontSize={20}
+                                        colorType="primary"
+                                        onClick={handleMenuSave}
+                                    />
+                                </>
+                            ) : (
+                                <TextButton
+                                    text="수정"
+                                    width="140px"
+                                    height="40px"
+                                    fontSize={20}
+                                    colorType="primary"
+                                    onClick={handleMenuEdit}
+                                />
+                            )}
                         </ChangeSellerInfoWrapper>
                     </SellerInfoTitleContainer>
-                    <SellerInfoContentWrapper>메뉴 정보</SellerInfoContentWrapper>
+                    {isMenuEditing ? (
+                        <>
+                            {sellerState.sellerMenuResponseDtos.map((menu, index) => (
+                                <SellerInfoMenuContentContainer key={`${menu}-${index}`}>
+                                    <SellerInfoContentWrapper key={index}>
+                                        {menu.menu}
+                                    </SellerInfoContentWrapper>
+                                    <DeleteIconWrapper
+                                        src="/assets/icons/delete-icon.svg"
+                                        alt="delete-tag"
+                                        width={15}
+                                        height={15}
+                                        onClick={() => deleteMenuMethod(menu)}
+                                    />
+                                </SellerInfoMenuContentContainer>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {sellerState.sellerMenuResponseDtos.map((menu, index) => (
+                                <SellerInfoContentWrapper key={index}>
+                                    {menu.menu}{" "}
+                                    {/* 여기서 menu는 sellerMenuResponseDtos의 각 요소 */}
+                                </SellerInfoContentWrapper>
+                            ))}
+                        </>
+                    )}
                 </SellerDetailInfoContainer>
             </SellerInfoContentContainer>
         );
@@ -579,6 +854,25 @@ function SellerInfo() {
                 </SellerInfoTabContainer>
             </SellerInfoTabWrapper>
             {content}
+            <Modal
+                isOpen={isModalOpen}
+                setIsOpen={setIsModalOpen}
+                width="800px"
+                height="500px"
+                buttonType="submit"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+                childComponent={AddMenu({
+                    menuName,
+                    setMenuName,
+                    originPrice,
+                    setOriginPrice,
+                    uploadedFiles,
+                    setUploadedFiles,
+                })}
+                onSubmit={submitModalData}
+            />
         </SellerInfoContainer>
     );
 }

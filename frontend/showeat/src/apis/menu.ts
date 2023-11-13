@@ -60,7 +60,19 @@ const addNewMenu = async ({ menu, price, multipartFiles }: AddNewMenuType) => {
     return result;
 };
 
+const deleteMenu = async (menuId: string) => {
+    const props: FetchProps = {
+        url: `business/menu/${menuId}`,
+        method: "DELETE",
+        isAuth: true,
+    };
+
+    const result = await fetchModify(props);
+
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getMenuList, addNewMenu };
+export { getMenuList, addNewMenu, deleteMenu };
