@@ -34,6 +34,21 @@ public class SellerResponseDto {
 	@ApiModelProperty(value = "셀러 휴무일 정보", example = "연중무휴")
 	private String businessClosedDays;
 
+	@ApiModelProperty(value = "주소", example = "서울시 강남구 역삼동")
+	private String businessAddress;
+
+	@ApiModelProperty(value = "연락처", example = "010-1234-1234")
+	private String businessPhone;
+
+	@ApiModelProperty(value = "대표자명", example = "김수환")
+	private String businessCeo;
+
+	@ApiModelProperty(value = "이메일", example = "yammy@gmail.com")
+	private String businessEmail;
+
+	@ApiModelProperty(value = "사업자등록번호", example = "12341211234")
+	private int businessNumber;
+
 	@ApiModelProperty(value = "메뉴 DTO")
 	private List<SellerMenuResponseDto> sellerMenuResponseDtos;
 

@@ -109,6 +109,11 @@ public class Business extends BaseDateEntity {
 			.businessBio(businessBio)
 			.businessOperatingTime(businessOperatingTime)
 			.businessClosedDays(businessClosedDays)
+			.businessPhone(businessPhone)
+			.businessNumber(businessNumber)
+			.businessCeo(businessCeo)
+			.businessAddress(businessAddress)
+			.businessEmail(businessEmail)
 			.sellerMenuResponseDtos(
 				businessMenus.stream()
 					.map(businessMenu -> businessMenu.toSellerMenuResponseDto())
