@@ -1,26 +1,20 @@
 /* Import */
-// import Head from "next/head";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/css";
 import MainLayout from "@layouts/MainLayout";
-import {
-    ReactNode,
-    useState,
-    //  useEffect,
-} from "react";
+import { ReactNode, useState } from "react";
 import withAuth from "@libs/withAuth";
 import SearchBar from "@components/composite/searchBar/SearchBar";
 import { TextButton, ScrollButton } from "@components/common/button";
 import Card from "@components/composite/card";
 import { useRouter } from "next/router";
-import { CheckBox } from "@components/common/input";
-// import MultiSlider from "@components/composite/multiSlider/MultiSlider";
+import { CheckBox, TextInput } from "@components/common/input";
 import { GetServerSideProps } from "next";
 import addressList from "@configs/addressList";
 import menuCategoryList from "@configs/menuCategoryList";
 import { searchFundings } from "@apis/fundings";
 import { FundingType } from "@customTypes/apiProps";
-// import useUserState from "@hooks/useUserState";
+import postBookmark from "@/apis/bookmark";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -40,8 +34,11 @@ interface SearchResultDataProps {
     keyword?: string | undefined;
     category?: string[] | undefined;
     address?: string[] | undefined;
+    min?: number | undefined;
+    max?: number | undefined;
     searchType?: string[] | undefined;
     sortType?: string | undefined;
+    isLast: boolean;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -176,59 +173,59 @@ const FilterTitleWrapper = styled("span")`
     font-weight: 700;
 `;
 
-// const PriceRangeContainer = styled("div")`
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
+const PriceRangeContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-//     width: 100%;
+    width: 100%;
 
-//     padding: 2em 2em;
-//     box-sizing: border-box;
+    padding: 2em 2em;
+    box-sizing: border-box;
 
-//     border: 1px solid ${(props) => props.theme.colors.gray3};
-//     border-radius: 10px;
-// `;
+    border: 1px solid ${(props) => props.theme.colors.gray3};
+    border-radius: 10px;
+`;
 
-// const PriceRangeInputContainer = styled("div")`
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-// `;
+const PriceRangeInputWrapper = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
-// const PriceInputContainer = styled("div")`
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-// `;
+const PriceInputContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
 
-// const PriceLabeltWrapper = styled("span")`
-//     font-weight: 700;
-// `;
+const PriceLabeltWrapper = styled("label")`
+    font-weight: 700;
+`;
 
-// const PriceInputWrapper = styled("div")`
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
+const PriceInputWrapper = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-//     padding: 1em 2em;
+    padding: 1em 2em;
 
-//     border: 1px solid ${(props) => props.theme.colors.gray3};
-//     border-radius: 10px;
-// `;
+    border: 1px solid ${(props) => props.theme.colors.gray3};
+    border-radius: 10px;
+`;
 
-// const PriceSpaceWrapper = styled("div")`
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
+const PriceSpaceWrapper = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-//     width: 100px;
+    width: 100px;
 
-//     font-size: 50px;
-//     font-weight: 300;
-// `;
+    font-size: 50px;
+    font-weight: 300;
+`;
 
 const FilterBodyContainer = styled("div")`
     display: grid;
@@ -328,6 +325,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         page: 0,
     });
     const searchResultData = result.data.content || [];
+    const isLast = result.data.last;
 
     return {
         props: {
@@ -335,8 +333,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             keyword,
             category,
             address,
+            min,
+            max,
             searchType,
             sortType,
+            isLast,
         },
     };
 };
@@ -349,8 +350,11 @@ function Search({
     keyword,
     category,
     address,
+    min,
+    max,
     searchType,
     sortType,
+    isLast,
 }: SearchResultDataProps) {
     const router = useRouter();
     const sortList = [
@@ -367,33 +371,49 @@ function Search({
             { value: "FUNDING_TAG", text: "검색용 태그", isChecked: false },
         ].map((one) => ({
             ...one,
-            isChecked: searchType && searchType.includes(one.value),
+            isChecked: (searchType && searchType.includes(one.value)) || false,
         })),
     );
 
     const [filterCategory, setFilterCategory] = useState(
         menuCategoryList.map((one) => ({
             ...one,
-            isChecked: category && category.includes(one.value),
+            isChecked: (category && category.includes(one.value)) || false,
         })),
     );
 
     const [filterAddress, setFilterAddress] = useState(
         addressList.map((one) => ({
             address: one,
-            isChecked: address && address.includes(one),
+            isChecked: (address && address.includes(one)) || false,
         })),
     );
 
-    // const [filterMoney, setFilterMoney] = useState({ min: 0, max: 10000000 });
     const [fundingDatas, setFundingDatas] = useState<FundingType[]>(searchResultData);
-
     const [isFilterd, setIsFiltered] = useState<boolean>(false);
     const [isSelectedSort, setIsSelectedSort] = useState<string>(sortType || "POPULARITY");
     const [pageNum, setPageNum] = useState(1);
+    const [isLastPage, setIsLastPage] = useState(isLast);
+    const [minMoney, setMinMoney] = useState(min);
+    const [maxMoney, setMaxMoney] = useState(max);
 
     const handleSort = (type: string) => {
-        setIsSelectedSort(type);
+        searchFundings({
+            keyword,
+            category,
+            address,
+            min,
+            max,
+            searchType,
+            sortType: type,
+            page: 0,
+        }).then((res) => {
+            if (res.statusCode === 200) {
+                setFundingDatas(res.data.content);
+                setIsSelectedSort(type);
+                setPageNum(1);
+            }
+        });
     };
 
     const handleCard = (fundingId: number) => {
@@ -401,23 +421,76 @@ function Search({
     };
 
     const handleBookmark = (fundingId: number) => {
-        // postBookmark(fundingId);
-        console.log(fundingId);
+        postBookmark(fundingId.toString()).then((res) => {
+            if (res.statusCode === 200) {
+                const updatedFundingDatas = fundingDatas.map((data) => {
+                    if (data.fundingId === fundingId) {
+                        return { ...data, fundingIsBookmark: !data.fundingIsBookmark };
+                    }
+                    return data;
+                });
+                setFundingDatas(updatedFundingDatas);
+            }
+        });
     };
 
     const handleMoreButton = () => {
-        const result = searchFundings({
+        if (!isLastPage) {
+            searchFundings({
+                keyword,
+                category,
+                address,
+                min,
+                max,
+                searchType,
+                sortType,
+                page: pageNum,
+            }).then((res) => {
+                if (res.data.last) {
+                    setIsLastPage(true);
+                }
+                setFundingDatas((prev) => {
+                    return [...prev, res.data.content];
+                });
+                setPageNum((prev) => prev + 1);
+            });
+        }
+    };
+
+    const changeMinMoney = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        if (/^\d+$/.test(newValue) || newValue === "") {
+            setMinMoney(parseFloat(newValue));
+        }
+    };
+
+    const changeMaxMoney = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        if (/^\d+$/.test(newValue) || newValue === "") {
+            setMaxMoney(parseFloat(newValue));
+        }
+    };
+
+    const handleFilteredSearch = () => {
+        router.push(`/search`);
+        searchFundings({
             keyword,
             category: filterCategory.filter((one) => one.isChecked).map((one) => one.value),
             address: filterAddress.filter((one) => one.isChecked).map((one) => one.address),
-            min: 0,
-            max: 100000000,
+            min: minMoney,
+            max: maxMoney,
             searchType: filterTypes.filter((one) => one.isChecked).map((one) => one.value),
             sortType: isSelectedSort,
-            page: pageNum,
+            page: 0,
+        }).then((res) => {
+            if (res.statusCode === 200) {
+                if (res.data.last) {
+                    setIsLastPage(true);
+                }
+                setFundingDatas(res.data.content);
+                setPageNum(1);
+            }
         });
-
-        result;
     };
 
     return (
@@ -531,25 +604,49 @@ function Search({
                                         ))}
                                     </FilterBodyContainer>
                                 </FilterOneContainer>
-                                {/* <FilterOneContainer>
+                                <FilterOneContainer>
                                     <FilterTitleWrapper>펀딩 가격</FilterTitleWrapper>
 
                                     <PriceRangeContainer>
-                                        <PriceRangeInputContainer>
+                                        <PriceRangeInputWrapper>
                                             <PriceInputContainer>
-                                                <PriceLabeltWrapper>최저가</PriceLabeltWrapper>
-                                                <PriceInputWrapper>여기는</PriceInputWrapper>
+                                                <PriceLabeltWrapper htmlFor="min-money">
+                                                    최저가
+                                                </PriceLabeltWrapper>
+                                                <PriceInputWrapper>
+                                                    <TextInput
+                                                        value={minMoney?.toString() || ""}
+                                                        width="150px"
+                                                        height="40px"
+                                                        id="min-money"
+                                                        onChange={(e) => changeMinMoney(e)}
+                                                    />
+                                                </PriceInputWrapper>
                                             </PriceInputContainer>
                                             <PriceSpaceWrapper>∼</PriceSpaceWrapper>
                                             <PriceInputContainer>
-                                                <PriceLabeltWrapper>최고가</PriceLabeltWrapper>
-                                                <PriceInputWrapper>일단 포기</PriceInputWrapper>
+                                                <PriceLabeltWrapper htmlFor="max-money">
+                                                    최고가
+                                                </PriceLabeltWrapper>
+                                                <PriceInputWrapper>
+                                                    <TextInput
+                                                        value={maxMoney?.toString() || ""}
+                                                        width="150px"
+                                                        height="40px"
+                                                        id="max-money"
+                                                        onChange={(e) => changeMaxMoney(e)}
+                                                    />
+                                                </PriceInputWrapper>
                                             </PriceInputContainer>
-                                        </PriceRangeInputContainer>
-                                        <MultiSlider />
+                                        </PriceRangeInputWrapper>
                                     </PriceRangeContainer>
-                                </FilterOneContainer> */}
-                                <TextButton colorType="secondary" text="상세 검색" width="300px" />
+                                </FilterOneContainer>
+                                <TextButton
+                                    colorType="secondary"
+                                    text="상세 검색"
+                                    width="300px"
+                                    onClick={handleFilteredSearch}
+                                />
                             </FilterSlideInContainer>
                         </FilterContainer>
                     )}
@@ -565,30 +662,35 @@ function Search({
                         ))}
                     </SortContainer>
                     {fundingDatas && fundingDatas.length > 0 ? (
-                        <SearchBodyContainer>
-                            {fundingDatas.map((data, idx) => (
-                                <SearchCardWrapper key={`${data.title}-${idx}`}>
-                                    <Card
-                                        fundingData={data}
-                                        onFundingClick={() => handleCard(data.fundingId)}
-                                        onBookmark={() => handleBookmark(data.fundingId)}
+                        <>
+                            <SearchBodyContainer>
+                                {fundingDatas.map((data, idx) => (
+                                    <SearchCardWrapper key={`${data.title}-${idx}`}>
+                                        <Card
+                                            fundingData={data}
+                                            onFundingClick={() => handleCard(data.fundingId)}
+                                            onBookmark={() => handleBookmark(data.fundingId)}
+                                        />
+                                    </SearchCardWrapper>
+                                ))}
+                            </SearchBodyContainer>
+                            {!isLastPage && (
+                                <MoreButtonWrapper>
+                                    <TextButton
+                                        text="더 보기"
+                                        width="400px"
+                                        height="50px"
+                                        colorType="secondary"
+                                        curve="round"
+                                        fontSize={20}
+                                        onClick={handleMoreButton}
                                     />
-                                </SearchCardWrapper>
-                            ))}
-                        </SearchBodyContainer>
+                                </MoreButtonWrapper>
+                            )}
+                        </>
                     ) : (
                         <NoSearchResultWrapper>검색 결과가 없습니다.</NoSearchResultWrapper>
                     )}
-                    <MoreButtonWrapper>
-                        <TextButton
-                            text="더 보기"
-                            width="400px"
-                            height="50px"
-                            colorType="secondary"
-                            curve="round"
-                            fontSize={20}
-                        />
-                    </MoreButtonWrapper>
                 </SearchResultContainer>
             </MainContentsContainer>
             <ScrollButton width="40px" />
