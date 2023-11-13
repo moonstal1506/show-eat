@@ -1,9 +1,10 @@
 /* Import */
-import Table from "@components/common/table";
 import { CardCarousel } from "@components/composite/carousel";
 import { BusinessType, FundingType } from "@customTypes/apiProps";
-import TextBox from "@components/common/textBox";
+import { formatBusinessNumber, formatPhoneNumber } from "@utils/format";
 import styled from "@emotion/styled";
+import Table from "@components/common/table";
+import TextBox from "@components/common/textBox";
 import { useEffect, useState } from "react";
 
 // ----------------------------------------------------------------------------------------------------
@@ -122,14 +123,14 @@ function FundingStoreTab(props: FundingStoreTabProps) {
         businessName,
         businessOperatingTime,
         businessClosedDays,
-        `${businessPhone}`,
+        formatPhoneNumber(businessPhone),
         businessAddress,
         businessCeo,
         businessEmail,
-        `${businessNumber}`,
+        formatBusinessNumber(businessNumber),
     ];
 
-    // Function for Loading Kakao Map API
+    // Hooks for Loading Kakao Map API
     useEffect(() => {
         kakao.maps.load(() => {
             const geocoder = new kakao.maps.services.Geocoder();

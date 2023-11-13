@@ -8,9 +8,9 @@ export interface BusinessType {
     businessClosedDays: string;
     businessEmail: string;
     businessName: string;
-    businessNumber: number;
+    businessNumber: string;
     businessOperatingTime: string;
-    businessPhone: number;
+    businessPhone: string;
     sellerMenuResponseDtos: {
         menuId: number;
         menu: string;
