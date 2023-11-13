@@ -230,7 +230,7 @@ public class FundingServiceImpl implements FundingService {
 
 		return fundingRepository.findByBusiness_BusinessIdAndFundingIsActive(businessId,FundingIsActive.ACTIVE)
 			.stream()
-			.map(funding -> funding.toFundingListResponseDto(false))
+			.map(funding -> funding.toFundingListResponseDto())
 			.collect(Collectors.toList());
 	}
 
