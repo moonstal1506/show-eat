@@ -485,28 +485,20 @@ function SellerInfo() {
         setIsMenuEditing(true);
     };
 
-    const handleMenuAdd = () => {
-        console.log("추가");
-    };
-
     const handleMenuSave = () => {
         setIsMenuEditing(false); // 수정 모드 종료
     };
 
     const submitModalData = () => {
-        console.log(uploadedFiles);
-
         addNewMenu({
             menu: menuName,
             price: originPrice,
             multipartFiles: uploadedFiles,
         }).then((res) => {
-            console.log(res.data);
             if (res.statusCode === 200) {
                 const menuList = [];
 
                 res.data.forEach((item) => {
-                    console.log(item);
                     const newItem = {
                         menuId: item.menuId,
                         menu: item.menu,
@@ -525,8 +517,6 @@ function SellerInfo() {
     };
 
     const deleteMenuMethod = (one: string) => {
-        console.log(one.menuId);
-
         deleteMenu(one.menuId).then((result) => {
             if (result.statusCode === 200) {
                 const newMenus = sellerState.sellerMenuResponseDtos.filter((oneMenu) => {
@@ -748,7 +738,6 @@ function SellerInfo() {
                             {sellerState.sellerMenuResponseDtos.map((menu, index) => (
                                 <SellerInfoContentWrapper key={index}>
                                     {menu.menu}{" "}
-                                    {/* 여기서 menu는 sellerMenuResponseDtos의 각 요소 */}
                                 </SellerInfoContentWrapper>
                             ))}
                         </>

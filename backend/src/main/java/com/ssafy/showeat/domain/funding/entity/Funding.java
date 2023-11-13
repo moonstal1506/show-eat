@@ -160,6 +160,14 @@ public class Funding extends BaseTimeEntity {
 		this.fundingIsSuccess = FundingIsSuccess.SUCCESS;
 	}
 
+	public void addFundingImage(String imageUrl){
+		this.getFundingImages().add(
+			FundingImage.builder()
+				.fundingImgUrl(imageUrl)
+				.build()
+		);
+	}
+
 	public FundingResponseDto toFundingResponseDto(int bookemarkCount , Long businessId){
 		return FundingResponseDto.builder()
 			.title(fundingTitle)
