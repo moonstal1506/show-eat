@@ -34,6 +34,16 @@ const patchSettingInfo = async (
     return result;
 };
 
+const DeleteImgUrl = async (userId: number) => {
+    const props: FetchProps = {
+        url: `/users/delete-profile-image/${userId}`,
+        method: "DELETE",
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+    return result;
+};
+
 const patchNickname = async (userId: number, userNickname: string) => {
     const props: FetchProps = {
         url: "users/nickname",
@@ -41,7 +51,6 @@ const patchNickname = async (userId: number, userNickname: string) => {
         data: { userId, userNickname },
         isAuth: true,
     };
-    console.log(userId, userNickname);
     const result = await fetchModify(props);
     return result;
 };
@@ -70,4 +79,4 @@ const patchAddress = async (userId: number, userAddress: string) => {
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getUserInfo, patchSettingInfo, patchNickname, patchPhone, patchAddress };
+export { getUserInfo, patchSettingInfo, patchNickname, patchPhone, patchAddress, DeleteImgUrl };

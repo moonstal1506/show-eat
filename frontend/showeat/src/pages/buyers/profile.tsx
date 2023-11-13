@@ -11,6 +11,8 @@ import { TextInput } from "@components/common/input";
 import { InputDropdown } from "@components/common/dropdown";
 import addressList from "@configs/addressList";
 import { formatPhoneNumber } from "@utils/format";
+// import FileInput from "@components/common/input/FileInput";
+
 // ----------------------------------------------------------------------------------------------------
 const UserInfoContainer = styled("div")`
     display: flex;
@@ -82,7 +84,7 @@ function BuyerProfile() {
     const [nickname, setNickname] = useState<string>(userNickname);
     const [phone, setPhone] = useState<string>(userPhone);
     const [address, setAddress] = useState<string>(userAddress);
-
+    // const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
     // Function for Handling Nickname Change
     const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setNickname(event.target.value.trim());
@@ -156,7 +158,17 @@ function BuyerProfile() {
                             colorType="primary"
                             onClick={() => {}}
                         />
-
+                        {/* <FileInput
+                            count={1}
+                            color="primary"
+                            id="menuImage"
+                            buttonWidth="140px"
+                            buttonHeight="40px"
+                            buttonDescription="수정"
+                            uploadedFiles={uploadedProfileFiles}
+                            setUploadedFiles={setUploadedProfileFiles}
+                            modifyProfile
+                        /> */}
                         <TextButton
                             text="삭제"
                             width="100px"
