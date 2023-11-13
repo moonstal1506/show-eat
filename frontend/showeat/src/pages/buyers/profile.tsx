@@ -2,7 +2,7 @@
 import BuyerLayout from "@layouts/BuyerLayout";
 import withAuth from "@libs/withAuth";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { patchNickname, patchPhone } from "@apis/users";
+import { patchNickname, patchPhone, patchAddress } from "@apis/users";
 import useUserState from "@/hooks/useUserState";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -33,7 +33,6 @@ const MyInfoContainer = styled("div")`
 
 const MyImageContainer = styled("div")`
     display: flex;
-    /* align-items: center; */
     flex-direction: column;
 `;
 
@@ -125,6 +124,16 @@ function BuyerProfile() {
             }));
         });
     };
+
+    const handleAddressSubmit = () => {
+        patchAddress(user.userId, address).then(() => {
+            setUser((prevState) => ({
+                ...prevState,
+                userAddress: address,
+            }));
+        });
+    };
+
     return (
         <UserInfoContainer>
             <MyInfoContainer>나의 정보</MyInfoContainer>
@@ -217,7 +226,7 @@ function BuyerProfile() {
                         height="40px"
                         fontSize={20}
                         colorType="primary"
-                        onClick={() => {}}
+                        onClick={handleAddressSubmit}
                     />
                 </MenuWrapper>
             </AddressContainer>
