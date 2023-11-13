@@ -24,4 +24,5 @@ public interface FundingService {
 	Page<FundingListResponseDto> searchFunding(SearchFundingRequestDto searchFundingRequestDto,User user);
 	List<FundingListResponseDto> getFundingByType(String type,User user);
 	Page<FundingListResponseDto> getFundingByCategory(String category , String sortType , int page , User user);
+	List<FundingListResponseDto> getBusinessFundingList(Long businessId);
 }

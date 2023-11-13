@@ -26,6 +26,23 @@ const getBusinessRegiInfo = async (sellerId: number) => {
 };
 
 /* Function for Setting Information at First */
+const pathSellerImg = async (businessImg: File) => {
+    const formData = new FormData();
+
+    formData.append(`businessImg`, businessImg);
+
+    const props: FetchProps = {
+        url: "business/seller/profile",
+        method: "PATCH",
+        data: formData,
+        contentType: "file",
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
 const pathSellerBio = async (businessBio: string) => {
     const props: FetchProps = {
         url: "business/seller/bio",
@@ -83,6 +100,7 @@ const patchSettingInfo = async (
 export {
     getSellerInfo,
     getBusinessRegiInfo,
+    pathSellerImg,
     pathSellerBio,
     pathSellerOperatingTime,
     pathSellerClosedDays,

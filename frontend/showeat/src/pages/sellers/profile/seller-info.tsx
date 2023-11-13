@@ -1,7 +1,7 @@
 /* Import */
 import SellerLayout from "@layouts/SellerLayout";
 import withAuth from "@libs/withAuth";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import useSellerState from "@/hooks/useSellerState";
@@ -14,6 +14,7 @@ import {
     pathSellerClosedDays,
 } from "@/apis/seller";
 import { TextArea } from "@/components/common/input";
+import FileInput from "@components/common/input/FileInput";
 // ----------------------------------------------------------------------------------------------------
 
 const SellerInfoContainer = styled("div")`
@@ -217,6 +218,7 @@ function SellerInfo() {
     const [businessBio, setBusinessBio] = useState("");
     const [businessOperatingTime, setBusinessOperatingTime] = useState("");
     const [businessClosedDays, setBusinessClosedDays] = useState("");
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
     const [sellerState, setSellerState] = useState({
         businessBio: "ㅋ",
@@ -312,6 +314,8 @@ function SellerInfo() {
         setIsClosedDaysEditing(false); // 수정 모드 종료
     };
 
+    const handleFileSave = () => {};
+
     let content;
     if (activeTab === "seller") {
         content = (
@@ -325,13 +329,23 @@ function SellerInfo() {
                             <ProfileImage src={seller.sellerImgUrl} alt="profile-img" fill />
                         </ProfileImageWrapper>
                         <ChangeSellerProfileImageWrapper>
-                            <TextButton
+                            {/* <TextButton
                                 text="사진 변경"
                                 width="140px"
                                 height="40px"
                                 fontSize={20}
                                 colorType="primary"
-                                // onClick={handleCreateFunding}
+                                onClick={handleFileSave}
+                            /> */}
+                            <FileInput
+                                count={1}
+                                color="primary"
+                                id="menuImage"
+                                buttonWidth="140px"
+                                buttonHeight="40px"
+                                buttonDescription="수정"
+                                uploadedFiles={uploadedFiles}
+                                setUploadedFiles={setUploadedFiles}
                             />
                         </ChangeSellerProfileImageWrapper>
                     </SellerProfileImageChangeContainer>
