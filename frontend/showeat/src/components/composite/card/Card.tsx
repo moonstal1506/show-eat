@@ -2,35 +2,15 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { calcRemainTime, changeFontWeight } from "@/utils/format";
+import { FundingType } from "@/customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
 interface CardProps {
-    fundingData: {
-        fundingId: number;
-        title: string;
-        businessName: string;
-        category: string;
-        maxLimit: number;
-        minLimit: number;
-        curCount: number;
-        menu: string;
-        price: number;
-        discountPrice: number;
-        discountRate: number;
-        startDate: string;
-        endDate: string;
-        fundingIsActive: string;
-        fundingIsSuccess: string;
-        fundingImageResponseDtos: {
-            imageId: number;
-            imageUrl: string;
-        }[];
-        fundingIsBookmark: boolean;
-    };
-    onFundingClick: (fundingId: number) => void;
-    onBookmark: (fundingId: number) => void;
+    fundingData: FundingType;
+    onFundingClick?: (fundingId: number) => void;
+    onBookmark?: (fundingId: number) => void;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -324,11 +304,19 @@ function Card({ fundingData, onFundingClick, onBookmark }: CardProps) {
 
     const handleBookmark = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onBookmark(fundingData.fundingId);
+        if (onBookmark) {
+            onBookmark(fundingData.fundingId);
+        }
     };
 
     return (
-        <CardContainer onClick={() => onFundingClick(fundingData.fundingId)}>
+        <CardContainer
+            onClick={() => {
+                if (onFundingClick) {
+                    onFundingClick(fundingData.fundingId);
+                }
+            }}
+        >
             <CardUpperContainer>
                 <CardImageWrapper
                     className="card-image"

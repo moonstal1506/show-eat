@@ -46,8 +46,13 @@ public class CreateFundingRequestDto {
 	@ApiModelProperty(value = "펀딩 설명" , example = "이 펀딩은...")
 	private String description;
 
-	@ApiModelProperty(value = "펀딩 메뉴 관련 정보")
-	private List<MenuRequestDto> menuRequestDtos;
+//	@ApiModelProperty(value = "펀딩 메뉴 관련 정보")
+//	private List<MenuRequestDto> menuRequestDtos;
+	@ApiModelProperty(value = "메뉴 아이디" , example = "1")
+	private Long menuId;
+
+	@ApiModelProperty(value = "할인가" , example = "5000")
+	private int discountPrice;
 
 	@ApiModelProperty(value = "펀딩 종료일")
 	private LocalDate endDate;

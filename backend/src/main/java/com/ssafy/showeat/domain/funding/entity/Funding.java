@@ -162,15 +162,17 @@ public class Funding extends BaseTimeEntity {
 		this.fundingIsSuccess = FundingIsSuccess.SUCCESS;
 	}
 
-	public FundingResponseDto toFundingResponseDto(int bookemarkCount , boolean isBookmark){
+	public FundingResponseDto toFundingResponseDto(int bookemarkCount , Long businessId){
 		return FundingResponseDto.builder()
 			.title(fundingTitle)
+			.businessId(businessId)
 			.businessName(fundingBusinessName)
 			.category(fundingCategory.name())
 			.maxLimit(fundingMaxLimit)
 			.minLimit(fundingMinLimit)
 			.curCount(fundingCurCount)
 			.menu(fundingMenu)
+			.description(fundingDescription)
 			.price(fundingPrice)
 			.discountPrice(fundingDiscountPrice)
 			.discountRate(fundingDiscountRate)
@@ -179,7 +181,6 @@ public class Funding extends BaseTimeEntity {
 			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(fundingIsSuccess)
 			.bookmarkCount(bookemarkCount)
-			.fundingIsBookmark(isBookmark)
 			.fundingTagResponseDtos(
 					this.fundingTags
 						.stream()
@@ -194,7 +195,7 @@ public class Funding extends BaseTimeEntity {
 			.build();
 	}
 
-	public FundingListResponseDto toFundingListResponseDto(boolean isBookmark) {
+	public FundingListResponseDto toFundingListResponseDto() {
 		return FundingListResponseDto.builder()
 			.fundingId(fundingId)
 			.title(fundingTitle)
@@ -211,7 +212,6 @@ public class Funding extends BaseTimeEntity {
 			.endDate(fundingEndDate)
 			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(fundingIsSuccess)
-			.fundingIsBookmark(isBookmark)
 			.fundingImageResponseDtos(
 				this.fundingImages
 					.stream()

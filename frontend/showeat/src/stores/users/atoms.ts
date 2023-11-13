@@ -1,7 +1,7 @@
 /* Import */
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { SellerType, UserType } from "@customTypes/storeProps";
+import { UserType } from "@customTypes/storeProps";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -22,6 +22,7 @@ const userDefaultValue: UserType = {
     userImgUrl: "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
     userAddress: "",
     userBusiness: false,
+    userBusinessId: 0,
     userMoney: 0,
     userPhone: "",
     visited: false,
@@ -33,19 +34,7 @@ const userState = atom<UserType>({
     effects_UNSTABLE: [persistAtom],
 });
 
-const sellerDefaultValue: SellerType = {
-    sellerId: 0,
-    sellerName: "",
-    sellerImgUrl: "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
-};
-
-const sellerState = atom<SellerType>({
-    key: "sellerState",
-    default: sellerDefaultValue,
-    effects_UNSTABLE: [persistAtom],
-});
-
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { userDefaultValue, userState, sellerDefaultValue, sellerState };
+export { userDefaultValue, userState };
