@@ -79,7 +79,6 @@ interface CreateFundingProps {
     discountPrice: number;
     price?: number;
     menuId?: number;
-    multipartFile?: File;
 }
 
 const createFunding = async ({
@@ -94,7 +93,6 @@ const createFunding = async ({
     menuId,
     discountPrice,
     price,
-    multipartFile,
 }: CreateFundingProps) => {
     const props: FetchProps = {
         url: `funding`,
@@ -111,13 +109,26 @@ const createFunding = async ({
             maxLimit,
             minLimit,
             price,
+        },
+        isAuth: true,
+    };
+
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+const postGiftcardImage = async (multipartFile: File, fundingId: number) => {
+    const props: FetchProps = {
+        url: `/funding/image/${fundingId}`,
+        method: "POST",
+        data: {
             multipartFile,
         },
         isAuth: true,
     };
 
     const result = await fetchModify(props);
-    console.log(222, result);
 
     return result;
 };
@@ -179,7 +190,7 @@ interface SearchFundingsProps {
 }
 
 const searchFundings = async ({
-    keyword,
+    keyword = "",
     category = [
         "KOREAN",
         "CHINESE",
@@ -237,4 +248,5 @@ export {
     getFavoriteFundings,
     createFunding,
     searchFundings,
+    postGiftcardImage,
 };
