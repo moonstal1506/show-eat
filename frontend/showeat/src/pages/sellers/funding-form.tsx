@@ -580,8 +580,7 @@ function FundingForm() {
                 title: textFormData[0].data,
                 menuId: menuData.data.menuId,
                 discountPrice: parseFloat(menuData.data.discountPrice),
-            }).then((res) => {
-                console.log(res);
+            }).then(() => {
                 router.push("/sellers/profile/seller-info");
             });
         } else if (isFundingType === "GIFT_CARD") {
@@ -597,10 +596,8 @@ function FundingForm() {
                 discountPrice: parseFloat(giftcardData.discountPrice),
                 price: parseFloat(giftcardData.originPrice),
             }).then((res) => {
-                console.log(res);
                 if (res.statusCode === 200) {
-                    postGiftcardImage(giftcardImage[0], res.data).then((res2) => {
-                        console.log("Gift Card Image : ", res2);
+                    postGiftcardImage(giftcardImage[0], res.data).then(() => {
                         router.push("/sellers/profile/seller-info");
                     });
                 }
