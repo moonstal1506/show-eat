@@ -15,19 +15,32 @@ const BasicInfoContainer = styled("div")`
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    // Box Model Attribute
+    margin-top: 5em;
 `;
 
 const SubTitleWrapper = styled("div")`
     // Box Model Attribute
     width: 100%;
-    margin-top: 3em;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 
     // Text Attribute
     text-align: center;
     font-weight: 900;
     font-size: 30px;
     color: ${(props) => props.theme.colors.secondary3};
+`;
+
+const Line = styled("div")`
+    // Box Model Attribute
+    width: 100%;
+    height: 1px;
+    margin: 5em 0;
+
+    // Style Attribute
+    border: none;
+    background-color: ${(props) => props.theme.colors.gray2};
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -79,12 +92,14 @@ function ProfileBasicInfoTab() {
                 headers={["대표자명", "대표자 이메일"]}
                 contents={representativeInfo}
             />
+            <Line />
             <SubTitleWrapper>사업자 정보</SubTitleWrapper>
             <Table
                 headerWidth="30%"
                 headers={["상호/법인명", "사업자 등록번호", "주소", "연락처"]}
                 contents={businessInfo}
             />
+            <Line />
             <SubTitleWrapper>정산 정보</SubTitleWrapper>
             <Table headerWidth="30%" headers={["예금주명", "계좌정보"]} contents={accountInfo} />
         </BasicInfoContainer>
