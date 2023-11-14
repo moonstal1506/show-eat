@@ -29,7 +29,6 @@ const LabelWrapper = styled("div")`
     justify-content: center;
     font-size: 18px;
     font-weight: 700;
-    margin-top: 0.5em;
 `;
 
 const ButtonWrapper = styled("div")`
@@ -42,7 +41,6 @@ const BusinessRegistrationWrapper = styled("div")`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 0.5em;
     width: 727px;
 `;
 
