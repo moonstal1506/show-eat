@@ -196,7 +196,7 @@ function Header() {
             return (
                 <TextButton
                     width="150px"
-                    onClick={() => router.push("/service")}
+                    onClick={() => router.push("/application/registration")}
                     text="셀러 등록"
                     curve="round"
                 />

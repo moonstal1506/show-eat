@@ -29,21 +29,18 @@ const LabelWrapper = styled("div")`
     justify-content: center;
     font-size: 18px;
     font-weight: 700;
-    margin-top: 0.5em;
 `;
 
 const ButtonWrapper = styled("div")`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 0.5em;
 `;
 
 const BusinessRegistrationWrapper = styled("div")`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 0.5em;
     width: 727px;
 `;
 
@@ -55,7 +52,13 @@ const InputBox = styled("div")`
 
 declare global {
     interface Window {
-        daum: any;
+        daum: {
+            Postcode: {
+                new (options: { oncomplete: (data: IAddr) => void }): {
+                    open: () => void;
+                };
+            };
+        };
     }
 }
 
@@ -165,7 +168,8 @@ function SellerInfo({
     useEffect(() => {
         const loadDaumPostcode = () => {
             const script = document.createElement("script");
-            script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+            script.src = "//ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"; // 배표 환경
+            // script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"; 로컬
             script.async = true;
             document.body.appendChild(script);
         };
@@ -176,7 +180,7 @@ function SellerInfo({
     }, []);
 
     const onClickAddress = () => {
-        if (window.daum) {
+        if (window.daum && window.daum.Postcode) {
             new window.daum.Postcode({
                 oncomplete(data: IAddr) {
                     setBusinessAddress(data.address);
