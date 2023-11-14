@@ -5,7 +5,8 @@ import withAuth from "@libs/withAuth";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { TextButton, ScrollButton } from "@components/common/button";
-import { getUserFundings, postHeart } from "@/apis/fundings";
+import { getUserFundings } from "@apis/fundings";
+import postBookmark from "@apis/bookmark";
 import { FundingType } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
@@ -74,7 +75,7 @@ function MyFundings() {
     };
 
     const handleBookmark = (funding: FundingType) => {
-        postHeart(funding.fundingId).then((res) => {
+        postBookmark(funding.fundingId.toString()).then((res) => {
             if (res.statusCode === 200) {
                 setFundingData(
                     fundingData.map((item) =>
@@ -89,16 +90,21 @@ function MyFundings() {
 
     const fetchFundingData = () => {
         getUserFundings(page).then((data) => {
-            if (data.data.content && data.data.content.length > 0) {
-                const isLastPage: boolean = data.data.last;
-                const fundingList: FundingType[] = data.data.content || [];
-                if (page === 0) {
-                    setFundingData(fundingList);
-                    setHasMorePage(!isLastPage);
-                } else {
-                    setFundingData([...fundingData, ...fundingList]);
-                    setHasMorePage(!isLastPage);
+            if (data.length > 0) {
+                if (data.data.content && data.data.content.length > 0) {
+                    const isLastPage: boolean = data.data.last;
+                    const fundingList: FundingType[] = data.data.content || [];
+                    if (page === 0) {
+                        setFundingData(fundingList);
+                        setHasMorePage(!isLastPage);
+                    } else {
+                        setFundingData([...fundingData, ...fundingList]);
+                        setHasMorePage(!isLastPage);
+                    }
                 }
+            } else {
+                setFundingData([]);
+                setHasMorePage(false);
             }
         });
     };

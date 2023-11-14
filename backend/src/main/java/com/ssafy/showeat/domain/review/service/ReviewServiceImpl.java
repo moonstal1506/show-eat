@@ -50,13 +50,15 @@ public class ReviewServiceImpl implements ReviewService{
 		if(!CouponStatus.USED.equals(coupon.getCouponStatus()))
 			throw new ImpossibleReviewException();
 
+		coupon.updateWriteCouponReview();
+
 		reviewRepository.save(reviewRequestDto.toEntity(loginUser,coupon.getFunding()));
 	}
 
 	@Override
-	public FundingReviewResponseDto getReviewByFundingId(Long fundingId , int page) {
+	public FundingReviewResponseDto getReviewByBusinessId(Long businessId , int page) {
 		log.info("ReviewServiceImpl_getReviewByFundingId || 리뷰 조회");
-		Page<Review> reviewInFunding = reviewRepository.findReviewInFunding(PageRequest.of(page, 5), fundingId);
+		Page<Review> reviewInFunding = reviewRepository.findReviewInBusinessId(PageRequest.of(page, 5), businessId);
 		return FundingReviewResponseDto.createFundingReviewResponseDto(reviewInFunding);
 	}
 }

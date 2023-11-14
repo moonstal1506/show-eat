@@ -1,10 +1,10 @@
 /* Import */
 import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { MenuButton } from "@components/common/button";
+import menuCategoryList from "@configs/menuCategoryList";
 import styled from "@emotion/styled";
+import { TextInput } from "@components/common/input";
 import { useRouter } from "next/router";
-import menuCategoryList from "@/configs/menuCategoryList";
-import { TextInput } from "../../common/input";
-import { MenuButton } from "../../common/button";
 import Modal from "../modal";
 
 // ----------------------------------------------------------------------------------------------------
@@ -132,13 +132,13 @@ function SearchBar({ isChange = false, setIsChange }: SearchBarProps) {
                 />
             </SearchInputWrapper>
             <IconMenuContainer>
-                {menuCategoryList.map((category) => (
+                {menuCategoryList.map((menu) => (
                     <MenuButton
-                        key={category.id}
+                        key={menu.id}
                         width="40px"
-                        imageUrl="/assets/images/cook-cow.png"
-                        menuName={category.value}
-                        onClick={() => handleMenuButton(category.id)}
+                        imageUrl={menu.imageUrl}
+                        menuName={menu.value}
+                        onClick={() => handleMenuButton(menu.id)}
                     />
                 ))}
             </IconMenuContainer>

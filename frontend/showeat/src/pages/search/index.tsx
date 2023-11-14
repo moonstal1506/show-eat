@@ -4,7 +4,7 @@ import { keyframes } from "@emotion/css";
 import MainLayout from "@layouts/MainLayout";
 import { ReactNode, useEffect, useState } from "react";
 import withAuth from "@libs/withAuth";
-import SearchBar from "@components/composite/searchBar/SearchBar";
+import SearchBar from "@components/composite/searchBar";
 import { TextButton, ScrollButton } from "@components/common/button";
 import Card from "@components/composite/card";
 import { useRouter } from "next/router";

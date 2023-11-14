@@ -49,6 +49,8 @@ function SignInLoading() {
                     userBusiness,
                     userMoney,
                     userPhone,
+                    credentialId,
+                    userEmail,
                     visited,
                     businessId,
                 } = userResult.data;
@@ -63,6 +65,8 @@ function SignInLoading() {
                     userBusiness,
                     userBusinessId: businessId,
                     userMoney,
+                    credentialId,
+                    userEmail,
                     userPhone,
                     visited,
                 });

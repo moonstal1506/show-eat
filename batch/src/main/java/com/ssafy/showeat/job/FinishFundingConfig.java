@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableBatchProcessing
 public class FinishFundingConfig {
 
-	private final int CHUNK_SIZE = 10;
+	private final int CHUNK_SIZE = 100;
 	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
 
 	private final FundingRepository fundingRepository;
