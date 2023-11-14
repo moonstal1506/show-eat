@@ -4,6 +4,7 @@ import TextArea from "@components/common/input/TextArea";
 import { useState } from "react";
 import { TextButton } from "@components/common/button";
 import { postReview } from "@apis/coupons";
+import { CouponType } from "@/customTypes/apiProps";
 
 const ReviewWrapper = styled("div")`
     display: flex;
@@ -41,9 +42,13 @@ const TextButtonContainer = styled("div")`
 function CouponReviewModal({
     couponId,
     closeReviewModal,
+    setCouponData,
+    setSelectedCoupon,
 }: {
     couponId: number;
     closeReviewModal: () => void;
+    setCouponData: React.Dispatch<React.SetStateAction<CouponType[]>>;
+    setSelectedCoupon: React.Dispatch<React.SetStateAction<CouponType>>;
 }) {
     const [message, setMessage] = useState("");
     const handleChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -55,6 +60,21 @@ function CouponReviewModal({
         postReview(couponId, message).then((res) => {
             if (res.statusCode === 200) {
                 console.log(res);
+                setCouponData((prev) => {
+                    return prev.map((coupon) => {
+                        if (coupon.couponId === couponId) {
+                            return {
+                                ...coupon,
+                                writeCouponReview: true,
+                            };
+                        }
+                        console.log(prev);
+                        return coupon;
+                    });
+                });
+                setSelectedCoupon((prev) => {
+                    return { ...prev, writeCouponReview: true };
+                });
                 closeReviewModal();
             }
         });
