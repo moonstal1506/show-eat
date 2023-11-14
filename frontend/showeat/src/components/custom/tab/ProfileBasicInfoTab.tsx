@@ -101,7 +101,7 @@ function ProfileBasicInfoTab() {
             />
             <Line />
             <SubTitleWrapper>정산 정보</SubTitleWrapper>
-            <Table headerWidth="30%" headers={["예금주명", "계좌정보"]} contents={accountInfo} />
+            <Table headerWidth="30%" headers={["예금주명", "계좌 정보"]} contents={accountInfo} />
         </BasicInfoContainer>
     );
 }
