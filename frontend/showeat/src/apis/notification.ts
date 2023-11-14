@@ -16,7 +16,18 @@ const getNotification = async () => {
     return result;
 };
 
+const getNotificationExist = async () => {
+    const props: FetchProps = {
+        url: `notification/exist`,
+        method: "GET",
+        isAuth: true,
+    };
+    const result = await fetchGet(props);
+
+    return result;
+};
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default getNotification;
+export { getNotificationExist, getNotification };

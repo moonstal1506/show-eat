@@ -26,4 +26,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 		+ "WHERE n.user = :user "
 		+ "AND n.notificationIsChecked = false ")
 	void updateCheckedState(@Param("user") User user);
+
+	boolean existsByUserAndNotificationIsChecked(User user, boolean notificationIsChecked);
 }

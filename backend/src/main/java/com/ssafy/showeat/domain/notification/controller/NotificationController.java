@@ -40,6 +40,17 @@ public class NotificationController {
 			notificationService.getNotificationListByIsChecked(userService.getUserFromRequest(request)));
 	}
 
+	@ApiOperation(value = "읽지 않은 알림 여부 조회", notes = "유저의 읽지 않은 알림 여부를 조회합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "읽지 않은 알림 여부 조회 성공"),
+		@ApiResponse(code = 400, message = "읽지 않은 알림 여부 조회 실패"),
+	})
+	@GetMapping("/exist")
+	public ResponseResult getNotificationExist(HttpServletRequest request) {
+		return new SingleResponseResult<>(
+			notificationService.getNotificationExist(userService.getUserFromRequest(request)));
+	}
+
 	@GetMapping(value = "/subscribe")
 	public SseEmitter subscribe(HttpServletRequest request) {
 		return sseService.connectNotification(userService.getUserFromRequest(request).getUserId());

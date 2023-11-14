@@ -5,4 +5,6 @@ import com.ssafy.showeat.domain.user.entity.User;
 
 public interface NotificationService {
 	NotificationListResponseDto getNotificationListByIsChecked(User user);
+
+	boolean getNotificationExist(User user);
 }

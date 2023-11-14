@@ -3,7 +3,7 @@ import { deleteCookie, getCookie } from "cookies-next";
 import { IconButton, TextButton } from "@components/common/button";
 import Image from "next/image";
 import { patchLogout } from "@apis/auth";
-import getNotification from "@apis/notification";
+import { getNotification, getNotificationExist } from "@apis/notification";
 import ProfileBox from "@/components/composite/profileBox";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -165,6 +165,7 @@ function Header() {
     const [user, setUser] = useUserState();
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
     const [isNotificationVisible, setIsNotificationVisible] = useState<boolean>(false);
+    const [isNotificationExist, setIsNotificationExist] = useState<boolean>(false);
     const [participatingFunding, setParticipatingFunding] = useState<Notification[]>([]);
     const [bookmarkFunding, setBookmarkFunding] = useState<Notification[]>([]);
 
@@ -173,6 +174,7 @@ function Header() {
         getNotification().then((res) => {
             setParticipatingFunding(res.data.participatingFunding);
             setBookmarkFunding(res.data.bookmarkFunding);
+            setIsNotificationExist(false);
         });
     };
 
@@ -223,6 +225,16 @@ function Header() {
     useEffect(() => {
         setHasAccessToken(Boolean(getCookie("access-token")) && user.userId !== 0);
     }, [user]);
+
+    useEffect(() => {
+        getNotificationExist().then((res) => {
+            if (res.data) {
+                setIsNotificationExist(true);
+            } else {
+                setIsNotificationExist(false);
+            }
+        });
+    }, [isNotificationExist]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -305,7 +317,11 @@ function Header() {
                                 handleNotification();
                                 setIsNotificationVisible(!isNotificationVisible);
                             }}
-                            source="/assets/icons/alarm-read-icon.svg"
+                            source={
+                                isNotificationExist
+                                    ? "/assets/icons/alarm-not-read-icon.svg"
+                                    : "/assets/icons/alarm-read-icon.svg"
+                            }
                             alternative="alarm-read-icon"
                         />
                         <IconButton

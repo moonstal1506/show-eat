@@ -49,4 +49,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
+	@Override
+	public boolean getNotificationExist(User user) {
+		return notificationRepository.existsByUserAndNotificationIsChecked(user, false);
+	}
+
 }
