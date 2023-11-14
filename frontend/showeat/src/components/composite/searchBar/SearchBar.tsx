@@ -5,6 +5,15 @@ import { useRouter } from "next/router";
 import menuCategoryList from "@/configs/menuCategoryList";
 import { TextInput } from "../../common/input";
 import { MenuButton } from "../../common/button";
+import Modal from "../modal";
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
+interface SearchBarProps {
+    isChange?: boolean;
+    setIsChange?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -32,12 +41,52 @@ const IconMenuContainer = styled("div")`
     width: 960px;
 `;
 
+const RequireModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const RequireModalTitleWrapper = styled("span")`
+    font-size: 30px;
+    font-weight: 700;
+
+    padding: 0.5em;
+`;
+
+const RequireModalDescriptionWrapper = styled("span")`
+    font-size: 18px;
+
+    padding: 2em;
+
+    @media (max-width: 767px) {
+        font-size: 14px;
+    }
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
+/* Require Input Modal Component */
+function RequireInputModal() {
+    return (
+        <RequireModalContainer>
+            <RequireModalTitleWrapper>검색어를 입력해주세요.</RequireModalTitleWrapper>
+            <RequireModalDescriptionWrapper>
+                검색어 입력은 필수 조건입니다.
+            </RequireModalDescriptionWrapper>
+        </RequireModalContainer>
+    );
+}
+
 /* Search Bar Button Component */
-function SearchBar() {
+function SearchBar({ isChange = false, setIsChange }: SearchBarProps) {
     const router = useRouter();
     const [searchText, setSearchText] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleSearchTextChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value);
@@ -45,16 +94,27 @@ function SearchBar() {
 
     const handleEnterKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
-            router.push(`search?keyword=${encodeURIComponent(searchText)}`);
+            if (searchText && searchText !== "") {
+                router.push(`search?keyword=${encodeURIComponent(searchText)}`);
+            } else {
+                setIsModalOpen(true);
+            }
         }
     };
 
     const handleSearchClick = () => {
-        router.push(`/search?keyword=${encodeURIComponent(searchText)}`);
+        if (searchText && searchText !== "") {
+            router.push(`/search?keyword=${encodeURIComponent(searchText)}`);
+        } else {
+            setIsModalOpen(true);
+        }
     };
 
     const handleMenuButton = (category: string) => {
         router.push(`search?category=${encodeURIComponent(category)}`);
+        if (!isChange && setIsChange) {
+            setIsChange(true);
+        }
     };
 
     return (
@@ -82,6 +142,17 @@ function SearchBar() {
                     />
                 ))}
             </IconMenuContainer>
+            <Modal
+                childComponent={RequireInputModal()}
+                width="500px"
+                height="300px"
+                isOpen={isModalOpen}
+                setIsOpen={setIsModalOpen}
+                buttonType="close"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+            />
         </SearchBarContainer>
     );
 }
