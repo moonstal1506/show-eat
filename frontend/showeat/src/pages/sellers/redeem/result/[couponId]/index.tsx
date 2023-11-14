@@ -1,6 +1,6 @@
 /* Import */
 import SingleLayout from "@layouts/SingleLayout";
-import withAuth from "@libs/withAuth";
+// import withAuth from "@libs/withAuth";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Table from "@components/common/table";
@@ -454,18 +454,18 @@ function RedeemResult() {
 // ----------------------------------------------------------------------------------------------------
 
 /* Middleware */
-const RedeemResultWithAuth = withAuth({
-    WrappedComponent: RedeemResult,
-});
+// const RedeemResultWithAuth = withAuth({
+//     WrappedComponent: RedeemResult,
+// });
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Layout */
-RedeemResultWithAuth.getLayout = function getLayout(page: ReactNode) {
+RedeemResult.getLayout = function getLayout(page: ReactNode) {
     return <SingleLayout>{page}</SingleLayout>;
 };
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default RedeemResultWithAuth;
+export default RedeemResult;
