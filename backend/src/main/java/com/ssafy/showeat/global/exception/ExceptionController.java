@@ -215,4 +215,11 @@ public class ExceptionController {
         return ResponseResult.exceptionResponse(ExceptionCode.BLANK_SEARCH_KEYWORD_EXCEPTION, err.getMessage());
     }
 
+    @ExceptionHandler(ImpossibleCouponUseException.class)
+    public ResponseResult ImpossibleCouponUseException(ImpossibleCouponUseException err) {
+        log.info("Error : {}", err.getClass());
+        log.info("Error Message : {}", err.getMessage());
+        return ResponseResult.exceptionResponse(ExceptionCode.IMPOSSIBLE_COUPON_USE_EXCEPTION, err.getMessage());
+    }
+
 }

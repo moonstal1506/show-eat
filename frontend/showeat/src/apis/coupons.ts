@@ -31,9 +31,8 @@ const getCouponDetails = async (couponId: number) => {
 /* Function for Use Single Coupon */
 const patchUseCoupon = async (couponId: number) => {
     const props: FetchProps = {
-        url: `coupon/update/status`,
+        url: `coupon/update/status/${couponId}`,
         method: "PATCH",
-        data: { couponId, couponStatus: "USED" },
         isAuth: true,
     };
     const result = await fetchModify(props);

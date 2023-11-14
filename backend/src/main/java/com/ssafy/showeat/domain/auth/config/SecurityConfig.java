@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .antMatchers("/api/payments/**").permitAll()
                 .antMatchers("/api/funding/**").permitAll()
                 .antMatchers("/api/business/seller/**").permitAll()
+                .antMatchers("/api/coupon/**").permitAll()
                 .antMatchers("/api/review").permitAll()
                 .anyRequest().authenticated();
 
