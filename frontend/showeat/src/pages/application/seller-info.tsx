@@ -36,7 +36,6 @@ const ButtonWrapper = styled("div")`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 0.5em;
 `;
 
 const BusinessRegistrationWrapper = styled("div")`
@@ -55,7 +54,7 @@ const InputBox = styled("div")`
 
 declare global {
     interface Window {
-        daum: any;
+        daum: unknown;
     }
 }
 
