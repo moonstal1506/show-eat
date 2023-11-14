@@ -1,5 +1,5 @@
 import { FetchProps } from "@customTypes/apiProps";
-import { fetchModify } from "@utils/api";
+import { fetchModify, fetchGet } from "@utils/api";
 
 const postRequestPayments = async (
     userId: number,
@@ -22,4 +22,22 @@ const postRequestPayments = async (
     return result;
 };
 
-export default postRequestPayments;
+const getRequestPaymentApproval = async (
+    paymentType: string,
+    orderId: string,
+    paymentKey: string,
+    amount: number,
+) => {
+    const props: FetchProps = {
+        url: `payments/request/success`,
+        method: "GET",
+        isAuth: true,
+        params: { paymentType, orderId, paymentKey, amount: amount.toString() },
+    };
+
+    const result = await fetchGet(props);
+
+    return result;
+};
+
+export { postRequestPayments, getRequestPaymentApproval };
