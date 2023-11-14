@@ -128,7 +128,7 @@ public class Business extends BaseDateEntity {
 		return RegistrationResponseDto.builder()
 			.businessId(businessId)
 			.businessName(businessName)
-			.businessNumber(Integer.parseInt(businessNumber))
+			.businessNumber(businessNumber)
 			.businessAddress(businessAddress)
 			.businessPhone(businessPhone)
 			.businessCeo(businessCeo)
