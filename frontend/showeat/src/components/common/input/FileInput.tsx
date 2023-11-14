@@ -3,7 +3,7 @@ import { changeFontWeight } from "@utils/format";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { SetStateAction, useRef } from "react";
-import { pathSellerImg } from "@apis/seller";
+import { patchSellerImg } from "@apis/seller";
 import { TextButton } from "../button";
 
 // ----------------------------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ function FileInput({
             if (fileList.length + uploadedFiles.length <= count) {
                 setUploadedFiles([...uploadedFiles, ...fileList]);
                 if (modifyProfile) {
-                    pathSellerImg(fileList).then((result) => {
+                    patchSellerImg(fileList).then((result) => {
                         console.log(result);
                         setUploadedFiles([]);
                     });
