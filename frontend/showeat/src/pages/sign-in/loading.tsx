@@ -49,6 +49,8 @@ function SignInLoading() {
                     userBusiness,
                     userMoney,
                     userPhone,
+                    credentialId,
+                    userEmail,
                     visited,
                     businessId,
                 } = userResult.data;
@@ -63,10 +65,10 @@ function SignInLoading() {
                     userBusiness,
                     userBusinessId: businessId,
                     userMoney,
-                    userPhone,
-                    visited,
                     credentialId,
                     userEmail,
+                    userPhone,
+                    visited,
                 });
                 if (userBusiness) {
                     getBusinessInfo(businessId).then((sellerResult) => {

@@ -71,6 +71,8 @@ public class User extends BaseTimeEntity {
             .visited(visited)
             .credentialId(credential.getCredentialId())
             .userEmail(credential.getEmail())
+            .visited(visited)
+            .businessId(business == null ? 0L : business.getBusinessId())
             .build();
     }
     //닉네임 수정
