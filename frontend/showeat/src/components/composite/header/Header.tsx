@@ -3,6 +3,7 @@ import { deleteCookie, getCookie } from "cookies-next";
 import { IconButton, TextButton } from "@components/common/button";
 import Image from "next/image";
 import { patchLogout } from "@apis/auth";
+import getNotification from "@apis/notification";
 import ProfileBox from "@/components/composite/profileBox";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -87,6 +88,26 @@ function Header() {
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
 
     // Function for Handling Logout
+    const handleNotification = () => {
+        getNotification().then((res) => {
+            console.log(res);
+        });
+    };
+    // const handleBookmark = (funding: FundingType) => {
+    //     postBookmark(funding.fundingId.toString()).then((res) => {
+    //         if (res.statusCode === 200) {
+    //             setFundingData(
+    //                 fundingData.map((item) =>
+    //                     item.fundingId === funding.fundingId
+    //                         ? { ...item, fundingIsBookmark: !item.fundingIsBookmark }
+    //                         : item,
+    //                 ),
+    //             );
+    //         }
+    //     });
+    // };
+
+    // Function for Handling Logout
     const handleLogout = () => {
         const accessToken = getCookie("access-token");
         patchLogout(user.userId, accessToken).then(() => {
@@ -150,7 +171,7 @@ function Header() {
                     <>
                         <IconButton
                             width="30"
-                            onClick={() => {}}
+                            onClick={handleNotification}
                             source="/assets/icons/alarm-read-icon.svg"
                             alternative="alarm-read-icon"
                         />
