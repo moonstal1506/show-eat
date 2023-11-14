@@ -90,16 +90,21 @@ function MyFundings() {
 
     const fetchFundingData = () => {
         getUserFundings(page).then((data) => {
-            if (data.data.content && data.data.content.length > 0) {
-                const isLastPage: boolean = data.data.last;
-                const fundingList: FundingType[] = data.data.content || [];
-                if (page === 0) {
-                    setFundingData(fundingList);
-                    setHasMorePage(!isLastPage);
-                } else {
-                    setFundingData([...fundingData, ...fundingList]);
-                    setHasMorePage(!isLastPage);
+            if (data.length > 0) {
+                if (data.data.content && data.data.content.length > 0) {
+                    const isLastPage: boolean = data.data.last;
+                    const fundingList: FundingType[] = data.data.content || [];
+                    if (page === 0) {
+                        setFundingData(fundingList);
+                        setHasMorePage(!isLastPage);
+                    } else {
+                        setFundingData([...fundingData, ...fundingList]);
+                        setHasMorePage(!isLastPage);
+                    }
                 }
+            } else {
+                setFundingData([]);
+                setHasMorePage(false);
             }
         });
     };
