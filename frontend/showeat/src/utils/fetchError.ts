@@ -1,6 +1,9 @@
 /* Function for Handling Error */
 function handleFetchError(statusCode: number) {
     switch (statusCode) {
+        case 401:
+            // Unauthorized
+            return 401;
         case 430:
             return "유효하지 않은 토큰입니다.";
         case 431:
