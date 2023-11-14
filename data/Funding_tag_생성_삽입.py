@@ -16,12 +16,12 @@ with open('funding.csv', 'r') as funding_file:
 fake = Faker('ko_KR')
 
 funding_tag_data = []
-for funding in funding_data:
+for fundingId in range(2,562):
     for i in range(random.randint(1, 3)):
-        funding_id = fake.pyint(min_value=600, max_value=1100)
+        # funding_id = fake.pyint(min_value=600, max_value=1100)
         row = {
             'funding_tag': fake.word(),
-            'funding_id': funding_id,
+            'funding_id': fundingId,
             'created_date' : datetime.now(),
             'modified_date' : datetime.now()
         }
