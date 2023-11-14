@@ -168,7 +168,7 @@ function SellerInfo({
     useEffect(() => {
         const loadDaumPostcode = () => {
             const script = document.createElement("script");
-            script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+            script.src = "https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js";
             // script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"; 로컬
             script.async = true;
             document.body.appendChild(script);
