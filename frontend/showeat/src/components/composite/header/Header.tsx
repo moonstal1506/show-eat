@@ -13,6 +13,13 @@ import useUserState from "@hooks/useUserState";
 
 // ----------------------------------------------------------------------------------------------------
 
+export interface Notification {
+    fundingId: number;
+    notificationId: number;
+    notificationMessage: string;
+    notificationType: "COUPON_CREATE" | "COUPON_DEADLINE" | "FUNDING_DEADLINE" | "FUNDING_FAIL";
+}
+
 /* Style */
 const HeaderContainer = styled("div")`
     // Position Attribute
@@ -78,6 +85,77 @@ const ButtonWrapper = styled("div")`
     cursor: pointer;
 `;
 
+const NotificationContainer = styled("div")`
+    width: 250px;
+    height: 250px;
+    border-radius: 20px;
+    border: 1px solid #000;
+    background: #fff;
+    display: flex;
+    position: relative;
+    top: 150px;
+    left: 270px;
+`;
+
+const NotificationListBox = styled("div")`
+    width: 220px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-right: 1px solid rgba(0, 0, 0, 0.33);
+    border-left: 1px solid rgba(0, 0, 0, 0.33);
+    overflow-y: auto;
+    flex-shrink: 0;
+    overflow-x: hidden;
+`;
+
+const NotificationBox = styled("div")`
+    display: flex;
+    width: 424px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    margin: 5px 10px;
+`;
+
+const NotificationTitleWrapper = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 20px;
+`;
+
+const NotificationMessageWrapper = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 20px;
+`;
+
+const NotificationWrapper = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 20px;
+    height: 100%;
+    align-items: center;
+    margin-left: 50px;
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Header Component */
@@ -86,26 +164,17 @@ function Header() {
     const router = useRouter();
     const [user, setUser] = useUserState();
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
+    const [isNotificationVisible, setIsNotificationVisible] = useState<boolean>(false);
+    const [participatingFunding, setParticipatingFunding] = useState<Notification[]>([]);
+    const [bookmarkFunding, setBookmarkFunding] = useState<Notification[]>([]);
 
     // Function for Handling Logout
     const handleNotification = () => {
         getNotification().then((res) => {
-            console.log(res);
+            setParticipatingFunding(res.data.participatingFunding);
+            setBookmarkFunding(res.data.bookmarkFunding);
         });
     };
-    // const handleBookmark = (funding: FundingType) => {
-    //     postBookmark(funding.fundingId.toString()).then((res) => {
-    //         if (res.statusCode === 200) {
-    //             setFundingData(
-    //                 fundingData.map((item) =>
-    //                     item.fundingId === funding.fundingId
-    //                         ? { ...item, fundingIsBookmark: !item.fundingIsBookmark }
-    //                         : item,
-    //                 ),
-    //             );
-    //         }
-    //     });
-    // };
 
     // Function for Handling Logout
     const handleLogout = () => {
@@ -155,6 +224,26 @@ function Header() {
         setHasAccessToken(Boolean(getCookie("access-token")) && user.userId !== 0);
     }, [user]);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const notificationContainer = document.getElementById("notification-container");
+
+            if (
+                notificationContainer &&
+                !notificationContainer.contains(event.target as Node) &&
+                isNotificationVisible
+            ) {
+                setIsNotificationVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isNotificationVisible]);
+
     return (
         <HeaderContainer>
             <LogoImageWrapper onClick={() => router.push("/")}>
@@ -169,9 +258,53 @@ function Header() {
             <NavigationContainer isAuth={hasAccessToken}>
                 {hasAccessToken ? (
                     <>
+                        {isNotificationVisible && (
+                            <NotificationContainer id="notification-container">
+                                <NotificationListBox>
+                                    {participatingFunding.length === 0 &&
+                                    bookmarkFunding.length === 0 ? (
+                                        <NotificationWrapper>
+                                            읽지 않은 알림이 없습니다
+                                        </NotificationWrapper>
+                                    ) : (
+                                        <>
+                                            {participatingFunding.length > 0 && (
+                                                <NotificationBox>
+                                                    <NotificationTitleWrapper>
+                                                        참여한 펀딩
+                                                    </NotificationTitleWrapper>
+                                                    {participatingFunding.map(
+                                                        (notification, index) => (
+                                                            <NotificationMessageWrapper key={index}>
+                                                                {notification.notificationMessage}
+                                                            </NotificationMessageWrapper>
+                                                        ),
+                                                    )}
+                                                </NotificationBox>
+                                            )}
+                                            {bookmarkFunding.length > 0 && (
+                                                <NotificationBox>
+                                                    <NotificationTitleWrapper>
+                                                        좋아요한 펀딩
+                                                    </NotificationTitleWrapper>
+                                                    {bookmarkFunding.map((notification, index) => (
+                                                        <NotificationMessageWrapper key={index}>
+                                                            {notification.notificationMessage}
+                                                        </NotificationMessageWrapper>
+                                                    ))}
+                                                </NotificationBox>
+                                            )}
+                                        </>
+                                    )}
+                                </NotificationListBox>
+                            </NotificationContainer>
+                        )}
                         <IconButton
                             width="30"
-                            onClick={handleNotification}
+                            onClick={() => {
+                                handleNotification();
+                                setIsNotificationVisible(!isNotificationVisible);
+                            }}
                             source="/assets/icons/alarm-read-icon.svg"
                             alternative="alarm-read-icon"
                         />
