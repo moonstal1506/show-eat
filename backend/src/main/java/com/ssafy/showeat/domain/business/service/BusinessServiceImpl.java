@@ -190,7 +190,9 @@ public class BusinessServiceImpl implements BusinessService {
 		//사업자 등록
 		String businessRegistrationUrl = s3Service.uploadBusinessImageToS3(businessRegistration);
 		if (loginUser.getBusiness() == null) {
-			businessRepository.save(registrationRequestDto.toEntity(businessRegistrationUrl, loginUser));
+			Business business = businessRepository.save(
+				registrationRequestDto.toEntity(businessRegistrationUrl, loginUser));
+			loginUser.updateBusiness(business);
 		} else {
 			loginUser.getBusiness().updateBusiness(registrationRequestDto, businessRegistrationUrl);
 		}

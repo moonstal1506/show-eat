@@ -128,7 +128,7 @@ const NotificationTitleWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 20px;
 `;
@@ -138,7 +138,7 @@ const NotificationMessageWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 20px;
 `;
@@ -148,12 +148,12 @@ const NotificationWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 20px;
     height: 100%;
     align-items: center;
-    margin-left: 50px;
+    margin-left: 30px;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -196,7 +196,7 @@ function Header() {
             return (
                 <TextButton
                     width="150px"
-                    onClick={() => router.push("/service")}
+                    onClick={() => router.push("/application/registration")}
                     text="셀러 등록"
                     curve="round"
                 />
