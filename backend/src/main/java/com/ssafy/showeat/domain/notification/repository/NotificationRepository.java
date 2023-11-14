@@ -1,7 +1,8 @@
 package com.ssafy.showeat.domain.notification.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,8 +17,8 @@ import com.ssafy.showeat.domain.user.entity.User;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
 	@EntityGraph(attributePaths = "funding")
-	Page<Notification> findNotificationWithFundingByUserAndNotificationIsChecked(
-		User user, boolean isChecked, PageRequest of);
+	List<Notification> findNotificationWithFundingByUserAndNotificationIsChecked(
+		User user, boolean isChecked);
 
 	@Modifying
 	@Query("UPDATE Notification n "

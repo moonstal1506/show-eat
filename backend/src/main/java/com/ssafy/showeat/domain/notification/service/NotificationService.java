@@ -1,9 +1,10 @@
 package com.ssafy.showeat.domain.notification.service;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 import com.ssafy.showeat.domain.notification.dto.response.NotificationListResponseDto;
+import com.ssafy.showeat.domain.user.entity.User;
 
 public interface NotificationService {
-	Page<NotificationListResponseDto> getNotificationListByIsChecked(Long userId, int page);
+	List<NotificationListResponseDto> getNotificationListByIsChecked(User user);
 }

@@ -1,15 +1,14 @@
 package com.ssafy.showeat.domain.notification.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.showeat.domain.notification.dto.response.NotificationListResponseDto;
 import com.ssafy.showeat.domain.notification.repository.NotificationRepository;
 import com.ssafy.showeat.domain.user.entity.User;
-import com.ssafy.showeat.domain.user.repository.UserRepository;
-import com.ssafy.showeat.global.exception.NotExistUserException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,21 +19,24 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationServiceImpl implements NotificationService {
 
 	private final NotificationRepository notificationRepository;
-	private final UserRepository userRepository;
 
+	@Override
 	@Transactional
-	public Page<NotificationListResponseDto> getNotificationListByIsChecked(Long userId, int page) {
+	public List<NotificationListResponseDto> getNotificationListByIsChecked(User user) {
 		log.info("NotificationService_getNotificationListByIsChecked || 유저가 읽지 않은 알림 조회");
-		User user = userRepository.findById(userId).orElseThrow(NotExistUserException::new);
 
 		// 읽지 않은 알람 조회
-		Page<NotificationListResponseDto> notificationListResponseDtos = notificationRepository
-			.findNotificationWithFundingByUserAndNotificationIsChecked(user, false, PageRequest.of(page, 6))
-			.map(notification -> notification.toNotificationListResponseDto());
+		List<NotificationListResponseDto> notificationListResponseDtos = notificationRepository
+			.findNotificationWithFundingByUserAndNotificationIsChecked(user, false)
+			.stream()
+			.map(notification -> notification.toNotificationListResponseDto())
+			.collect(Collectors.toList());
+
+		System.out.println("notificationListResponseDtos = " + notificationListResponseDtos);
+
 
 		// 읽지 않은 알람 읽음 처리
 		notificationRepository.updateCheckedState(user);
-
 		return notificationListResponseDtos;
 	}
 
