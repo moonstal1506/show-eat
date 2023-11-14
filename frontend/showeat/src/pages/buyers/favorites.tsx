@@ -95,10 +95,13 @@ function Favorites() {
                         setFundingData(fundingList);
                         setHasMorePage(!isLastPage);
                     }
+                } else {
+                    setFundingData([...fundingData, ...fundingList]);
+                    setHasMorePage(!isLastPage);
                 }
             } else {
-                setFundingData([...fundingData, ...fundingList]);
-                setHasMorePage(!isLastPage);
+                setFundingData([]);
+                setHasMorePage(false);
             }
         });
     };
