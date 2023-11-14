@@ -21,6 +21,7 @@ import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.funding.entity.UserFunding;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.repository.UserRepository;
+import com.ssafy.showeat.global.exception.ImpossibleCouponUseException;
 import com.ssafy.showeat.global.exception.InvalidCouponTypeException;
 import com.ssafy.showeat.global.exception.NotExistCouponException;
 import com.ssafy.showeat.global.exception.NotExistUserException;
@@ -77,6 +78,18 @@ public class CouponServiceImpl implements CouponService {
 		if (coupon.getCouponPrice() == 0) {
 			coupon.updateStatus(CouponStatus.USED);
 		}
+	}
+
+	@Override
+	@Transactional
+	public void updateCouponStatusByOwner(Long couponId, User user) {
+		log.info("CouponService_updateCouponStatusByOwner || 업주가 쿠폰 사용 처리");
+		Coupon coupon = couponRepository.findById(couponId).orElseThrow(NotExistCouponException::new);
+
+		if(!user.getUserId().equals(coupon.getFunding().getBusiness().getUser().getUserId()))
+			throw new ImpossibleCouponUseException();
+
+		coupon.updateStatus(CouponStatus.USED);
 	}
 
 	@Override
