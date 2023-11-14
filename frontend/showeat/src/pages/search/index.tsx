@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/css";
 import MainLayout from "@layouts/MainLayout";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import withAuth from "@libs/withAuth";
 import SearchBar from "@components/composite/searchBar/SearchBar";
 import { TextButton, ScrollButton } from "@components/common/button";
@@ -12,16 +12,17 @@ import { CheckBox, TextInput } from "@components/common/input";
 import { GetServerSideProps } from "next";
 import addressList from "@configs/addressList";
 import menuCategoryList from "@configs/menuCategoryList";
-import { searchFundings } from "@apis/fundings";
+import { getCategoryFundings, searchFundings } from "@apis/fundings";
 import { FundingType } from "@customTypes/apiProps";
 import postBookmark from "@/apis/bookmark";
+import Modal from "@components/composite/modal";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Type */
 interface SearchParams {
-    keyword?: string | undefined;
-    category?: string[] | undefined;
+    keyword?: string;
+    category?: string[] | string | undefined;
     address?: string[] | undefined;
     searchType?: string[] | undefined;
     sortType?: string | undefined;
@@ -29,9 +30,19 @@ interface SearchParams {
     max?: number | undefined;
 }
 
+interface SearchParams {
+    newKeyword?: string | undefined;
+    newCategory?: string[] | undefined;
+    newAddress?: string[] | undefined;
+    newSearchType?: string[] | undefined;
+    newSortType?: string | undefined;
+    newMin?: number | undefined;
+    newMax?: number | undefined;
+}
+
 interface SearchResultDataProps {
     searchResultData: FundingType[];
-    keyword?: string | undefined;
+    keyword?: string;
     category?: string[] | undefined;
     address?: string[] | undefined;
     min?: number | undefined;
@@ -173,6 +184,13 @@ const FilterTitleWrapper = styled("span")`
     font-weight: 700;
 `;
 
+const FilterHelpWrapper = styled("span")`
+    padding-left: 1em;
+
+    font-size: 14px;
+    font-weight: 500;
+`;
+
 const PriceRangeContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -306,26 +324,66 @@ const MoreButtonWrapper = styled("div")`
     padding-top: 2em;
 `;
 
+const MultiModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const MultiModalDescriptionWrapper = styled("span")`
+    font-size: 18px;
+    font-weight: 700;
+
+    padding: 2em 0;
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Server Side Rendering */
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    // States and Variables
-    const { keyword, category, address, min, max, searchType, sortType } =
-        context.query as SearchParams;
+    const {
+        keyword = "",
+        category = [
+            "KOREAN",
+            "CHINESE",
+            "JAPANESE_SUSHI",
+            "WESTERN",
+            "CHICKEN_BURGER",
+            "ASIAN",
+            "SNACKS_LATE_NIGHT",
+            "CAFE_DESSERT",
+        ],
+        address = addressList,
+        min = 0,
+        max = 100000000,
+        searchType = ["BUSINESS_NAME", "FUNDING_MENU", "FUNDING_TAG"],
+        sortType = "POPULARITY",
+    } = context.query as SearchParams;
 
-    const result = await searchFundings({
-        keyword,
-        category,
-        address,
-        min,
-        max,
-        searchType,
-        sortType,
-        page: 0,
-    });
-    const searchResultData = result.data.content || [];
-    const isLast = result.data.last;
+    const result =
+        keyword && keyword !== ""
+            ? await searchFundings({
+                  keyword,
+                  category,
+                  address,
+                  min,
+                  max,
+                  searchType,
+                  sortType,
+                  page: 0,
+              })
+            : await getCategoryFundings({
+                  category: typeof category === "string" ? category : category[0],
+                  sortType,
+                  page: 0,
+              });
+
+    const searchResultData = (result.data && result.data.content) || [];
+    const isLast = result.data && result.data.last !== false;
 
     return {
         props: {
@@ -344,7 +402,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Search Component */
+/* Multi Modal Component */
+function MultiModal(errorMessage: string) {
+    return (
+        <MultiModalContainer>
+            <MultiModalDescriptionWrapper>{errorMessage}</MultiModalDescriptionWrapper>
+        </MultiModalContainer>
+    );
+}
+
+/* Search Page */
 function Search({
     searchResultData,
     keyword,
@@ -363,7 +430,6 @@ function Search({
         { type: "LOW_PRICE", text: "💸 저렴한 가격" },
         { type: "HIGH_DISCOUNT_RATE", text: "📈 높은 할인율" },
     ];
-
     const [filterTypes, setFilterTypes] = useState(
         [
             { value: "BUSINESS_NAME", text: "상호명", isChecked: false },
@@ -374,46 +440,107 @@ function Search({
             isChecked: (searchType && searchType.includes(one.value)) || false,
         })),
     );
-
     const [filterCategory, setFilterCategory] = useState(
         menuCategoryList.map((one) => ({
             ...one,
-            isChecked: (category && category.includes(one.value)) || false,
+            isChecked: (category && category.includes(one.id)) || false,
         })),
     );
-
     const [filterAddress, setFilterAddress] = useState(
         addressList.map((one) => ({
             address: one,
             isChecked: (address && address.includes(one)) || false,
         })),
     );
-
     const [fundingDatas, setFundingDatas] = useState<FundingType[]>(searchResultData);
     const [isFilterd, setIsFiltered] = useState<boolean>(false);
     const [isSelectedSort, setIsSelectedSort] = useState<string>(sortType || "POPULARITY");
     const [pageNum, setPageNum] = useState(1);
     const [isLastPage, setIsLastPage] = useState(isLast);
+    const [isChange, setIsChange] = useState(false);
     const [minMoney, setMinMoney] = useState(min);
     const [maxMoney, setMaxMoney] = useState(max);
+    const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        setFundingDatas(searchResultData);
+        setFilterTypes(
+            [
+                { value: "BUSINESS_NAME", text: "상호명", isChecked: false },
+                { value: "FUNDING_MENU", text: "펀딩 메뉴", isChecked: false },
+                { value: "FUNDING_TAG", text: "검색용 태그", isChecked: false },
+            ].map((one) => ({
+                ...one,
+                isChecked: (searchType && searchType.includes(one.value)) || false,
+            })),
+        );
+        setFilterCategory(
+            menuCategoryList.map((one) => ({
+                ...one,
+                isChecked: (category && category.includes(one.id)) || false,
+            })),
+        );
+        setFilterAddress(
+            addressList.map((one) => ({
+                address: one,
+                isChecked: (address && address.includes(one)) || false,
+            })),
+        );
+        setIsSelectedSort(sortType || "POPULARITY");
+        setMinMoney(min);
+        setMaxMoney(max);
+        setPageNum(0);
+    }, [searchResultData, keyword, category, address, min, max, searchType, sortType]);
 
     const handleSort = (type: string) => {
-        searchFundings({
-            keyword,
-            category,
-            address,
-            min,
-            max,
-            searchType,
-            sortType: type,
-            page: 0,
-        }).then((res) => {
-            if (res.statusCode === 200) {
-                setFundingDatas(res.data.content);
-                setIsSelectedSort(type);
-                setPageNum(1);
-            }
-        });
+        if (keyword && keyword !== "") {
+            searchFundings({
+                keyword,
+                category,
+                address,
+                min,
+                max,
+                searchType,
+                sortType: type,
+                page: 0,
+            }).then((res) => {
+                if (res.statusCode === 200) {
+                    if (res.data.last) {
+                        setIsLastPage(true);
+                    }
+                    setFundingDatas(res.data.content);
+                    setIsSelectedSort(type);
+                    setPageNum(1);
+                } else if (res === 520) {
+                    setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                } else {
+                    setErrorMessage(res);
+                    setIsMultiModalOpen(true);
+                }
+            });
+        } else if (category) {
+            getCategoryFundings({
+                category: typeof category === "string" ? category : category[0],
+                sortType: type,
+                page: 0,
+            }).then((res) => {
+                if (res.statusCode === 200) {
+                    if (res.data.last) {
+                        setIsLastPage(true);
+                    }
+                    setFundingDatas(res.data.content);
+                    setIsSelectedSort(type);
+                    setPageNum(1);
+                } else if (res === 520) {
+                    setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                } else {
+                    setErrorMessage(res);
+                    setIsMultiModalOpen(true);
+                }
+            });
+        }
+        setIsChange(true);
     };
 
     const handleCard = (fundingId: number) => {
@@ -430,31 +557,61 @@ function Search({
                     return data;
                 });
                 setFundingDatas(updatedFundingDatas);
+            } else if (res === 520) {
+                setErrorMessage("알 수 없는 오류가 발생했습니다.");
+            } else {
+                setErrorMessage(res);
+                setIsMultiModalOpen(true);
             }
         });
+        setIsChange(true);
     };
 
     const handleMoreButton = () => {
         if (!isLastPage) {
-            searchFundings({
-                keyword,
-                category,
-                address,
-                min,
-                max,
-                searchType,
-                sortType,
-                page: pageNum,
-            }).then((res) => {
-                if (res.data.last) {
-                    setIsLastPage(true);
-                }
-                setFundingDatas((prev) => {
-                    return [...prev, res.data.content];
+            if (keyword && keyword !== "") {
+                searchFundings({
+                    keyword,
+                    category,
+                    address,
+                    min,
+                    max,
+                    searchType,
+                    sortType,
+                    page: pageNum,
+                }).then((res) => {
+                    if (res.data.last) {
+                        setIsLastPage(true);
+                    }
+                    setFundingDatas((prev) => {
+                        return [...prev, ...res.data.content];
+                    });
+                    setPageNum((prev) => prev + 1);
                 });
-                setPageNum((prev) => prev + 1);
-            });
+            } else if (category) {
+                getCategoryFundings({
+                    category: typeof category === "string" ? category : category[0],
+                    sortType,
+                    page: 0,
+                }).then((res) => {
+                    if (res.data.last) {
+                        setIsLastPage(true);
+                    }
+                    if (res.statusCode === 200) {
+                        setFundingDatas((prev) => {
+                            return [...prev, ...res.data.content];
+                        });
+                        setPageNum((prev) => prev + 1);
+                    } else if (res === 520) {
+                        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                    } else {
+                        setErrorMessage(res);
+                        setIsMultiModalOpen(true);
+                    }
+                });
+            }
         }
+        setIsChange(true);
     };
 
     const changeMinMoney = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -472,45 +629,66 @@ function Search({
     };
 
     const handleFilteredSearch = () => {
-        router.push(`/search`);
-        searchFundings({
-            keyword,
-            category: filterCategory.filter((one) => one.isChecked).map((one) => one.value),
-            address: filterAddress.filter((one) => one.isChecked).map((one) => one.address),
-            min: minMoney,
-            max: maxMoney,
-            searchType: filterTypes.filter((one) => one.isChecked).map((one) => one.value),
-            sortType: isSelectedSort,
-            page: 0,
-        }).then((res) => {
-            if (res.statusCode === 200) {
-                if (res.data.last) {
-                    setIsLastPage(true);
+        if (keyword && keyword !== "") {
+            searchFundings({
+                keyword,
+                category: filterCategory.filter((one) => one.isChecked).map((one) => one.id),
+                address: filterAddress.filter((one) => one.isChecked).map((one) => one.address),
+                min: minMoney,
+                max: maxMoney,
+                searchType: filterTypes.filter((one) => one.isChecked).map((one) => one.value),
+                sortType: isSelectedSort,
+                page: 0,
+            }).then((res) => {
+                if (res.statusCode === 200) {
+                    if (res.data.last) {
+                        setIsLastPage(true);
+                    }
+                    setFundingDatas(res.data.content);
+                    setPageNum(1);
+                } else if (res === 520) {
+                    setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                } else {
+                    setErrorMessage(res);
+                    setIsMultiModalOpen(true);
                 }
-                setFundingDatas(res.data.content);
-                setPageNum(1);
-            }
-        });
+            });
+        }
+        setIsChange(true);
     };
 
     return (
         <SearchPageWrapper>
             <MainContentsContainer>
-                <SearchBar />
+                <SearchBar isChange={isChange} setIsChange={setIsChange} />
                 <SearchResultContainer>
                     <SearchHeaderContainer>
                         <SearchResultHeaderContainer>
                             <ResultTitleContainer>
-                                <ResultKeywordWrapper>커피</ResultKeywordWrapper>
+                                <ResultKeywordWrapper>
+                                    {keyword !== ""
+                                        ? keyword
+                                        : menuCategoryList.map((one) => {
+                                              if (typeof category === "string") {
+                                                  if (one.id === category) {
+                                                      return one.value;
+                                                  }
+                                              }
+                                              return null;
+                                          })}
+                                </ResultKeywordWrapper>
                                 <SearchResultWrapper>&nbsp; 검색 결과</SearchResultWrapper>
                             </ResultTitleContainer>
                             <ResultDescriptionWrapper>
-                                총 <ResultCountWrapper>125건</ResultCountWrapper>의 결과가
-                                검색되었어요!
+                                총{" "}
+                                <ResultCountWrapper>
+                                    {fundingDatas && fundingDatas.length}건
+                                </ResultCountWrapper>
+                                의 결과가 검색되었어요!
                             </ResultDescriptionWrapper>
                         </SearchResultHeaderContainer>
                         <FilterButtonContainer>
-                            {!isFilterd ? (
+                            {!isFilterd && keyword && keyword !== "" ? (
                                 <TextButton
                                     text="필터링"
                                     width="150px"
@@ -520,9 +698,9 @@ function Search({
                                 />
                             ) : (
                                 <TextButton
-                                    text="필터링"
+                                    text={keyword && keyword !== "" ? "필터링" : "검색어 필요"}
                                     width="150px"
-                                    fill="positive"
+                                    fill={keyword && keyword !== "" ? "positive" : "negative"}
                                     colorType="secondary"
                                     onClick={() => setIsFiltered(false)}
                                 />
@@ -533,7 +711,10 @@ function Search({
                         <FilterContainer>
                             <FilterSlideInContainer isFilterd={isFilterd}>
                                 <FilterOneContainer>
-                                    <FilterTitleWrapper>검색 조건</FilterTitleWrapper>
+                                    <FilterTitleWrapper>
+                                        검색 조건
+                                        <FilterHelpWrapper>최소 1개</FilterHelpWrapper>
+                                    </FilterTitleWrapper>
                                     <FilterBodyContainer>
                                         {filterTypes.map((filter) => (
                                             <CheckBox
@@ -557,7 +738,9 @@ function Search({
                                     </FilterBodyContainer>
                                 </FilterOneContainer>
                                 <FilterOneContainer>
-                                    <FilterTitleWrapper>메뉴 카테고리</FilterTitleWrapper>
+                                    <FilterTitleWrapper>
+                                        메뉴 카테고리<FilterHelpWrapper>최소 1개</FilterHelpWrapper>
+                                    </FilterTitleWrapper>
                                     <FilterBodyContainer>
                                         {filterCategory.map((filter) => (
                                             <CheckBox
@@ -581,7 +764,9 @@ function Search({
                                     </FilterBodyContainer>
                                 </FilterOneContainer>
                                 <FilterOneContainer>
-                                    <FilterTitleWrapper>펀딩 지역</FilterTitleWrapper>
+                                    <FilterTitleWrapper>
+                                        펀딩 지역<FilterHelpWrapper>최소 1개</FilterHelpWrapper>
+                                    </FilterTitleWrapper>
                                     <FilterBodyContainer>
                                         {filterAddress.map((filter) => (
                                             <CheckBox
@@ -694,6 +879,17 @@ function Search({
                 </SearchResultContainer>
             </MainContentsContainer>
             <ScrollButton width="40px" />
+            <Modal
+                childComponent={MultiModal(errorMessage)}
+                width="500px"
+                height="300px"
+                isOpen={isMultiModalOpen}
+                setIsOpen={setIsMultiModalOpen}
+                buttonType="close"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+            />
         </SearchPageWrapper>
     );
 }
