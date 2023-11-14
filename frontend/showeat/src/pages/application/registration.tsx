@@ -7,12 +7,26 @@ import SellerRegisterFailModal from "@/components/custom/modal/SellerRegisterFai
 import Modal from "@components/composite/modal";
 import { useRouter } from "next/router";
 import { postBusinessInfo } from "@apis/business";
+import LoadingSpinner from "@components/composite/loadingSpinner";
 import SellerInfo from "./seller-info";
 import OwnerInfo from "./owner-info";
 
 interface StepBoxProps {
     backgroundColor: string;
 }
+
+const LoadingContainer = styled("div")`
+    // Layout Attribute
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3em;
+
+    // Box Model Attribute
+    width: 100vw;
+    height: 100vh;
+`;
 
 const HeaderContainer = styled("div")`
     display: flex;
@@ -81,7 +95,8 @@ function Registration() {
     const [fileName, setFileName] = useState<string>("");
     const [formData, setFormData] = useState<FormData>(new FormData());
     const [, setIsModalOpen] = useState<boolean>(false);
-    const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleCeoChange = (event: ChangeEvent<HTMLInputElement>) => {
         setCeo(event.target.value.trim());
@@ -128,10 +143,11 @@ function Registration() {
     };
 
     const openModal = () => {
-        setReviewModalOpen(true);
+        setModalOpen(true);
     };
 
     const handleButtonClick = () => {
+        setIsLoading(true);
         console.log(fileName);
         const newBusinessAddress = `${zonecode} ${businessAddress} ${businessAddressDetail}`;
         postBusinessInfo(
@@ -144,6 +160,7 @@ function Registration() {
             businessPhone,
             formData,
         ).then((res) => {
+            setIsLoading(false);
             if (res.data) {
                 router.replace("/application/account-info");
             }
@@ -156,47 +173,59 @@ function Registration() {
 
     return (
         <>
-            <Modal
-                width="auto"
-                height="auto"
-                isOpen={reviewModalOpen}
-                setIsOpen={setReviewModalOpen}
-                childComponent={<SellerRegisterFailModal />}
-                buttonType="close"
-                buttonWidth="150px"
-            />
-            <HeaderContainer>
-                <HeaderWrapper>셀러 계정 신청</HeaderWrapper>
-                <ProgressBox>
-                    <StepBox backgroundColor="#fdb757" />
-                    <StepLine />
-                    <StepBox backgroundColor="black" />
-                    <StepLine />
-                    <StepBox backgroundColor="black" />
-                </ProgressBox>
-            </HeaderContainer>
-            <ResultBox>
-                <OwnerInfo onCeoChange={handleCeoChange} onEmailChange={handleEmailChange} />
-                <SellerInfo
-                    onBusinessNameChange={handleBusinessNameChange}
-                    onStartDateChange={handleStartDateChange}
-                    onBusinessNumberChange={handleBusinessNumberChange}
-                    onBusinessAddressChange={handleBusinessAddressChange}
-                    onZonecodeChange={handleZonecodeChange}
-                    onBusinessAddressDetailChange={handleBusinessAddressDetailChange}
-                    onBusinessPhoneChange={handleBusinessPhoneChange}
-                    onFileNameChange={handleFileNameChange}
-                    onFormDataChange={handleFormDataChange}
-                />
-                <ButtonWrapper>
-                    <TextButton
-                        type="submit"
-                        width="200px"
-                        text="다음"
-                        onClick={handleButtonClick}
+            {isLoading ? (
+                <LoadingContainer>
+                    <LoadingSpinner />
+                </LoadingContainer>
+            ) : (
+                <>
+                    <Modal
+                        width="auto"
+                        height="auto"
+                        isOpen={modalOpen}
+                        setIsOpen={setModalOpen}
+                        childComponent={<SellerRegisterFailModal />}
+                        buttonType="close"
+                        buttonWidth="150px"
                     />
-                </ButtonWrapper>
-            </ResultBox>
+                    <HeaderContainer>
+                        <HeaderWrapper>셀러 계정 신청</HeaderWrapper>
+                        <ProgressBox>
+                            <StepBox backgroundColor="#fdb757" />
+                            <StepLine />
+                            <StepBox backgroundColor="black" />
+                            <StepLine />
+                            <StepBox backgroundColor="black" />
+                        </ProgressBox>
+                    </HeaderContainer>
+                    <ResultBox>
+                        <OwnerInfo
+                            onCeoChange={handleCeoChange}
+                            onEmailChange={handleEmailChange}
+                        />
+                        <SellerInfo
+                            onBusinessNameChange={handleBusinessNameChange}
+                            onStartDateChange={handleStartDateChange}
+                            onBusinessNumberChange={handleBusinessNumberChange}
+                            onBusinessAddressChange={handleBusinessAddressChange}
+                            onZonecodeChange={handleZonecodeChange}
+                            onBusinessAddressDetailChange={handleBusinessAddressDetailChange}
+                            onBusinessPhoneChange={handleBusinessPhoneChange}
+                            onFileNameChange={handleFileNameChange}
+                            onFormDataChange={handleFormDataChange}
+                        />
+                        <ButtonWrapper>
+                            <TextButton
+                                type="submit"
+                                width="200px"
+                                text="다음"
+                                onClick={handleButtonClick}
+                            />
+                        </ButtonWrapper>
+                    </ResultBox>
+                </>
+            )}
+            ;
         </>
     );
 }
