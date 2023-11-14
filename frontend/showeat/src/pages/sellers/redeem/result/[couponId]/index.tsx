@@ -12,6 +12,7 @@ import Modal from "@components/composite/modal";
 import { formatMoney } from "@/utils/format";
 import { TextInput } from "@/components/common/input";
 import useUserState from "@/hooks/useUserState";
+import Head from "next/head";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -332,10 +333,16 @@ function MultiModal(isStatus: string) {
     );
 }
 
-function SuccessModal(setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+function SuccessModal() {
+    // setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>
     const router = useRouter();
     const goRedeem = () => {
         router.replace("/sellers/redeem");
+    };
+    const closeWindow = () => {
+        if (typeof window !== "undefined") {
+            window.close();
+        }
     };
     return (
         <MultiModalContainer>
@@ -345,10 +352,10 @@ function SuccessModal(setIsSuccessModalOpen: React.Dispatch<React.SetStateAction
             <SuccessModalButtonContainer>
                 <TextButton text="QR 페이지로" width="180px" height="40px" onClick={goRedeem} />
                 <TextButton
-                    text="닫기"
+                    text="페이지 나가기"
                     width="180px"
                     height="40px"
-                    onClick={() => setIsSuccessModalOpen(false)}
+                    onClick={() => closeWindow()}
                 />
             </SuccessModalButtonContainer>
         </MultiModalContainer>
@@ -465,102 +472,108 @@ function RedeemResult() {
     };
 
     return (
-        <RedeemResultContainer>
-            <TitleContainer>
-                <TitleWrapper>발급한 쿠폰으로 결제하기</TitleWrapper>
-                <DescriptionWrapper>발급한 쿠폰 정보가 맞는지 확인해주세요.</DescriptionWrapper>
-            </TitleContainer>
-            <ContentContainer>
-                <SellerInfoContainer>
-                    <SellerNameContainer>야미화니 커피</SellerNameContainer>
-                    <MenuNameContainer>카페라떼</MenuNameContainer>
-                </SellerInfoContainer>
-                <TableContainer>
-                    <Table
-                        headers={tableHeaders}
-                        contents={tableContents}
-                        headerWidth="30%"
-                        gap="1em"
-                    />
-                </TableContainer>
-                {couponData?.couponType === "GIFTCARD" && (
-                    <MoneyInputContainer>
-                        <InputLabelWrapper htmlFor="use-money">사용 금액</InputLabelWrapper>
-                        <InputWrapper>
-                            <TextInput
-                                value={isUseMoney}
-                                width="100%"
-                                id="use-money"
-                                unit="원"
-                                required
-                                onChange={(e) => changeUseMoney(e)}
-                            />
-                        </InputWrapper>
-                    </MoneyInputContainer>
-                )}
-            </ContentContainer>
-            <ButtonContainer>
-                {user.userId ? (
-                    <TextButton
-                        text="쿠폰 결제"
-                        width="200px"
-                        height="50px"
-                        fontSize={20}
-                        onClick={handleUseCoupon}
-                    />
-                ) : (
-                    <TextButton
-                        text="로그인"
-                        width="200px"
-                        height="50px"
-                        fontSize={20}
-                        onClick={handleLogin}
-                    />
-                )}
+        <>
+            <Head>
+                <title>쿠폰 결제</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
+            <RedeemResultContainer>
+                <TitleContainer>
+                    <TitleWrapper>발급한 쿠폰으로 결제하기</TitleWrapper>
+                    <DescriptionWrapper>발급한 쿠폰 정보가 맞는지 확인해주세요.</DescriptionWrapper>
+                </TitleContainer>
+                <ContentContainer>
+                    <SellerInfoContainer>
+                        <SellerNameContainer>야미화니 커피</SellerNameContainer>
+                        <MenuNameContainer>카페라떼</MenuNameContainer>
+                    </SellerInfoContainer>
+                    <TableContainer>
+                        <Table
+                            headers={tableHeaders}
+                            contents={tableContents}
+                            headerWidth="30%"
+                            gap="1em"
+                        />
+                    </TableContainer>
+                    {couponData?.couponType === "GIFTCARD" && (
+                        <MoneyInputContainer>
+                            <InputLabelWrapper htmlFor="use-money">사용 금액</InputLabelWrapper>
+                            <InputWrapper>
+                                <TextInput
+                                    value={isUseMoney}
+                                    width="100%"
+                                    id="use-money"
+                                    unit="원"
+                                    required
+                                    onChange={(e) => changeUseMoney(e)}
+                                />
+                            </InputWrapper>
+                        </MoneyInputContainer>
+                    )}
+                </ContentContainer>
+                <ButtonContainer>
+                    {user.userId ? (
+                        <TextButton
+                            text="쿠폰 결제"
+                            width="200px"
+                            height="50px"
+                            fontSize={20}
+                            onClick={handleUseCoupon}
+                        />
+                    ) : (
+                        <TextButton
+                            text="로그인"
+                            width="200px"
+                            height="50px"
+                            fontSize={20}
+                            onClick={handleLogin}
+                        />
+                    )}
 
-                <TextButton
-                    text="취소"
-                    width="200px"
-                    height="50px"
-                    fill="negative"
-                    fontSize={20}
-                    onClick={() => router.back()}
+                    <TextButton
+                        text="취소"
+                        width="200px"
+                        height="50px"
+                        fill="negative"
+                        fontSize={20}
+                        onClick={() => router.back()}
+                    />
+                </ButtonContainer>
+                <Modal
+                    childComponent={MultiModal(isStatus)}
+                    width="500px"
+                    height="300px"
+                    isOpen={isMultiModalOpen}
+                    setIsOpen={setIsMultiModalOpen}
+                    buttonType="close"
+                    buttonWidth="200px"
+                    buttonHeight="50px"
+                    buttonFontSize={20}
                 />
-            </ButtonContainer>
-            <Modal
-                childComponent={MultiModal(isStatus)}
-                width="500px"
-                height="300px"
-                isOpen={isMultiModalOpen}
-                setIsOpen={setIsMultiModalOpen}
-                buttonType="close"
-                buttonWidth="200px"
-                buttonHeight="50px"
-                buttonFontSize={20}
-            />
-            <Modal
-                childComponent={LoginModal()}
-                width="500px"
-                height="300px"
-                isOpen={isLoginModalOpen}
-                setIsOpen={setIsLoginModalOpen}
-                buttonType="none"
-                buttonWidth="200px"
-                buttonHeight="50px"
-                buttonFontSize={20}
-            />
-            <Modal
-                childComponent={SuccessModal(setIsSuccessModalOpen)}
-                width="500px"
-                height="300px"
-                isOpen={isSuccessModalOpen}
-                setIsOpen={setIsSuccessModalOpen}
-                buttonType="none"
-                buttonWidth="200px"
-                buttonHeight="50px"
-                buttonFontSize={20}
-            />
-        </RedeemResultContainer>
+                <Modal
+                    childComponent={LoginModal()}
+                    width="500px"
+                    height="300px"
+                    isOpen={isLoginModalOpen}
+                    setIsOpen={setIsLoginModalOpen}
+                    buttonType="none"
+                    buttonWidth="200px"
+                    buttonHeight="50px"
+                    buttonFontSize={20}
+                />
+                <Modal
+                    childComponent={SuccessModal()}
+                    width="500px"
+                    height="300px"
+                    isOpen={isSuccessModalOpen}
+                    setIsOpen={setIsSuccessModalOpen}
+                    buttonType="none"
+                    buttonWidth="200px"
+                    buttonHeight="50px"
+                    buttonFontSize={20}
+                />
+            </RedeemResultContainer>
+        </>
     );
 }
 
