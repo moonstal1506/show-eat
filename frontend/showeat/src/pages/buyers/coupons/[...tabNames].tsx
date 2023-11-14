@@ -265,7 +265,7 @@ function CouponsTab(props: CouponsTabProps) {
                     setIsOpen={setIsModalOpen}
                     childComponent={<BuyersCouponsModal coupon={selectedCoupon} />}
                     onSubmit={() => openReviewModal()}
-                    buttonType="review"
+                    buttonType={selectedCoupon.writeCouponReview ? "close" : "review"}
                     buttonWidth="150px"
                 />
             )}
