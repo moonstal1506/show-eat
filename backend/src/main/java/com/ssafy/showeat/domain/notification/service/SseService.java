@@ -43,8 +43,8 @@ public class SseService {
 	public SseEmitter connectNotification(Long userId) {
 		SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 		emitterRepository.save(userId, emitter);
-		emitter.onCompletion(() -> emitterRepository.delete(userId));
-		emitter.onTimeout(() -> emitterRepository.delete(userId));
+		// emitter.onCompletion(() -> emitterRepository.delete(userId));
+		// emitter.onTimeout(() -> emitterRepository.delete(userId));
 
 		try {
 			log.info("connectNotification - send");

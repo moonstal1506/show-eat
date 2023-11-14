@@ -3,6 +3,7 @@ package com.ssafy.showeat.domain.notification.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -51,8 +52,8 @@ public class NotificationController {
 			notificationService.getNotificationExist(userService.getUserFromRequest(request)));
 	}
 
-	@GetMapping(value = "/subscribe")
-	public SseEmitter subscribe(HttpServletRequest request) {
-		return sseService.connectNotification(userService.getUserFromRequest(request).getUserId());
+	@GetMapping(value = "/subscribe/{userId}")
+	public SseEmitter subscribe(@PathVariable Long userId ) {
+		return sseService.connectNotification(userId);
 	}
 }

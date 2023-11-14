@@ -161,6 +161,7 @@ const NotificationWrapper = styled("div")`
 /* Header Component */
 function Header() {
     // States and Variables
+    const ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT;
     const router = useRouter();
     const [user, setUser] = useUserState();
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
@@ -168,6 +169,7 @@ function Header() {
     const [isNotificationExist, setIsNotificationExist] = useState<boolean>(false);
     const [participatingFunding, setParticipatingFunding] = useState<Notification[]>([]);
     const [bookmarkFunding, setBookmarkFunding] = useState<Notification[]>([]);
+    const [eventSource, setEventSource] = useState<EventSource | null>(null);
 
     // Function for Handling Logout
     const handleNotification = () => {
@@ -226,15 +228,52 @@ function Header() {
         setHasAccessToken(Boolean(getCookie("access-token")) && user.userId !== 0);
     }, [user]);
 
+    // Function for Checking Notification Existence
+    const checkNotificationExistence = async () => {
+        try {
+            const response = await getNotificationExist();
+            const notificationExists = response.data;
+
+            setIsNotificationExist(notificationExists);
+            console.log("checkNotificationExistence 실행", notificationExists);
+        } catch (error) {
+            console.error("Error checking notification existence:", error);
+        }
+    };
+
     useEffect(() => {
-        getNotificationExist().then((res) => {
-            if (res.data) {
-                setIsNotificationExist(true);
-            } else {
-                setIsNotificationExist(false);
+        if (user.userId !== 0) {
+            checkNotificationExistence();
+            try {
+                setEventSource(new EventSource(`${ENDPOINT}notification/subscribe/${user.userId}`));
+
+                eventSource?.addEventListener("open", (event) => {
+                    console.log(event);
+                    console.log("connection opened");
+                });
+
+                eventSource?.addEventListener("alarm", (event) => {
+                    console.log("alarm");
+                    console.log(event.data);
+
+                    checkNotificationExistence();
+                });
+
+                eventSource?.addEventListener("error", (event) => {
+                    console.log("error");
+                    console.log(event);
+                    const es = event.target as EventSource;
+                    console.log(es?.readyState);
+                    if (es?.readyState === EventSource.CLOSED) {
+                        console.log(`eventsource closed (${es?.readyState})`);
+                    }
+                    es?.close();
+                });
+            } catch (error) {
+                console.error("Error setting up EventSource:", error);
             }
-        });
-    }, [isNotificationExist]);
+        }
+    }, [user.userId]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -254,7 +293,7 @@ function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isNotificationVisible]);
+    }, [isNotificationVisible, eventSource]);
 
     return (
         <HeaderContainer>
