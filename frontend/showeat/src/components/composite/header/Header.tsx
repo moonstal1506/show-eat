@@ -86,6 +86,13 @@ function Header() {
     const [user, setUser] = useUserState();
     const [hasAccessToken, setHasAccessToken] = useState<boolean>(false);
 
+    // Function for Handling Login
+    const handleLogin = () => {
+        deleteCookie("access-token");
+        deleteCookie("refresh-token");
+        router.push("/sign-in");
+    };
+
     // Function for Handling Logout
     const handleLogout = () => {
         const accessToken = getCookie("access-token");
@@ -167,12 +174,8 @@ function Header() {
                     </>
                 ) : (
                     <>
-                        <ButtonWrapper onClick={() => router.push("/sign-in")}>
-                            로그인
-                        </ButtonWrapper>
-                        <ButtonWrapper onClick={() => router.push("/sign-in")}>
-                            회원가입
-                        </ButtonWrapper>
+                        <ButtonWrapper onClick={handleLogin}>로그인</ButtonWrapper>
+                        <ButtonWrapper onClick={handleLogin}>회원가입</ButtonWrapper>
                     </>
                 )}
             </NavigationContainer>
