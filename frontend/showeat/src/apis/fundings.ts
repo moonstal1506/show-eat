@@ -72,7 +72,7 @@ interface CreateFundingProps {
     category: string;
     description: string;
     endDate: string;
-    maxLimit: number;
+    maxLimit?: number;
     minLimit: number;
     tags: string[];
     title: string;
@@ -86,7 +86,7 @@ const createFunding = async ({
     category,
     description,
     endDate,
-    maxLimit,
+    maxLimit = 50000000,
     minLimit,
     tags,
     title,
@@ -118,6 +118,7 @@ const createFunding = async ({
     return result;
 };
 
+/* Function for Post Gift Card Image */
 const postGiftcardImage = async (multipartFile: File, fundingId: number) => {
     const formData = new FormData();
 
@@ -128,12 +129,8 @@ const postGiftcardImage = async (multipartFile: File, fundingId: number) => {
         method: "POST",
         contentType: "file",
         isAuth: true,
-        data:
-            // multipartFile,
-            formData,
+        data: formData,
     };
-
-    console.log(multipartFile, fundingId);
 
     const result = await fetchModify(props);
 
@@ -187,7 +184,7 @@ const getFavoriteFundings = async (page: number) => {
 /* Function for Search Fundings */
 interface SearchFundingsProps {
     keyword: string;
-    category?: string[] | undefined;
+    category?: string[] | string | undefined;
     address?: string[] | undefined;
     min?: number | undefined;
     max?: number | undefined;
@@ -215,10 +212,23 @@ const searchFundings = async ({
     sortType = "POPULARITY",
     page,
 }: SearchFundingsProps) => {
+    let categoryValue;
+    if (category) {
+        if (typeof category === "string") {
+            categoryValue = [category];
+        } else if (category.length > 0) {
+            categoryValue = category;
+        } else {
+            categoryValue = undefined;
+        }
+    } else {
+        categoryValue = undefined;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params: Record<string, any> = {
         keyword,
-        category: category && category.length > 0 ? category : undefined,
+        category: categoryValue,
         address: address && address.length > 0 ? address : undefined,
         min,
         max,
@@ -240,6 +250,30 @@ const searchFundings = async ({
     return result;
 };
 
+/* Function for Search One Category Fundings */
+interface CategoryFundingProps {
+    category: string;
+    sortType?: string;
+    page: number;
+}
+
+const getCategoryFundings = async ({
+    category,
+    page,
+    sortType = "POPULARITY",
+}: CategoryFundingProps) => {
+    const props: FetchProps = {
+        url: `funding/home/category`,
+        method: "GET",
+        isAuth: true,
+        params: { category, sortType, page: page.toString() },
+    };
+    const result = await fetchGet(props);
+
+    return result;
+};
+
+/* Function for Get Funding Reviews */
 const getFundingReview = async (fundingId: number, page: number) => {
     const props: FetchProps = {
         url: `review`,
@@ -268,4 +302,5 @@ export {
     searchFundings,
     postGiftcardImage,
     getFundingReview,
+    getCategoryFundings,
 };
