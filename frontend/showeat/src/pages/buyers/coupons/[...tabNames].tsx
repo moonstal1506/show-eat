@@ -182,15 +182,20 @@ function CouponsTab(props: CouponsTabProps) {
         const status: string = activeTab.toUpperCase();
         if (userId !== 0) {
             getCouponList(userId, status, page).then((result) => {
-                const isLastPage: boolean = result.data.last;
-                const couponList: CouponType[] = result.data.couponResponseDtos || [];
+                if (result.length > 0) {
+                    const isLastPage: boolean = result.data.last;
+                    const couponList: CouponType[] = result.data.couponResponseDtos || [];
 
-                if (page === 0) {
-                    setCouponData(couponList);
-                    setHasMorePage(!isLastPage);
+                    if (page === 0) {
+                        setCouponData(couponList);
+                        setHasMorePage(!isLastPage);
+                    } else {
+                        setCouponData([...couponData, ...couponList]);
+                        setHasMorePage(!isLastPage);
+                    }
                 } else {
-                    setCouponData([...couponData, ...couponList]);
-                    setHasMorePage(!isLastPage);
+                    setCouponData([]);
+                    setHasMorePage(false);
                 }
             });
         }
