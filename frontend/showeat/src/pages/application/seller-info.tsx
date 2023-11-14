@@ -52,7 +52,13 @@ const InputBox = styled("div")`
 
 declare global {
     interface Window {
-        daum: unknown;
+        daum: {
+            Postcode: {
+                new (options: { oncomplete: (data: IAddr) => void }): {
+                    open: () => void;
+                };
+            };
+        };
     }
 }
 
