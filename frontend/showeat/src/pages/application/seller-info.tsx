@@ -179,7 +179,7 @@ function SellerInfo({
     }, []);
 
     const onClickAddress = () => {
-        if (window.daum) {
+        if (window.daum && window.daum.Postcode) {
             new window.daum.Postcode({
                 oncomplete(data: IAddr) {
                     setBusinessAddress(data.address);
