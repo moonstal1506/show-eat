@@ -251,7 +251,7 @@ function Payment() {
                     customerEmail: user.userEmail,
                     customerMobilePhone: user.userPhone,
                     successUrl: `${FRONT_ENDPOINT}buyers/pay-loading`,
-                    failUrl: `${FRONT_ENDPOINT}buyers/pay-result-fail`,
+                    failUrl: `${FRONT_ENDPOINT}buyers/pay`,
                 });
             })
             .catch((error) => {
@@ -457,7 +457,6 @@ function Payment() {
                 width="15%"
                 type="button"
                 text="결제"
-                colorType="gray"
                 curve="curved"
                 fontSize={27}
                 onClick={handlePayment}
