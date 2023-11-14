@@ -89,7 +89,7 @@ function Home(props: HomeProps) {
     const [discountFundings, setDiscountFundings] = useState<FundingType[]>(fundingListData[3]);
 
     useEffect(() => {
-        if (user.userId) {
+        if (user && user.userId !== 0) {
             const promises = [getUserFundings(0), getFavoriteFundings(0)];
             Promise.all(promises).then((results) => {
                 if (results[0].data) {
