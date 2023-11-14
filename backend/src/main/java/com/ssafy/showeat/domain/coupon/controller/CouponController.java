@@ -69,6 +69,7 @@ public class CouponController {
 	@ApiResponses(value = {
 		@ApiResponse(code = 200, message = "쿠폰 사용 처리 성공"),
 		@ApiResponse(code = 400, message = "쿠폰 사용 처리 실패"),
+		@ApiResponse(code = 463, message = "쿠폰 사용 처리는 업주만 가능"),
 	})
 	@PatchMapping("/update/status/{couponId}")
 	public ResponseResult updateCouponStatusByOwner(
