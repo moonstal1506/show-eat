@@ -165,32 +165,34 @@ function SellerInfo({
         }
     };
 
-    // useEffect(() => {
-    //     const loadDaumPostcode = () => {
-    //         const script = document.createElement("script");
-    //         script.src = "https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js";
-    //         // script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"; 로컬
-    //         script.async = true;
-    //         document.body.appendChild(script);
-    //     };
+    useEffect(() => {
+        const loadDaumPostcode = () => {
+            const script = document.createElement("script");
 
-    //     if (!window.daum) {
-    //         loadDaumPostcode();
-    //     }
-    // }, []);
+            // script.src = "https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js";
+            script.src = "https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js?autoload=false";
+            console.log(script);
+            script.async = true;
+            document.body.appendChild(script);
+        };
 
-    // const onClickAddress = () => {
-    //     if (window.daum && window.daum.Postcode) {
-    //         new window.daum.Postcode({
-    //             oncomplete(data: IAddr) {
-    //                 setBusinessAddress(data.address);
-    //                 setZonecode(data.zonecode);
-    //                 onBusinessAddressChange(data.address);
-    //                 onZonecodeChange(data.zonecode);
-    //             },
-    //         }).open();
-    //     }
-    // };
+        if (!window.daum) {
+            loadDaumPostcode();
+        }
+    }, []);
+
+    const onClickAddress = () => {
+        if (window.daum && window.daum.Postcode) {
+            new window.daum.Postcode({
+                oncomplete(data: IAddr) {
+                    setBusinessAddress(data.address);
+                    setZonecode(data.zonecode);
+                    onBusinessAddressChange(data.address);
+                    onZonecodeChange(data.zonecode);
+                },
+            }).open();
+        }
+    };
 
     return (
         <InputContainer>
@@ -239,7 +241,7 @@ function SellerInfo({
                     onChange={handleZonecodeChange}
                 />
                 <ButtonWrapper>
-                    <TextButton width="100px" text="검색" />
+                    <TextButton width="100px" text="검색" onClick={onClickAddress} />
                 </ButtonWrapper>
             </InputBox>
             <InputBox>
