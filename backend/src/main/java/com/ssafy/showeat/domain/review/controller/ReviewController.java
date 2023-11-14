@@ -50,9 +50,9 @@ public class ReviewController {
 	})
 	@GetMapping
 	public ResponseResult getReviewByFundingId(
-		@RequestParam Long fundingId,
+		@RequestParam Long businessId,
 		@RequestParam int page
 	){
-		return new SingleResponseResult<>(reviewService.getReviewByFundingId(fundingId,page));
+		return new SingleResponseResult<>(reviewService.getReviewByBusinessId(businessId,page));
 	}
 }
