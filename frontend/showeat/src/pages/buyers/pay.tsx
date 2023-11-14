@@ -1,5 +1,4 @@
 /* Import */
-// import Image from "next/image";
 import { TextButton } from "@components/common/button";
 import { RadioButton } from "@/components/common/input";
 import React, { ReactNode, useState, useEffect, useRef } from "react";
@@ -8,11 +7,12 @@ import styled from "@emotion/styled";
 import withAuth from "@libs/withAuth";
 import { getUserInfo } from "@apis/users";
 import useUserState from "@hooks/useUserState";
-import postRequestPayments from "@apis/payments";
+import { postRequestPayments } from "@apis/payments";
 import { PaymentWidgetInstance, loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { useAsync } from "react-use";
-import { useRouter } from "next/router";
 
+/* Variables */
+const FRONT_ENDPOINT = process.env.NEXT_PUBLIC_FRONTEND_ENDPOINT;
 const clientKey = "test_ck_QbgMGZzorzyKv2BGY6djVl5E1em4";
 const customerKey = "test_sk_Ba5PzR0ArnWLjDw7vPe18vmYnNeD";
 
@@ -182,7 +182,6 @@ const Agreement = styled("div")`
 /* Payment Page */
 function Payment() {
     // States and Variables
-    const router = useRouter();
     const [selectedValue, setSelectedValue] = useState("0");
     const [user] = useUserState();
     const [currentPoint, setCurrentPoint] = useState(0);
@@ -222,6 +221,7 @@ function Payment() {
     };
 
     // handlePayment 함수
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
     const handlePayment = () => {
         // if amount === 0: 결제 막기
 
@@ -241,39 +241,18 @@ function Payment() {
         )
             .then((result) => {
                 console.log(result.data);
-                const { orderId, successUrl, failUrl } = result.data;
+                const { orderId } = result.data;
                 const paymentWidget = paymentWidgetRef.current;
 
-                // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
-                // 더 많은 결제 정보 파라미터는 결제위젯 SDK에서 확인하세요.
-                // https://docs.tosspayments.com/reference/widget-sdk#requestpayment결제-정보
-                paymentWidget
-                    ?.requestPayment({
-                        orderId,
-                        orderName,
-                        customerName: user.userNickname,
-                        customerEmail: user.userEmail,
-                        customerMobilePhone: user.userPhone,
-                        successUrl: "http://localhost:3000/buyers/pay-result",
-                        failUrl: "http://localhost:3000/buyers/pay-result-fail",
-                    })
-                    .then(() => {
-                        // 성공 처리: 결제 승인 API를 호출하세요
-                        console.log("결제 성공");
-                        getRequestPaymentApproval;
-                        // router.replace("/buyers/pay-result");
-                    })
-                    .catch(function (error) {
-                        // 에러 처리: 에러 목록을 확인하세요
-                        // https://docs.tosspayments.com/reference/error-codes#failurl로-전달되는-에러
-                        if (error.code === "USER_CANCEL") {
-                            // 결제 고객이 결제창을 닫았을 때 에러 처리
-                            console.log("결제 고객이 결제창을 닫았을 때 에러 처리");
-                        } else if (error.code === "INVALID_CARD_COMPANY") {
-                            // 유효하지 않은 카드 코드에 대한 에러 처리
-                            console.log("유효하지 않은 카드 코드에 대한 에러 처리");
-                        }
-                    });
+                paymentWidget?.requestPayment({
+                    orderId,
+                    orderName,
+                    customerName: user.userNickname,
+                    customerEmail: user.userEmail,
+                    customerMobilePhone: user.userPhone,
+                    successUrl: `${FRONT_ENDPOINT}buyers/pay-loading`,
+                    failUrl: `${FRONT_ENDPOINT}buyers/pay-result-fail`,
+                });
             })
             .catch((error) => {
                 console.log(error);
