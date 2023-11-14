@@ -1,7 +1,19 @@
 /* Import */
-// import PaginationBar from "@components/composite/paginationBar";
+import getReviewList from "@apis/review";
+import PaginationBar from "@components/composite/paginationBar";
 import ReviewBox from "@components/composite/reviewBox";
 import styled from "@emotion/styled";
+import { ReviewType } from "@customTypes/apiProps";
+import { useState } from "react";
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
+interface FundingReviewTabProps {
+    businessId: number;
+    reviewList: ReviewType[];
+    reviewPage: number;
+}
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -12,12 +24,13 @@ const ReviewContainer = styled("div")`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 5em;
 
     // Box Model Attribute
     width: 100%;
 `;
 
-const ReviewList = styled("div")`
+const ReviewListWrapper = styled("div")`
     // Layout Attribute
     display: flex;
     flex-direction: column;
@@ -32,14 +45,32 @@ const ReviewList = styled("div")`
 // ----------------------------------------------------------------------------------------------------
 
 /* Funding Review Tab Component */
-function FundingReviewTab() {
+function FundingReviewTab(props: FundingReviewTabProps) {
+    // States and Variables
+    const { businessId, reviewList, reviewPage } = props;
+    const [curPage, setCurPage] = useState<number>(1);
+    const [curReviewList, setCurReviewList] = useState<ReviewType[]>(reviewList);
+
+    const handlePageClick = (number: number) => {
+        setCurPage(number);
+        getReviewList(businessId, number - 1).then((result) => {
+            setCurReviewList(result.data.reviewResponseDtos);
+        });
+    };
+
     return (
         <ReviewContainer>
-            <ReviewList>
-                <ReviewBox />
-                <ReviewBox />
-            </ReviewList>
-            {/* <PaginationBar /> */}
+            <ReviewListWrapper>
+                {curReviewList.map((reviewData, index) => (
+                    <ReviewBox key={index} reviewData={reviewData} />
+                ))}
+            </ReviewListWrapper>
+            <PaginationBar
+                pageCount={reviewPage}
+                selectedPage={curPage}
+                setSelectedPage={setCurPage}
+                onClick={handlePageClick}
+            />
         </ReviewContainer>
     );
 }
