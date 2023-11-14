@@ -114,7 +114,7 @@ function Header() {
             return (
                 <TextButton
                     width="150px"
-                    onClick={() => router.push("/sellers/profile/basic-info")}
+                    onClick={() => router.push("/sellers/profile/seller-info")}
                     text="셀러 전환"
                     curve="round"
                 />
