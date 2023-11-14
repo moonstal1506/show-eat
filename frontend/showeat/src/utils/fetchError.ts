@@ -4,13 +4,13 @@ function handleFetchError(statusCode: number) {
         case 400:
             return "요청이 실패했습니다.";
         case 410:
-            return "유효하지 않은 조건입니다.";
+            return 410;
         case 411:
-            return "유효하지 않은 조건입니다.";
+            return 411;
         case 412:
-            return "유효하지 않은 조건입니다.";
+            return 412;
         case 413:
-            return "유효하지 않은 조건입니다.";
+            return 413;
         case 430:
             return "유효하지 않은 토큰입니다.";
         case 431:
