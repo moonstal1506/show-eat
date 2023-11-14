@@ -1,6 +1,6 @@
 /* Import */
 import SingleLayout from "@layouts/SingleLayout";
-// import withAuth from "@libs/withAuth";
+import withAuth from "@libs/withAuth";
 import { ReactNode, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Table from "@components/common/table";
@@ -189,11 +189,33 @@ const MultiModalTitleWrapper = styled("span")`
 const MultiModalDescriptionWrapper = styled("span")`
     font-size: 18px;
 
-    padding: 2em;
+    padding: 2em 0;
 
     @media (max-width: 767px) {
         font-size: 14px;
     }
+`;
+
+const SuccessModalDescriptionWrapper = styled("span")`
+    font-size: 22px;
+    font-weight: 700;
+
+    padding: 3em 0;
+
+    @media (max-width: 767px) {
+        font-size: 14px;
+    }
+`;
+
+const SuccessModalButtonContainer = styled("span")`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 90%;
+    height: 50px;
+
+    box-sizing: border-box;
 `;
 
 const LoginModalContainer = styled("div")`
@@ -292,6 +314,11 @@ function MultiModal(isStatus: string) {
             title: "알 수 없는 오류",
             description: "개발진에게 문의 해주세요.",
         },
+        {
+            status: "NONEBUSINESS",
+            title: "잘못된 접근",
+            description: "해당 쿠폰을 발행한 셀러가 아니예요!",
+        },
     ];
     return (
         <MultiModalContainer>
@@ -305,12 +332,36 @@ function MultiModal(isStatus: string) {
     );
 }
 
+function SuccessModal(setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+    const router = useRouter();
+    const goRedeem = () => {
+        router.replace("/sellers/redeem");
+    };
+    return (
+        <MultiModalContainer>
+            <SuccessModalDescriptionWrapper>
+                성공적으로 처리 완료됐습니다.
+            </SuccessModalDescriptionWrapper>
+            <SuccessModalButtonContainer>
+                <TextButton text="QR 페이지로" width="180px" height="40px" onClick={goRedeem} />
+                <TextButton
+                    text="닫기"
+                    width="180px"
+                    height="40px"
+                    onClick={() => setIsSuccessModalOpen(false)}
+                />
+            </SuccessModalButtonContainer>
+        </MultiModalContainer>
+    );
+}
+
 /* Seller Redeem Result Page */
 function RedeemResult() {
     const router = useRouter();
     const [couponData, setCouponData] = useState<CouponType | null>(null);
     const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isStatus, setIsStatus] = useState<string>("UNKNOWN");
     const [isUseMoney, setIsUseMoney] = useState("");
     const [user] = useUserState();
@@ -363,23 +414,31 @@ function RedeemResult() {
         if (couponData) {
             if (couponData.couponStatus === "ACTIVE") {
                 if (couponData.couponType === "SINGLE") {
-                    patchUseCoupon(couponData.couponId).then(() => {
-                        setIsStatus("SUCCESS");
-                        setIsMultiModalOpen(true);
-                        setTimeout(() => {
-                            router.replace("/sellers/redeem");
-                        }, 2000);
+                    patchUseCoupon(couponData.couponId).then((res) => {
+                        if (res.statusCode === 200) {
+                            setIsSuccessModalOpen(true);
+                        } else if (res.statusCode === 463) {
+                            setIsStatus("NONEBUSINESS");
+                            setIsMultiModalOpen(true);
+                        } else {
+                            setIsStatus("UNKNOWN");
+                            setIsMultiModalOpen(true);
+                        }
                     });
                 } else if (parseFloat(isUseMoney) > 0) {
                     patchUseGiftcard({
                         couponId: couponData.couponId,
                         couponAmount: parseFloat(isUseMoney),
-                    }).then(() => {
-                        setIsStatus("SUCCESS");
-                        setIsMultiModalOpen(true);
-                        setTimeout(() => {
-                            router.replace("/sellers/redeem");
-                        }, 2000);
+                    }).then((res) => {
+                        if (res.statusCode === 200) {
+                            setIsSuccessModalOpen(true);
+                        } else if (res.statusCode === 463) {
+                            setIsStatus("NONEBUSINESS");
+                            setIsMultiModalOpen(true);
+                        } else {
+                            setIsStatus("UNKNOWN");
+                            setIsMultiModalOpen(true);
+                        }
                     });
                 } else {
                     setIsStatus("REQUIREMONEY");
@@ -479,13 +538,23 @@ function RedeemResult() {
                 buttonHeight="50px"
                 buttonFontSize={20}
             />
-
             <Modal
                 childComponent={LoginModal()}
                 width="500px"
                 height="300px"
                 isOpen={isLoginModalOpen}
                 setIsOpen={setIsLoginModalOpen}
+                buttonType="none"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+            />
+            <Modal
+                childComponent={SuccessModal(setIsSuccessModalOpen)}
+                width="500px"
+                height="300px"
+                isOpen={isSuccessModalOpen}
+                setIsOpen={setIsSuccessModalOpen}
                 buttonType="none"
                 buttonWidth="200px"
                 buttonHeight="50px"
@@ -498,18 +567,18 @@ function RedeemResult() {
 // ----------------------------------------------------------------------------------------------------
 
 /* Middleware */
-// const RedeemResultWithAuth = withAuth({
-//     WrappedComponent: RedeemResult,
-// });
+const RedeemResultWithAuth = withAuth({
+    WrappedComponent: RedeemResult,
+});
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Layout */
-RedeemResult.getLayout = function getLayout(page: ReactNode) {
+RedeemResultWithAuth.getLayout = function getLayout(page: ReactNode) {
     return <SingleLayout>{page}</SingleLayout>;
 };
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export default RedeemResult;
+export default RedeemResultWithAuth;
