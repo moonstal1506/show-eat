@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
 import com.ssafy.showeat.domain.funding.entity.FundingIsSuccess;
+import com.ssafy.showeat.domain.funding.entity.FundingType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

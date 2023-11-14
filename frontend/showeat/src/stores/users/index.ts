@@ -1,7 +1,7 @@
 /* Import */
-import { userState, userDefaultValue, sellerDefaultValue, sellerState } from "./atoms";
+import { userState, userDefaultValue } from "./atoms";
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { userState, userDefaultValue, sellerDefaultValue, sellerState };
+export { userState, userDefaultValue };

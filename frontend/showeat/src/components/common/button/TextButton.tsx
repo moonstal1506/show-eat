@@ -25,7 +25,7 @@ const ButtonContainer = styled("button")<Partial<TextButtonProps>>`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1em;
+    gap: 0.5em;
 
     // Box Model Attribute
     width: ${(props) => props.width};
@@ -64,6 +64,7 @@ const ButtonContainer = styled("button")<Partial<TextButtonProps>>`
             color: white;
             path {
                 fill: white;
+                stroke: white;
             }
         }
     }
@@ -75,6 +76,7 @@ const ButtonContainer = styled("button")<Partial<TextButtonProps>>`
         color: ${(props) => props.theme.colors[`${props.colorType}3`]};
         path {
             fill: ${(props) => props.theme.colors[`${props.colorType}3`]};
+            stroke: ${(props) => props.theme.colors[`${props.colorType}3`]};
         }
         &:hover {
             border-color: ${(props) => props.theme.colors[`${props.colorType}4`]};
@@ -84,6 +86,7 @@ const ButtonContainer = styled("button")<Partial<TextButtonProps>>`
             font-weight: 700;
             path {
                 fill: white;
+                stroke: white;
             }
         }
     }

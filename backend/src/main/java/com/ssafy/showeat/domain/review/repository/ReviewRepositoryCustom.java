@@ -8,4 +8,5 @@ import com.ssafy.showeat.domain.review.entity.Review;
 
 public interface ReviewRepositoryCustom {
 	Page<Review> findReviewInFunding(Pageable pageable , Long fundingId);
+	Page<Review> findReviewInBusinessId(Pageable pageable , Long businessId);
 }

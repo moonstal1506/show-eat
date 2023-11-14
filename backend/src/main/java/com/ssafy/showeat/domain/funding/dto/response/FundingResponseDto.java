@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "펀딩 조회 DTO" , description = "펀딩 조회시 필요한 정보들")
 public class FundingResponseDto {
 
+	@ApiModelProperty(value = "업체 ID")
+	private Long businessId;
+
 	@ApiModelProperty(value = "업체명")
 	private String businessName;
 
@@ -49,6 +52,9 @@ public class FundingResponseDto {
 
 	@ApiModelProperty(value = "펀딩 메뉴 할인률")
 	private int discountRate;
+
+	@ApiModelProperty(value = "펀딩 상세글")
+	private String description;
 
 	@ApiModelProperty(value = "펀딩 시작일")
 	private LocalDate startDate;

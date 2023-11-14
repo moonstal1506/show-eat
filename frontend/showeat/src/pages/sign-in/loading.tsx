@@ -1,11 +1,13 @@
 /* Import */
 import { getLoginWithKakao } from "@apis/auth";
-import LoadingSpinner from "@/components/composite/loadingSpinner";
+import { getBusinessInfo } from "@apis/business";
+import LoadingSpinner from "@components/composite/loadingSpinner";
 import { setCookie } from "cookies-next";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
-import useUserState from "@hooks/useUserState";
 import { useRouter } from "next/router";
+import useSellerState from "@hooks/useSellerState";
+import useUserState from "@hooks/useUserState";
 import withAuth from "@libs/withAuth";
 
 // ----------------------------------------------------------------------------------------------------
@@ -31,25 +33,25 @@ function SignInLoading() {
     // States and Variables
     const router = useRouter();
     const [, setUser] = useUserState();
+    const [, setSeller] = useSellerState();
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
         if (code) {
-            getLoginWithKakao(code).then((result) => {
-                const { accessToken, refreshToken } = result.data.tokenDto;
+            getLoginWithKakao(code).then((userResult) => {
+                const { accessToken, refreshToken } = userResult.data.tokenDto;
                 const {
                     userId,
                     userNickname,
                     userImgUrl,
                     userAddress,
                     userBusiness,
-                    visited,
                     userMoney,
                     userPhone,
-                    credentialId,
-                    userEmail,
-                } = result.data;
+                    visited,
+                    businessId,
+                } = userResult.data;
 
                 setCookie("access-token", accessToken);
                 setCookie("refresh-token", refreshToken);
@@ -59,14 +61,30 @@ function SignInLoading() {
                     userImgUrl,
                     userAddress,
                     userBusiness,
+                    userBusinessId: businessId,
                     userMoney,
                     userPhone,
                     visited,
                     credentialId,
                     userEmail,
                 });
-
-                if (visited) {
+                if (userBusiness) {
+                    getBusinessInfo(businessId).then((sellerResult) => {
+                        const { businessName, businessImgUrl } = sellerResult.data;
+                        setSeller((prev) => {
+                            return {
+                                ...prev,
+                                sellerId: businessId,
+                                sellerName: businessName,
+                                sellerImgUrl: businessImgUrl,
+                            };
+                        });
+                    });
+                }
+                const returnUrl = params.get("state");
+                if (returnUrl) {
+                    router.replace(returnUrl);
+                } else if (visited) {
                     router.replace("/");
                 } else {
                     router.replace("/sign-up");

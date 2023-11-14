@@ -26,4 +26,5 @@ public class UserResDto {
     private TokenDto tokenDto;
     private String credentialId;
     private String userEmail;
+    private Long businessId;
 }

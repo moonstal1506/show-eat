@@ -10,5 +10,5 @@ import com.ssafy.showeat.domain.review.dto.response.ReviewResponseDto;
 
 public interface ReviewService {
 	void createReview(ReviewRequestDto reviewRequestDto , HttpServletRequest request);
-	FundingReviewResponseDto getReviewByFundingId(Long fundingId  ,int page);
+	FundingReviewResponseDto getReviewByBusinessId(Long businessId  ,int page);
 }

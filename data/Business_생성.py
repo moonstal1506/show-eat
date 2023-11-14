@@ -1,6 +1,7 @@
 import csv
 from faker import Faker
 from datetime import datetime
+import random
 
 # User 정보를 읽어옴
 user_data = []
@@ -12,27 +13,37 @@ with open('user.csv', 'r') as user_file:
 # 더미 데이터 생성을 위한 Faker 객체 생성 (한국어로 설정)
 fake = Faker('ko_KR')
 
+seoul_districts = [
+    "강남구", "강동구", "강북구", "강서구", 
+    "관악구", "광진구", "구로구", "금천구", 
+    "노원구", "도봉구", "동대문구", "동작구", 
+    "마포구", "서대문구", "서초구", "성동구", 
+    "성북구", "송파구", "양천구", "영등포구", 
+    "용산구", "은평구", "종로구", "중구", "중랑구"
+]
+
 business_data = []
-for user in user_data:
+for user in range(1,101):
+    name = fake.user_name()
     row = {
         'business_name': fake.company(),
         'business_img_url': "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
         'business_phone': fake.phone_number().replace('-',''),
-        'business_ceo': user['user_nickname'],
+        'business_ceo': name,
         'business_email' : fake.email(),
         'business_money' : fake.pyint(min_value=1000000, max_value=10000000),
         'business_funding_count' : fake.pyint(min_value=1, max_value=10),
         'business_supporter_count' : fake.pyint(min_value=0, max_value=100),
-        'business_address' : fake.address(),
-        'business_account_holder' : user['user_nickname'],
+        'business_address' : "서울특별시 " + random.choice(seoul_districts),
+        'business_account_holder' : name,
         'business_account' : f"{fake.random_number(digits=3)}-{fake.random_number(digits=3)}-{fake.random_number(digits=6)}",
-        'business_number' : fake.pyint(min_value=0, max_value=100000000),
+        'business_number' : fake.pyint(min_value=10000, max_value=100000000),
         'business_registration_url' : fake.sentence(),
         'bank_book_url' : fake.sentence(), 
         'business_bio' : fake.catch_phrase(), 
         'business_operating_time' : fake.sentence(),
         'business_closed_days' : fake.sentence(), 
-        'user_id' : fake.pyint(min_value=2, max_value=100),
+        'user_id' : user,
         'created_date' : datetime.now(),
         'modified_date' : datetime.now()
     }

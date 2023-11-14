@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.showeat.domain.auth.util.JwtProvider;
+import com.ssafy.showeat.domain.user.dto.request.UpdatePhoneRequestDto;
 import com.ssafy.showeat.domain.user.entity.Credential;
 import com.ssafy.showeat.domain.user.repository.CredentialRepository;
 import com.ssafy.showeat.domain.user.dto.request.UpdateInfoRequestDto;
@@ -51,7 +52,11 @@ public class UserServiceImpl implements UserService {
         //사용자 정보 조회
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(NotExistUserException::new);
-        return user.toUserResponseDto();
+
+        // return user.toUserResponseDto();
+        return new UserResponseDto(user.getUserId(), user.getUserNickname(),
+                user.getUserImgUrl(), user.getUserAddress(), user.isUserBusiness(), user.getUserMoney(),user.getUserPhone(),user.isVisited(), user.getBusiness() == null ? 0L : user.getBusiness().getBusinessId());
+
     }
 
     @Override
@@ -144,5 +149,13 @@ public class UserServiceImpl implements UserService {
         user.updateAddress(updateInfoRequestDto.getUserAddress());
         user.setUserPhone(updateInfoRequestDto.getUserPhone());
         user.setVisited(true);
+    }
+
+    @Override
+    @Transactional
+    public void updatePhone(UpdatePhoneRequestDto updatePhoneRequestDto) {
+        log.info("UserServiceImpl_updatePhone -> 사용자 닉네임 수정 시도");
+        User user = userRepository.findByUserId(updatePhoneRequestDto.getUserId()).orElseThrow(NotExistUserException::new);
+        user.setUserPhone(updatePhoneRequestDto.getUserPhone());
     }
 }

@@ -13,7 +13,9 @@ import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.user.entity.User;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark,Long> {
-	boolean existsByUserAndFunding(User user , Funding funding);
+
+
+	boolean existsByUser_UserIdAndFunding_FundingId(@Param("userId") Long userId,@Param("fundingId") Long fundingId);
 	Bookmark findByUserAndFunding(User user , Funding funding);
 
 	@Query("SELECT COUNT(b) FROM Bookmark b WHERE b.funding.fundingId = :fundingId")

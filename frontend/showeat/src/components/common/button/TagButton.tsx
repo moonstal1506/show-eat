@@ -7,60 +7,80 @@ import styled from "@emotion/styled";
 
 /* Type */
 interface TagButtonProps extends ButtonProps {
-    tagDescription: string;
-    buttonColor?: string;
+    text: string;
+    colorType?: "primary" | "secondary" | "green" | "red" | "gray";
     textColor?: string;
+    fontSize?: string;
 }
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
-const TagButtonWrapper = styled("div")<ButtonProps & { buttonColor: string }>`
-    display: inline-block;
+const TagButtonWrapper = styled("div")<Partial<TagButtonProps>>`
+    // Layout Attribute
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    max-width: ${(props) => props.width};
-    min-width: 50px;
+    // Box Model Attribute
+    width: ${(props) => props.width};
     height: ${(props) => props.height};
+    box-sizing: border-box;
+    padding: 0.5em 1em;
 
-    padding: 5px 10px;
-    border-radius: 10px;
-    border: ${(props) =>
-        props.buttonColor && props.buttonColor !== "white"
-            ? "none"
-            : `1px solid ${props.theme.colors.gray2}`};
-    background-color: ${(props) => (props.buttonColor ? props.buttonColor : "none")};
+    // Style Attribute
+    border-radius: 15px;
+    background-color: ${(props) => {
+        if (props.colorType === "green") {
+            return props.theme.colors.normalGreen;
+        }
+        if (props.colorType === "red") {
+            return props.theme.colors.normalRed;
+        }
+        return props.theme.colors[`${props.colorType}3`];
+    }};
 
+    // Text Attribute
     text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 `;
 
-const TagText = styled("span")<{ textColor: string }>`
+const TagTextWrapper = styled("div")<Partial<TagButtonProps>>`
+    // Box Model Attribute
     max-width: 100%;
-
-    font-size: 14px;
-    color: ${(props) => props.textColor};
     white-space: nowrap;
     overflow: hidden;
+
+    // Text Attribute
     text-overflow: ellipsis;
+    font-size: ${(props) => props.fontSize};
+    span {
+        font-size: ${(props) => props.fontSize};
+    }
+    color: ${(props) => props.textColor};
 `;
 
 // ----------------------------------------------------------------------------------------------------
 
 /* Tag Button Component */
-function TagButton({
-    width,
-    height,
-    tagDescription,
-    buttonColor = "",
-    textColor = "black",
-}: TagButtonProps) {
-    const fixedDescription = changeFontWeight(tagDescription);
+function TagButton(props: TagButtonProps) {
+    // States and Variables
+    const {
+        width,
+        height = "auto",
+        text,
+        colorType = "primary",
+        textColor = "black",
+        fontSize = "16px",
+    } = props;
+    const formattedText = changeFontWeight(text);
 
     return (
-        <TagButtonWrapper width={width} height={height} buttonColor={buttonColor}>
-            <TagText dangerouslySetInnerHTML={{ __html: fixedDescription }} textColor={textColor} />
+        <TagButtonWrapper width={width} height={height} colorType={colorType}>
+            <TagTextWrapper
+                dangerouslySetInnerHTML={{ __html: formattedText }}
+                textColor={textColor}
+                fontSize={fontSize}
+            />
         </TagButtonWrapper>
     );
 }

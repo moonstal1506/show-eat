@@ -17,14 +17,12 @@ fake = Faker('ko_KR')
 
 business_menu_data = []
 business_menu_id_data = []
-for busienss in business_data:
+for busienssId in range(5,105):
     for i in range(random.randint(1, 5)):
-        business_id = fake.pyint(min_value=52, max_value=150)
-        business_menu_id_data.append(business_id)
         row = {
             'business_menu_price': fake.pyint(min_value=1000, max_value=100000),
             'business_menu_name': fake.word(),
-            'business_id': business_id
+            'business_id': busienssId
         }
         business_menu_data.append(row)
 

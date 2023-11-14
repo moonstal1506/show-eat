@@ -104,6 +104,7 @@ public class KakaoAuthService {
 				.tokenDto(tokenDto)
 				.credentialId(credential.getCredentialId())
 				.userEmail(credential.getEmail())
+				.businessId(user.getBusiness()==null?  0L:user.getBusiness().getBusinessId())
 				.build())
 			.build();
 	}

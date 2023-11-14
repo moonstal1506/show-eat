@@ -118,4 +118,8 @@ public class User extends BaseTimeEntity {
     public void updateUserMoney(Long amount) {
         this.userMoney += amount;
     }
+
+    public void updateBusiness() {
+        this.userBusiness = true;
+    }
 }

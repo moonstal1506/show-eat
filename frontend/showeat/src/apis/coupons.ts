@@ -1,32 +1,81 @@
 /* Import */
-import { fetchGet } from "@utils/api";
+import { fetchGet, fetchModify } from "@utils/api";
 import { FetchProps } from "@customTypes/apiProps";
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Function for get My Coupons */
+/* Function for Getting Coupon List */
 const getCouponList = async (userId: number, status: string, page: number) => {
-    console.log(userId, " ", status);
     const props: FetchProps = {
         url: `coupon/${userId}/${status}/${page}`,
         method: "GET",
         isAuth: true,
     };
-
     const result = await fetchGet(props);
-    const data = Array.isArray(result.data.couponListResponseDtos) ? result.data : [];
-    return data;
+
+    return result;
 };
 
+/* Function for Getting Coupon Information */
 const getCouponDetails = async (couponId: number) => {
     const props: FetchProps = {
         url: `coupon/${couponId}`,
         method: "GET",
         isAuth: true,
     };
-    const data = await fetchGet(props);
-    return data;
+    const result = await fetchGet(props);
+
+    return result;
 };
 
-// Export the function as the default export
-export { getCouponList, getCouponDetails };
+/* Function for Use Single Coupon */
+const patchUseCoupon = async (couponId: number) => {
+    const props: FetchProps = {
+        url: `coupon/update/status`,
+        method: "PATCH",
+        data: { couponId, couponStatus: "USED" },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+/* Function for Use Single Coupon */
+interface PatchUseGiftcardProps {
+    couponId: number;
+    couponAmount: number;
+}
+
+const patchUseGiftcard = async ({ couponId, couponAmount }: PatchUseGiftcardProps) => {
+    const props: FetchProps = {
+        url: `coupon/update/price`,
+        method: "PATCH",
+        data: { couponId, couponAmount },
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+const postReview = async (couponId: number, message: string) => {
+    const reviewData = {
+        couponId,
+        message,
+    };
+
+    const props: FetchProps = {
+        url: "review",
+        method: "POST",
+        data: reviewData,
+        isAuth: true,
+    };
+
+    const result = await fetchModify(props);
+    return result;
+};
+// ----------------------------------------------------------------------------------------------------
+
+/* Export */
+export { getCouponList, getCouponDetails, patchUseCoupon, patchUseGiftcard, postReview };

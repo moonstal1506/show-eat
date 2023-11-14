@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "누적 통계 조회 DTO", description = "업주가 누적 통계 조회 시 필요한 정보")
 public class BusinessTotalStatResponseDto {
 
+	@ApiModelProperty(value = "업체명", example = "카우카우")
+	private String businessName;
+
 	@ApiModelProperty(value = "누적 매출액", example = "100000")
 	private int totalRevenue;
 

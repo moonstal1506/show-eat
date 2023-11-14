@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,14 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
-import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.AccountInfoRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.UpdateSellerInfoRequestDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
+import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
@@ -45,26 +49,52 @@ public class BusinessController {
 		@ApiResponse(code = 200, message = "사업자 인증 성공"),
 		@ApiResponse(code = 400, message = "사업자 인증 실패"),
 	})
-	@PostMapping("/registration")
+	@PostMapping(value = "/registration", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseResult verifyBusiness(
-		@RequestPart BusinessInfoRequestDto businessInfoRequestDto,
-		@RequestPart MultipartFile businessRegistration
-	) {
-		return new SingleResponseResult<>(businessService.verifyBusiness(businessInfoRequestDto, businessRegistration));
+		// RegistrationRequestDto로 안받아짐..
+		@RequestParam("ceo") String ceo,
+		@RequestParam("email") String email,
+		@RequestParam("businessName") String businessName,
+		@RequestParam("startDate") String startDate,
+		@RequestParam("businessNumber") String businessNumber,
+		@RequestParam("newBusinessAddress") String newBusinessAddress,
+		@RequestParam("businessPhone") String businessPhone,
+		@RequestPart("businessRegistration") MultipartFile businessRegistration,
+		HttpServletRequest request
+	) throws IOException {
+		return new SingleResponseResult<>(businessService.verifyBusiness(RegistrationRequestDto.builder()
+				.ceo(ceo)
+				.email(email)
+				.businessName(businessName)
+				.startDate(startDate)
+				.businessNumber(businessNumber)
+				.newBusinessAddress(newBusinessAddress)
+				.businessPhone(businessPhone)
+				.build(),
+			businessRegistration, userService.getUserFromRequest(request)));
 	}
 
-	@ApiOperation(value = "업체 등록", notes = "업체를 등록합니다.")
+	@ApiOperation(value = "정산 정보 등록", notes = "정산 정보를 등록합니다.")
 	@ApiResponses(value = {
-		@ApiResponse(code = 200, message = "업체 등록 성공"),
-		@ApiResponse(code = 400, message = "업체 등록 실패"),
+		@ApiResponse(code = 200, message = "정산 정보 등록 성공"),
+		@ApiResponse(code = 400, message = "정산 정보 등록 실패"),
 	})
-	@PostMapping
-	public ResponseResult registerBusinessUser(
-		@RequestPart BusinessUserRequestDto businessUserRequestDto,
-		@RequestPart MultipartFile businessRegistration,
-		@RequestPart MultipartFile bankBook
+	@PostMapping(value = "/account")
+	public ResponseResult registerAccount(
+		@RequestParam("accountHolder") String accountHolder,
+		@RequestParam("accountBank") String accountBank,
+		@RequestParam("accountNumber") String accountNumber,
+		@RequestPart("bankBook") MultipartFile bankBook,
+		HttpServletRequest request
 	) throws IOException {
-		businessService.registerBusinessUser(businessUserRequestDto, businessRegistration, bankBook);
+		businessService.registerAccount(
+			AccountInfoRequestDto.builder()
+				.accountHolder(accountHolder)
+				.accountBank(accountBank)
+				.accountNumber(accountNumber)
+				.build(),
+			bankBook,
+			userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -84,9 +114,10 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 프로필 수정 실패"),
 	})
 	@PatchMapping("/seller/profile")
-	public ResponseResult updateBusinessImg(@RequestPart MultipartFile businessImg) throws IOException {
-		businessService.updateBusinessImg(businessImg);
-		return ResponseResult.successResponse;
+	public ResponseResult updateBusinessImg(@RequestPart MultipartFile businessImg, HttpServletRequest request) throws
+		IOException {
+		String imgUrl = businessService.updateBusinessImg(businessImg, userService.getUserFromRequest(request));
+		return new SingleResponseResult<>(imgUrl);
 	}
 
 	@ApiOperation(value = "셀러 소개 수정", notes = "셀러 소개를 수정합니다.")
@@ -95,8 +126,10 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 소개 수정 실패"),
 	})
 	@PatchMapping("/seller/bio")
-	public ResponseResult updateBusinessBio(@RequestBody String businessBio) {
-		businessService.updateBusinessBio(businessBio);
+	public ResponseResult updateBusinessBio(@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto,
+		HttpServletRequest request) {
+		businessService.updateBusinessBio(updateSellerInfoRequestDto.getBusinessBio(),
+			userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -106,8 +139,10 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 운영시간 수정 실패"),
 	})
 	@PatchMapping("/seller/operating-time")
-	public ResponseResult updateBusinessOperatingTime(@RequestBody String operatingTime) {
-		businessService.updateBusinessOperatingTime(operatingTime);
+	public ResponseResult updateBusinessOperatingTime(
+		@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto, HttpServletRequest request) {
+		businessService.updateBusinessOperatingTime(updateSellerInfoRequestDto.getOperatingTime(),
+			userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -117,8 +152,10 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "셀러 휴무일 수정 실패"),
 	})
 	@PatchMapping("/seller/closed-days")
-	public ResponseResult updateBusinessClosedDays(@RequestBody String businessClosedDays) {
-		businessService.updateBusinessClosedDays(businessClosedDays);
+	public ResponseResult updateBusinessClosedDays(@RequestBody UpdateSellerInfoRequestDto updateSellerInfoRequestDto,
+		HttpServletRequest request) {
+		businessService.updateBusinessClosedDays(updateSellerInfoRequestDto.getBusinessClosedDays(),
+			userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 
@@ -139,12 +176,13 @@ public class BusinessController {
 	})
 	@PostMapping("/menu")
 	public ResponseResult registMenu(
-		@RequestPart RegistMenuRequestDto registMenuRequestDto,
-		@RequestPart List<MultipartFile> multipartFiles,
+		RegistMenuRequestDto registMenuRequestDto,
+		@RequestPart(value = "multipartFiles", required = false) List<MultipartFile> multipartFiles,
 		HttpServletRequest request
 	) throws IOException {
-		businessService.registMenu(registMenuRequestDto, multipartFiles , userService.getUserFromRequest(request));
-		return ResponseResult.successResponse;
+		User user = userService.getUserFromRequest(request);
+		businessService.registMenu(registMenuRequestDto, multipartFiles, user);
+		return new ListResponseResult<>(businessService.getMenuList(user));
 	}
 
 	@ApiOperation(value = "업체 메뉴 조회", notes = "업주가 메뉴를 조회합니다.")
@@ -173,8 +211,8 @@ public class BusinessController {
 		@ApiResponse(code = 400, message = "메뉴 삭제 실패"),
 	})
 	@DeleteMapping("/menu/{menuId}")
-	public ResponseResult deleteMenu(@PathVariable Long menuId , HttpServletRequest request) {
-		businessService.deleteMenu(menuId , userService.getUserFromRequest(request));
+	public ResponseResult deleteMenu(@PathVariable Long menuId, HttpServletRequest request) {
+		businessService.deleteMenu(menuId, userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 

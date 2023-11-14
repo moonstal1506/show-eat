@@ -3,12 +3,11 @@ package com.ssafy.showeat.domain.business.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.ssafy.showeat.domain.business.dto.request.BusinessInfoRequestDto;
-import com.ssafy.showeat.domain.business.dto.request.BusinessUserRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
+import com.ssafy.showeat.domain.business.dto.request.AccountInfoRequestDto;
 
 import com.ssafy.showeat.domain.business.dto.response.*;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
@@ -16,7 +15,7 @@ import com.ssafy.showeat.domain.user.entity.User;
 
 public interface BusinessService {
 
-	void updateBusinessImg(MultipartFile businessImg) throws IOException;
+	String updateBusinessImg(MultipartFile businessImg , User user) throws IOException;
 
 	void registMenu(RegistMenuRequestDto registMenuRequestDto, List<MultipartFile> multipartFiles , User user) throws IOException;
 
@@ -32,16 +31,17 @@ public interface BusinessService {
 
 	BusinessTotalStatResponseDto getTotalStatistic(Long businessId);
 
-	void registerBusinessUser(BusinessUserRequestDto businessUserRequestDto, MultipartFile businessRegistration,
-		MultipartFile bankBook) throws IOException;
-
 	RegistrationResponseDto getRegistrationInfo(Long businessId);
 
-	void updateBusinessBio(String businessBio);
+	void updateBusinessBio(String businessBio , User user);
 
-	void updateBusinessOperatingTime(String operatingTime);
+	void updateBusinessOperatingTime(String operatingTime , User user);
 
-	void updateBusinessClosedDays(String businessClosedDays);
+	void updateBusinessClosedDays(String closedDays , User user);
 
-	boolean verifyBusiness(BusinessInfoRequestDto businessInfoRequestDto, MultipartFile businessRegistration);
+	boolean verifyBusiness(RegistrationRequestDto registrationRequestDto, MultipartFile businessRegistration,
+		User userFromRequest) throws IOException;
+
+	void registerAccount(AccountInfoRequestDto accountInfoRequestDto, MultipartFile bankBook, User user) throws
+		IOException;
 }

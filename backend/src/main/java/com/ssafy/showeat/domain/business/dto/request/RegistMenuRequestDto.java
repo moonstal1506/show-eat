@@ -1,20 +1,17 @@
 package com.ssafy.showeat.domain.business.dto.request;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+@Setter
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ApiModel(value = "메뉴 등록 DTO" , description = "업주가 메뉴 등록시 필요한 정보")
 public class RegistMenuRequestDto {
 

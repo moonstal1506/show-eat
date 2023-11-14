@@ -1,11 +1,8 @@
 /* Import */
-import Header from "@/components/composite/header";
-import styled from "@emotion/styled";
-import NavigationBar from "@/components/composite/navigationBar/NavigationBar";
+import Header from "@components/composite/header";
 import { LayoutProps } from "@customTypes/layoutProps";
-// import { useEffect } from "react";
-// import { useRouter } from "next/router";
-// import useUserState from "@hooks/useUserState";
+import NavigationBar from "@components/composite/navigationBar";
+import styled from "@emotion/styled";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -49,17 +46,6 @@ const FlexArticle = styled("article")`
 /* Seller Page Layout */
 function SellerLayout(props: LayoutProps) {
     const { children } = props;
-
-    // 셀러가 아니라면 메인으로 돌려보냄
-
-    // const router = useRouter();
-    // const [user] = useUserState();
-
-    // useEffect(() => {
-    //     if (!user.userBusiness) {
-    //         router.replace("/");
-    //     }
-    // }, []);
 
     return (
         <>
