@@ -182,7 +182,7 @@ const Agreement = styled("div")`
 /* Payment Page */
 function Payment() {
     // States and Variables
-    const [selectedValue, setSelectedValue] = useState("0");
+    const [selectedValue, setSelectedValue] = useState("5,000");
     const [user] = useUserState();
     const [currentPoint, setCurrentPoint] = useState(0);
     const [afterPoint, setAfterPoint] = useState(0);
@@ -191,7 +191,7 @@ function Payment() {
     const paymentMethodsWidgetRef = useRef<ReturnType<
         PaymentWidgetInstance["renderPaymentMethods"]
     > | null>(null);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(5000);
 
     useEffect(() => {
         const { userId } = user;
@@ -223,8 +223,6 @@ function Payment() {
     // handlePayment 함수
     // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
     const handlePayment = () => {
-        // if amount === 0: 결제 막기
-
         // 1. 결제 요청에 필요한 데이터를 생성
         const payType = "CARD";
         const orderName = "카우카우 화폐";
@@ -314,6 +312,7 @@ function Payment() {
                                     setSelectedValue("5,000");
                                     setAmount(5000);
                                 }}
+                                defaultCheck
                             />
                             <RadioButton
                                 width="100%"
