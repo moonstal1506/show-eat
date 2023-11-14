@@ -48,7 +48,7 @@ function CouponReviewModal({
     couponId: number;
     closeReviewModal: () => void;
     setCouponData: React.Dispatch<React.SetStateAction<CouponType[]>>;
-    setSelectedCoupon: React.Dispatch<React.SetStateAction<CouponType>>;
+    setSelectedCoupon: React.Dispatch<React.SetStateAction<CouponType | null>>;
 }) {
     const [message, setMessage] = useState("");
     const handleChangeText = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -59,7 +59,6 @@ function CouponReviewModal({
     const handleReviewSubmit = () => {
         postReview(couponId, message).then((res) => {
             if (res.statusCode === 200) {
-                console.log(res);
                 setCouponData((prev) => {
                     return prev.map((coupon) => {
                         if (coupon.couponId === couponId) {
@@ -68,13 +67,19 @@ function CouponReviewModal({
                                 writeCouponReview: true,
                             };
                         }
-                        console.log(prev);
                         return coupon;
                     });
                 });
                 setSelectedCoupon((prev) => {
-                    return { ...prev, writeCouponReview: true };
+                    if (prev) {
+                        return {
+                            ...prev,
+                            writeCouponReview: true,
+                        };
+                    }
+                    return null;
                 });
+
                 closeReviewModal();
             }
         });
