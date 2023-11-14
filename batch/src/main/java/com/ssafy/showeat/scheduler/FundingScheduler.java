@@ -21,8 +21,8 @@ public class FundingScheduler {
 	private final JobLauncher jobLauncher;
 
 	// 1시간 마다 실행
-	@Scheduled(cron = "0 1 0 * * *")
-	// @Scheduled(cron = "*/30 * * * * *")
+	// @Scheduled(cron = "0 1 0 * * *")
+	@Scheduled(cron = "*/30 * * * * *")
 	public void executeJob () {
 		try {
 			log.info("fetch gas station job start");
