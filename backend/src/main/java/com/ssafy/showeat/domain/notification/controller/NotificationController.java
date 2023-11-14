@@ -10,8 +10,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import com.ssafy.showeat.domain.notification.service.NotificationService;
 import com.ssafy.showeat.domain.notification.service.SseService;
 import com.ssafy.showeat.domain.user.service.UserService;
-import com.ssafy.showeat.global.response.ListResponseResult;
 import com.ssafy.showeat.global.response.ResponseResult;
+import com.ssafy.showeat.global.response.SingleResponseResult;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,7 +36,7 @@ public class NotificationController {
 	})
 	@GetMapping
 	public ResponseResult getNotificationListByIsChecked(HttpServletRequest request) {
-		return new ListResponseResult<>(
+		return new SingleResponseResult<>(
 			notificationService.getNotificationListByIsChecked(userService.getUserFromRequest(request)));
 	}
 
