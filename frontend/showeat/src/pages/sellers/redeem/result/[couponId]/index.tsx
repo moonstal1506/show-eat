@@ -335,7 +335,7 @@ function MultiModal(isStatus: string) {
 
 function SuccessModal() {
     const router = useRouter();
-    const goRedeem = () => {
+    const goSeller = () => {
         router.replace("/sellers/redeem");
     };
     const closeWindow = () => {
@@ -348,7 +348,7 @@ function SuccessModal() {
                 성공적으로 처리 완료됐습니다.
             </SuccessModalDescriptionWrapper>
             <SuccessModalButtonContainer>
-                <TextButton text="QR 페이지로" width="180px" height="40px" onClick={goRedeem} />
+                <TextButton text="셀러 페이지로" width="180px" height="40px" onClick={goSeller} />
                 <TextButton
                     text="메인으로"
                     width="180px"
