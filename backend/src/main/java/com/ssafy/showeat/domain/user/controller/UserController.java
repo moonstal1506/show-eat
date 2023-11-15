@@ -69,8 +69,8 @@ public class UserController {
             @ApiResponse(code = 200, message = "프로필사진 수정 성공"),
             @ApiResponse(code = 400, message = "프로필사진 수정 실패"),
     })
-    @PatchMapping("/update-profile-image")
-    public ResponseResult updateImage(@RequestParam("files") List<MultipartFile> multipartFiles, @RequestParam("userId") Long userId) {
+    @PatchMapping("/update-profile-image/{userId}")
+    public ResponseResult updateImage(@RequestParam("files") List<MultipartFile> multipartFiles, @PathVariable Long userId) {
         log.info("UserController_updateImage -> 사용자 프로필 사진 수정");
         userService.updateuserImgUrl(multipartFiles, userId);
         return ResponseResult.successResponse;
