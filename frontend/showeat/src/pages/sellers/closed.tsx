@@ -105,6 +105,10 @@ function ClosedFunding() {
         <>
             <Head>
                 <title>종료된 펀딩</title>
+                <meta
+                    name="description"
+                    content="셀러님께서 과거에 진행한 이미 종료된 펀딩 목록입니다."
+                />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <FavoritesContainer>

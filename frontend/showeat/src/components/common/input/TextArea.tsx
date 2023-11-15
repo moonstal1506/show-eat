@@ -32,8 +32,8 @@ interface TextareaBoxType {
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
-const TextareaContainer = styled("div")`
-    /* border: 1px solid ${(props) => props.theme.colors.gray2}; */
+const TextareaContainer = styled("div")<Partial<TextareaWrapperType>>`
+    width: ${(props) => props.width};
 `;
 
 const TextareaWrapper = styled("div")<TextareaWrapperType>`
@@ -81,7 +81,7 @@ const TextareaLabelWrapper = styled("label")<{ labelFontSize?: string }>`
 
 // ----------------------------------------------------------------------------------------------------
 
-/* Textarea Button Component */
+/* Textarea Input Component */
 function Textarea({
     width,
     height = "80px",
@@ -96,7 +96,7 @@ function Textarea({
     error = false,
 }: TextareaProps) {
     return (
-        <TextareaContainer>
+        <TextareaContainer width={width}>
             {textareaName && (
                 <TextareaLabelWrapper labelFontSize={labelFontSize}>
                     {textareaName}

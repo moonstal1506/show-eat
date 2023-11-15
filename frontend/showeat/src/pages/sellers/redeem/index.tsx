@@ -159,6 +159,7 @@ function Redeem() {
         <>
             <Head>
                 <title>QR 코드 읽기</title>
+                <meta name="description" content="쿠폰 처리를 위한 QR 코드 인식 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <RedeemContainer>

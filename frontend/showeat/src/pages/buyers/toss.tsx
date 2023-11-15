@@ -58,6 +58,7 @@ export default function Home() {
         <>
             <Head>
                 <title>토스 결제</title>
+                <meta name="description" content="토스로 결제하실 수 있는 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <main

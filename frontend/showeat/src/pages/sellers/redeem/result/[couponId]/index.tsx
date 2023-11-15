@@ -334,25 +334,23 @@ function MultiModal(isStatus: string) {
 }
 
 function SuccessModal() {
-    // setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>
     const router = useRouter();
-    const goRedeem = () => {
+    const goSeller = () => {
         router.replace("/sellers/redeem");
     };
     const closeWindow = () => {
-        if (typeof window !== "undefined") {
-            window.close();
-        }
+        router.replace("/");
     };
+
     return (
         <MultiModalContainer>
             <SuccessModalDescriptionWrapper>
                 성공적으로 처리 완료됐습니다.
             </SuccessModalDescriptionWrapper>
             <SuccessModalButtonContainer>
-                <TextButton text="QR 페이지로" width="180px" height="40px" onClick={goRedeem} />
+                <TextButton text="셀러 페이지로" width="180px" height="40px" onClick={goSeller} />
                 <TextButton
-                    text="페이지 나가기"
+                    text="메인으로"
                     width="180px"
                     height="40px"
                     onClick={() => closeWindow()}
@@ -389,16 +387,19 @@ function RedeemResult() {
     }, [router.query, user]);
 
     const isSingleCoupon = couponData?.couponType === "SINGLE";
-    const tableHeaders: string[] = [
-        "펀딩명",
-        "유효 기간",
-        isSingleCoupon ? "메뉴 가격" : "쿠폰 잔액",
-        isSingleCoupon && "구입 가격",
-    ]
-        .filter(Boolean)
-        .map((item) => item as string);
+    const tableHeaders =
+        couponData &&
+        [
+            "펀딩명",
+            "유효 기간",
+            isSingleCoupon ? "메뉴 가격" : "쿠폰 잔액",
+            isSingleCoupon && "구입 가격",
+        ]
 
-    const tableContents: (string | number)[] = [
+            .filter(Boolean)
+            .map((item) => item as string);
+
+    const tableContents = [
         couponData?.fundingTitle || "데이터가 없습니다.",
         couponData?.expirationDate || "데이터가 없습니다.",
         isSingleCoupon
@@ -424,7 +425,7 @@ function RedeemResult() {
                     patchUseCoupon(couponData.couponId).then((res) => {
                         if (res.statusCode === 200) {
                             setIsSuccessModalOpen(true);
-                        } else if (res.statusCode === 463) {
+                        } else if (res === 463) {
                             setIsStatus("NONEBUSINESS");
                             setIsMultiModalOpen(true);
                         } else {
@@ -437,9 +438,11 @@ function RedeemResult() {
                         couponId: couponData.couponId,
                         couponAmount: parseFloat(isUseMoney),
                     }).then((res) => {
+                        console.log(res);
+
                         if (res.statusCode === 200) {
                             setIsSuccessModalOpen(true);
-                        } else if (res.statusCode === 463) {
+                        } else if (res === 463) {
                             setIsStatus("NONEBUSINESS");
                             setIsMultiModalOpen(true);
                         } else {
@@ -475,6 +478,7 @@ function RedeemResult() {
         <>
             <Head>
                 <title>쿠폰 결제</title>
+                <meta name="description" content="쿠폰 결제 처리 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <RedeemResultContainer>
@@ -484,16 +488,27 @@ function RedeemResult() {
                 </TitleContainer>
                 <ContentContainer>
                     <SellerInfoContainer>
-                        <SellerNameContainer>야미화니 커피</SellerNameContainer>
-                        <MenuNameContainer>카페라떼</MenuNameContainer>
+                        {couponData && (
+                            <SellerNameContainer>{couponData?.businessName}</SellerNameContainer>
+                        )}
+
+                        <MenuNameContainer>
+                            {(couponData &&
+                                (couponData?.couponType === "SINGLE"
+                                    ? couponData?.fundingMenu
+                                    : "금액권")) ||
+                                "데이터를 찾지 못 했습니다."}
+                        </MenuNameContainer>
                     </SellerInfoContainer>
                     <TableContainer>
-                        <Table
-                            headers={tableHeaders}
-                            contents={tableContents}
-                            headerWidth="30%"
-                            gap="1em"
-                        />
+                        {tableHeaders && (
+                            <Table
+                                headers={tableHeaders}
+                                contents={tableContents}
+                                headerWidth="30%"
+                                gap="1em"
+                            />
+                        )}
                     </TableContainer>
                     {couponData?.couponType === "GIFTCARD" && (
                         <MoneyInputContainer>

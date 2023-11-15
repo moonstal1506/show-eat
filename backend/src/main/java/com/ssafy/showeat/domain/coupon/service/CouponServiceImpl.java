@@ -94,7 +94,7 @@ public class CouponServiceImpl implements CouponService {
 
 	@Override
 	@Transactional
-	public void createCoupon(Funding funding) {
+	public List<Coupon> createCoupon(Funding funding) {
 		log.info("CouponService_createCoupon || 펀딩 성공에 따른 쿠폰 발급");
 		List<Coupon> couponList = new ArrayList<>();
 
@@ -103,11 +103,10 @@ public class CouponServiceImpl implements CouponService {
 			User user = userFunding.getUser();
 			Coupon coupon = Coupon.createCouponByFundingSuccess(user, funding);
 			couponList.add(coupon);
-
-			// 쿠폰 알림 생성
-
 		}
 		if (!couponList.isEmpty())
 			couponRepository.saveAll(couponList);
+
+		return couponList;
 	}
 }

@@ -128,7 +128,7 @@ public class Business extends BaseDateEntity {
 		return RegistrationResponseDto.builder()
 			.businessId(businessId)
 			.businessName(businessName)
-			.businessNumber(Integer.parseInt(businessNumber))
+			.businessNumber(businessNumber)
 			.businessAddress(businessAddress)
 			.businessPhone(businessPhone)
 			.businessCeo(businessCeo)
@@ -168,6 +168,6 @@ public class Business extends BaseDateEntity {
 		this.bankBookUrl = bankBookUrl;
 		this.businessAccount =accountInfoRequestDto.getAccountBank()+ " "+ accountInfoRequestDto.getAccountNumber();
 		this.businessAccountHolder =accountInfoRequestDto.getAccountHolder();
-		user.updateBusiness();
+		user.updateUserBusiness();
 	}
 }

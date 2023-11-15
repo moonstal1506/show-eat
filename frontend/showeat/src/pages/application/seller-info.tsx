@@ -125,15 +125,15 @@ function SellerInfo({
     };
 
     const handleBusinessAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim();
-        setBusinessAddress(value);
-        onBusinessAddressChange(value);
+        const newValue = event.target.value;
+        setBusinessAddress(newValue);
+        onBusinessAddressChange(newValue);
     };
 
     const handleBusinessAddressDetailChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim();
-        setBusinessAddressDetail(value);
-        onBusinessAddressDetailChange(value);
+        const newValue = event.target.value;
+        setBusinessAddressDetail(newValue);
+        onBusinessAddressDetailChange(newValue);
     };
 
     const handleBusinessPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -168,13 +168,15 @@ function SellerInfo({
     useEffect(() => {
         const loadDaumPostcode = () => {
             const script = document.createElement("script");
-            script.src = "//ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"; // 배표 환경
-            // script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"; 로컬
+
+            // script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+            script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+            console.log(script);
             script.async = true;
             document.body.appendChild(script);
         };
 
-        if (!window.daum) {
+        if (window.daum) {
             loadDaumPostcode();
         }
     }, []);

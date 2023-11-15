@@ -19,7 +19,7 @@ import lombok.ToString;
 @ApiModel(value = "비즈니스 정보 DTO", description = "비즈니스 회원 인증시 필요한 정보")
 public class RegistrationRequestDto {
 
-    private final static String DEFAULT_BUSINESS_IMG_URL = "https://img.freepik.com/premium-photo/gold-sculture-of-a-cow_839169-25494.jpg";
+    private final static String DEFAULT_BUSINESS_IMG_URL = "https://s3.ap-northeast-2.amazonaws.com/showeatbucket/business/bc756e90-fe78-4f27-9a99-ad00df3a24c0.jpg";
 
     @ApiModelProperty(value = "대표자명", example = "문수정")
     private String ceo;

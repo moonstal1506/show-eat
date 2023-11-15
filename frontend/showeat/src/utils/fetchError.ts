@@ -3,6 +3,9 @@ function handleFetchError(statusCode: number) {
     switch (statusCode) {
         case 400:
             return "요청이 실패했습니다.";
+        case 401:
+            // Unauthorized
+            return 401;
         case 410:
             return 410;
         case 411:
@@ -28,7 +31,7 @@ function handleFetchError(statusCode: number) {
         case 460:
             return "해당 업체가 존재하지 않습니다.";
         case 463:
-            return "쿠폰 사용처리는 업주만 가능합니다.";
+            return 463;
         case 470:
             return "해당 쿠폰이 존재하지 않습니다.";
         case 480:

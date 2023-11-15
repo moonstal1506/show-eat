@@ -134,6 +134,7 @@ function PayResult() {
         <>
             <Head>
                 <title>충전 완료</title>
+                <meta name="description" content="요청하신 캐시카우를 충전 완료되었습니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <Container>

@@ -298,6 +298,10 @@ function Payment() {
         <>
             <Head>
                 <title>캐시카우 충전하기</title>
+                <meta
+                    name="description"
+                    content="쑈잇에서 사용하실 수 있는 화폐, '캐시카우'를 충전하실 수 있는 페이지입니다."
+                />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <PaymentContainer>

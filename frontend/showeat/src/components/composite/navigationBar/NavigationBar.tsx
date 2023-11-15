@@ -151,6 +151,12 @@ const MenuWrapper = styled("div")<{ isSelected: boolean }>`
     cursor: pointer;
 `;
 
+const QRButtonWrapper = styled("div")`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 // ----------------------------------------------------------------------------------------------------
 
 /* Function */
@@ -203,6 +209,10 @@ function NavigationBar({ isBuyer }: NavigationBarProps) {
 
     const handleCharge = () => {
         router.push("/buyers/pay");
+    };
+
+    const handleQR = () => {
+        router.push("/sellers/redeem");
     };
 
     return (
@@ -268,6 +278,18 @@ function NavigationBar({ isBuyer }: NavigationBarProps) {
                     </MenuWrapper>
                 ))}
             </MenuContainer>
+            {!isBuyer && (
+                <QRButtonWrapper>
+                    <TextButton
+                        text="QR 인식"
+                        width="180px"
+                        height="40px"
+                        fontSize={20}
+                        colorType="primary"
+                        onClick={() => handleQR}
+                    />
+                </QRButtonWrapper>
+            )}
         </NavigationBarContainer>
     );
 }

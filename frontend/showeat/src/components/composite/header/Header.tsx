@@ -128,7 +128,7 @@ const NotificationTitleWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 20px;
 `;
@@ -138,7 +138,7 @@ const NotificationMessageWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 20px;
 `;
@@ -148,12 +148,12 @@ const NotificationWrapper = styled("div")`
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 20px;
     height: 100%;
     align-items: center;
-    margin-left: 50px;
+    margin-left: 30px;
 `;
 
 // ----------------------------------------------------------------------------------------------------
@@ -176,6 +176,13 @@ function Header() {
             setBookmarkFunding(res.data.bookmarkFunding);
             setIsNotificationExist(false);
         });
+    };
+
+    // Function for Handling Login
+    const handleLogin = () => {
+        deleteCookie("access-token");
+        deleteCookie("refresh-token");
+        router.push("/sign-in");
     };
 
     // Function for Handling Logout
@@ -206,7 +213,7 @@ function Header() {
             return (
                 <TextButton
                     width="150px"
-                    onClick={() => router.push("/sellers/profile/basic-info")}
+                    onClick={() => router.push("/sellers/profile/seller-info")}
                     text="셀러 전환"
                     curve="round"
                 />
@@ -227,14 +234,18 @@ function Header() {
     }, [user]);
 
     useEffect(() => {
-        getNotificationExist().then((res) => {
-            if (res.data) {
-                setIsNotificationExist(true);
-            } else {
-                setIsNotificationExist(false);
-            }
-        });
-    }, [isNotificationExist]);
+        if (user.userId !== 0) {
+            getNotificationExist().then((res) => {
+                console.log("getNotificationExist", res);
+                if (res.data) {
+                    setIsNotificationExist(true);
+                } else {
+                    setIsNotificationExist(false);
+                }
+            });
+            console.log("getNotificationExist");
+        }
+    }, [user.userId]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -337,12 +348,8 @@ function Header() {
                     </>
                 ) : (
                     <>
-                        <ButtonWrapper onClick={() => router.push("/sign-in")}>
-                            로그인
-                        </ButtonWrapper>
-                        <ButtonWrapper onClick={() => router.push("/sign-in")}>
-                            회원가입
-                        </ButtonWrapper>
+                        <ButtonWrapper onClick={handleLogin}>로그인</ButtonWrapper>
+                        <ButtonWrapper onClick={handleLogin}>회원가입</ButtonWrapper>
                     </>
                 )}
             </NavigationContainer>

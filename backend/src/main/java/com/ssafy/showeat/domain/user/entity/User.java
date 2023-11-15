@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.notification.entity.Notification;
-import com.ssafy.showeat.domain.payment.dto.response.PaymentResponseDto;
 import com.ssafy.showeat.domain.payment.entity.Payment;
 import com.ssafy.showeat.domain.user.dto.response.UserResponseDto;
 import com.ssafy.showeat.global.entity.BaseTimeEntity;
@@ -121,7 +120,11 @@ public class User extends BaseTimeEntity {
         this.userMoney += amount;
     }
 
-    public void updateBusiness() {
+    public void updateUserBusiness() {
         this.userBusiness = true;
+    }
+
+    public void updateBusiness(Business business) {
+        this.business = business;
     }
 }

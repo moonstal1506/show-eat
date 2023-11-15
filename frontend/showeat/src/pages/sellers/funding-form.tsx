@@ -11,7 +11,7 @@ import Image from "next/image";
 import { changeFontWeight } from "@utils/format";
 import Modal from "@components/composite/modal";
 import FileInput from "@components/common/input/FileInput";
-import { addNewMenu, getMenuList } from "@apis/menu";
+import { getMenuList, postMenu } from "@apis/menu";
 import { createFunding, postGiftcardImage } from "@/apis/fundings";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -558,11 +558,7 @@ function FundingForm() {
     };
 
     const submitModalData = () => {
-        addNewMenu({
-            menu: menuName,
-            price: originPrice,
-            multipartFiles: uploadedFiles,
-        }).then((res) => {
+        postMenu(menuName, originPrice, uploadedFiles).then((res) => {
             setMenuList(res.data);
             setIsModalOpen(false);
         });
@@ -610,6 +606,7 @@ function FundingForm() {
         <>
             <Head>
                 <title>펀딩 생성</title>
+                <meta name="description" content="셀러님께서 펀딩을 생성하는 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <FundingFormContainer>
