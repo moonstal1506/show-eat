@@ -13,6 +13,7 @@ import { formatMoney } from "@/utils/format";
 import { TextInput } from "@/components/common/input";
 import useUserState from "@/hooks/useUserState";
 import Head from "next/head";
+import useSellerState from "@/hooks/useSellerState";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -258,8 +259,7 @@ function LoginModal() {
     // Function for Redirecting to Kakao Login Page
     const handleKakaoLogin = () => {
         const KAKAO_BASE_URL: string = "https://kauth.kakao.com/oauth/authorize";
-        const currentUrl = window.location.pathname;
-        window.location.href = `${KAKAO_BASE_URL}?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&state=${currentUrl}`;
+        window.location.href = `${KAKAO_BASE_URL}?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
     };
     return (
         <LoginModalContainer>
@@ -336,9 +336,9 @@ function MultiModal(isStatus: string) {
 function SuccessModal() {
     const router = useRouter();
     const goSeller = () => {
-        router.replace("/sellers/redeem");
+        router.replace("/sellers/profile/seller-info");
     };
-    const closeWindow = () => {
+    const goMain = () => {
         router.replace("/");
     };
 
@@ -348,13 +348,13 @@ function SuccessModal() {
                 성공적으로 처리 완료됐습니다.
             </SuccessModalDescriptionWrapper>
             <SuccessModalButtonContainer>
-                <TextButton text="셀러 페이지로" width="180px" height="40px" onClick={goSeller} />
                 <TextButton
-                    text="메인으로"
+                    text="셀러 페이지로"
                     width="180px"
                     height="40px"
-                    onClick={() => closeWindow()}
+                    onClick={() => goSeller()}
                 />
+                <TextButton text="메인으로" width="180px" height="40px" onClick={() => goMain()} />
             </SuccessModalButtonContainer>
         </MultiModalContainer>
     );
@@ -370,6 +370,7 @@ function RedeemResult() {
     const [isStatus, setIsStatus] = useState<string>("UNKNOWN");
     const [isUseMoney, setIsUseMoney] = useState("");
     const [user] = useUserState();
+    const [, setSeller] = useSellerState();
 
     useEffect(() => {
         const { couponId } = router.query;
@@ -383,6 +384,18 @@ function RedeemResult() {
                     setCouponData(res.data);
                 }
             });
+        }
+
+        if (user.userId === 0) {
+            setSeller((prev) => ({
+                ...prev,
+                couponUrl: `/sellers/redeem/result/${couponId}`,
+            }));
+        } else {
+            setSeller((prev) => ({
+                ...prev,
+                couponUrl: "",
+            }));
         }
     }, [router.query, user]);
 
