@@ -49,7 +49,7 @@ function PayLoading() {
                 .catch((approvalError) => {
                     console.error(approvalError);
 
-                    router.replace("/buyers/pay-result-fail");
+                    router.replace("/buyers/pay");
                 });
         } else {
             // Handle the case where paymentType is null
