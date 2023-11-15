@@ -42,6 +42,6 @@ public interface BusinessService {
 	boolean verifyBusiness(RegistrationRequestDto registrationRequestDto, MultipartFile businessRegistration,
 		User userFromRequest) throws IOException;
 
-	void registerAccount(AccountInfoRequestDto accountInfoRequestDto, MultipartFile bankBook, User user) throws
+	SellerResponseDto registerAccount(AccountInfoRequestDto accountInfoRequestDto, MultipartFile bankBook, User user) throws
 		IOException;
 }
