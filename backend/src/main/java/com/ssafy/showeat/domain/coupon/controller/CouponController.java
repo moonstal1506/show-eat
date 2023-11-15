@@ -87,7 +87,7 @@ public class CouponController {
 	})
 	@PatchMapping("/update/price")
 	public ResponseResult updateCouponPrice(@RequestBody UpdateCouponPriceRequestDto updateCouponPriceRequestDto , HttpServletRequest request) {
-		couponService.updateCouponPrice(updateCouponPriceRequestDto),userService.getUserFromRequest(request);
+		couponService.updateCouponPrice(updateCouponPriceRequestDto,userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 }
