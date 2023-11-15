@@ -3,9 +3,6 @@ package com.ssafy.showeat.domain.funding.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,15 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.zxing.WriterException;
 import com.ssafy.showeat.domain.bookmark.entity.Bookmark;
 import com.ssafy.showeat.domain.bookmark.service.BookmarkService;
 import com.ssafy.showeat.domain.business.entity.Business;
 import com.ssafy.showeat.domain.business.entity.BusinessMenu;
 import com.ssafy.showeat.domain.business.repository.BusinessMenuRepository;
 import com.ssafy.showeat.domain.business.repository.BusinessRepository;
+import com.ssafy.showeat.domain.coupon.entity.Coupon;
 import com.ssafy.showeat.domain.coupon.service.CouponService;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
-import com.ssafy.showeat.domain.funding.dto.request.MenuRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingIsZzimAndIsParticipate;
 import com.ssafy.showeat.domain.funding.dto.response.FundingListResponseDto;
@@ -38,8 +36,9 @@ import com.ssafy.showeat.domain.funding.entity.FundingType;
 import com.ssafy.showeat.domain.funding.entity.UserFunding;
 import com.ssafy.showeat.domain.funding.repository.FundingRepository;
 import com.ssafy.showeat.domain.funding.repository.UserFundingRepository;
+import com.ssafy.showeat.domain.notification.service.NotificationService;
+import com.ssafy.showeat.domain.qr.service.QrService;
 import com.ssafy.showeat.domain.user.entity.User;
-import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.exception.BlankSearchKeywordException;
 import com.ssafy.showeat.global.exception.DuplicationApplyFundingException;
 import com.ssafy.showeat.global.exception.ImpossibleApplyFundingException;
@@ -68,63 +67,73 @@ public class FundingServiceImpl implements FundingService {
 	private final BusinessMenuRepository businessMenuRepository;
 	private final BookmarkService bookmarkService;
 	private final CouponService couponService;
+	private final NotificationService notificationService;
 	private final S3Service s3Service;
+	private final QrService qrService;
 
 	@Override
 	@Transactional
-	public Long createFunding(CreateFundingRequestDto createFundingRequestDto , User loginUser) {
+	public Long createFunding(CreateFundingRequestDto createFundingRequestDto, User loginUser) {
 		log.info("FundingServiceImpl_createFunding || 업주가 펀딩을 생성");
 
 		Business business = businessRepository.findByUser(loginUser).orElseThrow(NotExistBusinessException::new);
 		validateCategoryType(createFundingRequestDto.getCategory());
 
-		if(createFundingRequestDto.getFundingType().equals(FundingType.MENU.name())){
+		if (createFundingRequestDto.getFundingType().equals(FundingType.MENU.name())) {
 			BusinessMenu businessMenu = businessMenuRepository.findById(createFundingRequestDto.getMenuId()).get();
-			return fundingRepository.save(createFundingRequestDto.createMenuFunding(business,businessMenu)).getFundingId();
-		}else{
+			return fundingRepository.save(createFundingRequestDto.createMenuFunding(business, businessMenu))
+				.getFundingId();
+		} else {
 			return fundingRepository.save(createFundingRequestDto.createGifrCardFunding(business)).getFundingId();
 		}
 
-//		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
-//			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
-//			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
-//		}
+		//		for (MenuRequestDto menuRequestDto : createFundingRequestDto.getMenuRequestDtos()) {
+		//			BusinessMenu businessMenu = businessMenuRepository.findById(menuRequestDto.getMenuId()).get();
+		//			fundingRepository.save(createFundingRequestDto.createFunding(business,businessMenu,menuRequestDto.getDiscountPrice()));
+		//		}
 	}
 
 	@Override
 	@Transactional
-	public void applyFunding(Long fundingId ,User loginUser) {
+	public void applyFunding(Long fundingId, User loginUser) throws IOException, WriterException {
 		log.info("FundingServiceImpl_applyFunding ||  펀딩 참여");
 		Funding funding = fundingRepository.findByIdWithLock(fundingId).orElseThrow(NotExistFundingException::new);
-		fundingValidation(funding,loginUser);
+		fundingValidation(funding, loginUser);
 
-		funding.addUserFunding(funding,loginUser);
+		funding.addUserFunding(funding, loginUser);
 		loginUser.spendMoney(funding.getFundingDiscountPrice());
 		funding.addMoneyForApply();
 		funding.addCountForApply();
 
-		if(!funding.isMaxLimit())
+		if (!funding.isMaxLimit())
 			return;
 
 		funding.changeFundingStatusByMaxApply();
-		couponService.createCoupon(funding);
-		// TODO : HISTORY 생성
+
+		//쿠폰생성
+		List<Coupon> coupons = couponService.createCoupon(funding);
+
+		//qr생성
+		qrService.createQr(coupons);
+
+		//알림 생성
+		notificationService.createNotification(coupons);
 	}
 
 	@Override
 	@Transactional
-	public void cancelFunding(Long fundingId , User loginUser) {
+	public void cancelFunding(Long fundingId, User loginUser) {
 		log.info("FundingServiceImpl_cancelFunding ||  펀딩 참여 취소");
 
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
 
-		if(funding.getFundingIsActive().equals(FundingIsActive.INACTIVE))
+		if (funding.getFundingIsActive().equals(FundingIsActive.INACTIVE))
 			throw new InactiveFundingException();
 
-		if(!userFundingRepository.existsByUserAndFunding(loginUser,funding))
+		if (!userFundingRepository.existsByUserAndFunding(loginUser, funding))
 			throw new ImpossibleCancelFundingException();
 
-		userFundingRepository.delete(userFundingRepository.findByUserAndFunding(loginUser,funding));
+		userFundingRepository.delete(userFundingRepository.findByUserAndFunding(loginUser, funding));
 		loginUser.refundMoney(funding.getFundingDiscountPrice());
 		funding.cancelFunding();
 	}
@@ -136,38 +145,38 @@ public class FundingServiceImpl implements FundingService {
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
 		int bookmarkCount = bookmarkService.getBookmarkCountByFundingId(fundingId);
 
-		return funding.toFundingResponseDto(bookmarkCount , funding.getBusiness().getBusinessId());
+		return funding.toFundingResponseDto(bookmarkCount, funding.getBusiness().getBusinessId());
 	}
 
-	private void fundingValidation(Funding funding , User loginUser){
-		if(funding.getFundingIsActive().equals(FundingIsActive.INACTIVE))
+	private void fundingValidation(Funding funding, User loginUser) {
+		if (funding.getFundingIsActive().equals(FundingIsActive.INACTIVE))
 			throw new InactiveFundingException();
 
-		if(!funding.isApply())
+		if (!funding.isApply())
 			throw new ImpossibleApplyFundingException();
 
-		if(userFundingRepository.existsByUserAndFunding(loginUser,funding))
+		if (userFundingRepository.existsByUserAndFunding(loginUser, funding))
 			throw new DuplicationApplyFundingException();
 
-		if(!loginUser.haveMoney(funding.getFundingDiscountPrice()))
+		if (!loginUser.haveMoney(funding.getFundingDiscountPrice()))
 			throw new LackPointUserFundingException();
 	}
 
 	@Override
 	public Page<FundingListResponseDto> getUserFundingList(User user, int page) {
 		log.info("FundingServiceImpl_getUserFundingList ||  유저가 참여한 펀딩 리스트 조회");
-		Pageable pageable = PageRequest.of(page, 12 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Pageable pageable = PageRequest.of(page, 12, Sort.by(Sort.Direction.DESC, "createdDate"));
 		Page<UserFunding> userFundings = userFundingRepository.findByUser(user, pageable);
 
 		List<FundingListResponseDto> result =
-				userFundings.getContent()
+			userFundings.getContent()
 				.stream()
 				.map(userFunding -> {
 					Funding funding = userFunding.getFunding();
 					return funding.toFundingListResponseDto();
 				}).collect(Collectors.toList());
 
-		if(userFundings.getTotalPages() <= page)
+		if (userFundings.getTotalPages() <= page)
 			throw new NotExistPageFundingException();
 
 		return new PageImpl<>(result, pageable, userFundings.getTotalElements());
@@ -176,7 +185,7 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public Page<FundingListResponseDto> getUserFundingListByBookmark(User user, int page) {
 		log.info("FundingServiceImpl_getUserFundingListByBookmark ||  유저가 좋아요한 펀딩 리스트 조회");
-		Pageable pageable = PageRequest.of(page, 12 , Sort.by(Sort.Direction.DESC, "createdDate"));
+		Pageable pageable = PageRequest.of(page, 12, Sort.by(Sort.Direction.DESC, "createdDate"));
 		Page<Bookmark> userBookmarkFundingList = bookmarkService.getUserBookmarkFundingList(user, page, pageable);
 
 		List<FundingListResponseDto> result = userBookmarkFundingList.getContent()
@@ -186,7 +195,7 @@ public class FundingServiceImpl implements FundingService {
 				return funding.toFundingListResponseDto();
 			}).collect(Collectors.toList());
 
-		if(userBookmarkFundingList.getTotalPages() <= page)
+		if (userBookmarkFundingList.getTotalPages() <= page)
 			throw new NotExistPageFundingException();
 
 		return new PageImpl<>(result, pageable, userBookmarkFundingList.getTotalElements());
@@ -201,7 +210,7 @@ public class FundingServiceImpl implements FundingService {
 		Page<Funding> searchFundingList = fundingRepository.findBySearchFundingRequestDto(
 			searchFundingRequestDto, pageable);
 
-		if(searchFundingList.getTotalPages() <= searchFundingRequestDto.getPage())
+		if (searchFundingList.getTotalPages() <= searchFundingRequestDto.getPage())
 			throw new NotExistPageFundingException();
 
 		return searchFundingList.map(funding -> funding.toFundingListResponseDto());
@@ -213,9 +222,9 @@ public class FundingServiceImpl implements FundingService {
 		validateSortType(type);
 
 		return fundingRepository.findByType(type)
-				.stream()
-				.map(funding -> funding.toFundingListResponseDto())
-				.collect(Collectors.toList());
+			.stream()
+			.map(funding -> funding.toFundingListResponseDto())
+			.collect(Collectors.toList());
 	}
 
 	@Override
@@ -227,7 +236,7 @@ public class FundingServiceImpl implements FundingService {
 		validateSortType(sortType);
 		validateCategoryType(category);
 
-		if(fundingList.getTotalPages() <= page)
+		if (fundingList.getTotalPages() <= page)
 			throw new NotExistPageFundingException();
 
 		return fundingList.map(funding -> funding.toFundingListResponseDto());
@@ -237,7 +246,7 @@ public class FundingServiceImpl implements FundingService {
 	public List<FundingListResponseDto> getBusinessFundingList(Long businessId) {
 		log.info("FundingServiceImpl_getBusinessFundingList || 업체의 펀딩 목록 조회");
 
-		return fundingRepository.findByBusiness_BusinessIdAndFundingIsActive(businessId,FundingIsActive.ACTIVE)
+		return fundingRepository.findByBusiness_BusinessIdAndFundingIsActive(businessId, FundingIsActive.ACTIVE)
 			.stream()
 			.map(funding -> funding.toFundingListResponseDto())
 			.collect(Collectors.toList());
@@ -248,14 +257,14 @@ public class FundingServiceImpl implements FundingService {
 		log.info("FundingServiceImpl_getUserFundingIsZzimAndIsParticipate || 유저의 펀딩 참여여부,찜 여부");
 
 		return FundingIsZzimAndIsParticipate.builder()
-			.fundingIsZzim(bookmarkService.isBookmark(userId,fundingId))
-			.fundingIsParticipate(userFundingRepository.existsByUser_UserIdAndFunding_FundingId(userId,fundingId))
+			.fundingIsZzim(bookmarkService.isBookmark(userId, fundingId))
+			.fundingIsParticipate(userFundingRepository.existsByUser_UserIdAndFunding_FundingId(userId, fundingId))
 			.build();
 	}
 
 	@Override
 	@Transactional
-	public void addImageToFunding(Long fundingId, MultipartFile multipartFile,  User user) throws IOException {
+	public void addImageToFunding(Long fundingId, MultipartFile multipartFile, User user) throws IOException {
 		log.info("FundingServiceImpl_AddImageToFunding || 금액권 펀딩에 이미지 추가");
 
 		Funding funding = fundingRepository.findById(fundingId).orElseThrow(NotExistFundingException::new);
@@ -270,7 +279,7 @@ public class FundingServiceImpl implements FundingService {
 			.map(funding -> funding.toFundingListResponseDto());
 	}
 
-	private void validateSearch(SearchFundingRequestDto searchFundingRequestDto){
+	private void validateSearch(SearchFundingRequestDto searchFundingRequestDto) {
 		searchFundingRequestDto.getSearchType().stream().forEach(searchType -> validateSearchType(searchType));
 		searchFundingRequestDto.getCategory().stream().forEach(category -> validateCategoryType(category));
 		validateSortType(searchFundingRequestDto.getSortType());
@@ -281,20 +290,22 @@ public class FundingServiceImpl implements FundingService {
 		if (sortType.equals(FundingSortType.POPULARITY.name())
 			|| sortType.equals(FundingSortType.CLOSING_SOON.name())
 			|| sortType.equals(FundingSortType.LOW_PRICE.name())
-			|| sortType.equals(FundingSortType.HIGH_DISCOUNT_RATE.name())) return;
+			|| sortType.equals(FundingSortType.HIGH_DISCOUNT_RATE.name()))
+			return;
 
 		throw new InvalidSortTypeException();
 	}
 
-	private void validateSearchType(String searchType){
+	private void validateSearchType(String searchType) {
 		if (searchType.equals(FundingSearchType.FUNDING_MENU.name())
 			|| searchType.equals(FundingSearchType.FUNDING_TAG.name())
-			|| searchType.equals(FundingSearchType.BUSINESS_NAME.name())) return;
+			|| searchType.equals(FundingSearchType.BUSINESS_NAME.name()))
+			return;
 
 		throw new InvalidSearchTypeException();
 	}
 
-	private void validateCategoryType(String categoryType){
+	private void validateCategoryType(String categoryType) {
 		if (categoryType.equals(FundingCategory.ASIAN.name())
 			|| categoryType.equals(FundingCategory.CHINESE.name())
 			|| categoryType.equals(FundingCategory.CAFE_DESSERT.name())
@@ -302,12 +313,14 @@ public class FundingServiceImpl implements FundingService {
 			|| categoryType.equals(FundingCategory.JAPANESE_SUSHI.name())
 			|| categoryType.equals(FundingCategory.KOREAN.name())
 			|| categoryType.equals(FundingCategory.SNACKS_LATE_NIGHT.name())
-			|| categoryType.equals(FundingCategory.CHICKEN_BURGER.name())) return;
+			|| categoryType.equals(FundingCategory.CHICKEN_BURGER.name()))
+			return;
 
 		throw new InvalidCategoryTypeException();
 	}
 
 	private void validateBlankKeyword(String keyword) {
-		if (keyword.isBlank()) throw new BlankSearchKeywordException();
+		if (keyword.isBlank())
+			throw new BlankSearchKeywordException();
 	}
 }
