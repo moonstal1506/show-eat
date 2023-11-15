@@ -34,7 +34,7 @@ public class QrService {
 		// QR 정보
 		int width = 200;
 		int height = 200;
-		String url = "https://showeat.kr/" + coupon.getCouponId();
+		String url = "https://showeat.kr/sellers/redeem/result/" + coupon.getCouponId();
 
 		// QR Code - BitMatrix: qr code 정보 생성
 		BitMatrix encode = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, width, height);

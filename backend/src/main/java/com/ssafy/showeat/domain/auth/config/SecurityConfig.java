@@ -73,6 +73,7 @@ public class SecurityConfig {
                 .antMatchers("/api/funding/home/**").permitAll()
                 .antMatchers("/api/funding/business/active/**").permitAll()
                 .antMatchers("/api/business/seller/**").permitAll()
+                .antMatchers("/api/coupon/**").permitAll()
                 .antMatchers("/api/review").permitAll()
                 .anyRequest().authenticated();
 

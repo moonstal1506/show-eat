@@ -87,7 +87,6 @@ const LabelWrapper = styled("div")`
     justify-content: center;
     font-size: 18px;
     font-weight: 700;
-    margin-top: 0.5em;
 `;
 
 const InputBox = styled("div")`
@@ -101,7 +100,6 @@ const BankBookImgWrapper = styled("div")`
     display: flex;
     width: 727px;
     gap: 10px;
-    margin-top: 0.5em;
     align-items: center;
 `;
 

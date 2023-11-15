@@ -6,6 +6,7 @@ import FundingCancelErrorModal from "./FundingCancelErrorModal";
 import FundingCancelModal from "./FundingCancelModal";
 import FundingFavoriteErrorModal from "./FundingFavoriteErrorModal";
 import FundingShareModal from "./FundingShareModal";
+import SellerRegisterFailModal from "./SellerRegisterFailModal";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -18,4 +19,5 @@ export {
     FundingCancelModal,
     FundingFavoriteErrorModal,
     FundingShareModal,
+    SellerRegisterFailModal,
 };

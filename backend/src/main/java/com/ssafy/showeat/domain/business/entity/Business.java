@@ -168,6 +168,6 @@ public class Business extends BaseDateEntity {
 		this.bankBookUrl = bankBookUrl;
 		this.businessAccount =accountInfoRequestDto.getAccountBank()+ " "+ accountInfoRequestDto.getAccountNumber();
 		this.businessAccountHolder =accountInfoRequestDto.getAccountHolder();
-		user.updateBusiness();
+		user.updateUserBusiness();
 	}
 }

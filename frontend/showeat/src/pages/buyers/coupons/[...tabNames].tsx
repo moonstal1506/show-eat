@@ -15,6 +15,7 @@ import { TextButton } from "@components/common/button";
 import { useRouter } from "next/router";
 import useUserState from "@hooks/useUserState";
 import withAuth from "@libs/withAuth";
+import CouponReviewModal from "@/components/custom/modal/CouponReviewModal";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -153,6 +154,7 @@ function CouponsTab(props: CouponsTabProps) {
     const [page, setPage] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [hasMorePage, setHasMorePage] = useState<boolean>(false);
+    const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
 
     // Function for Handling Tab Click
     const handleTabClick = (id: string, redirectUrl: string) => {
@@ -177,15 +179,22 @@ function CouponsTab(props: CouponsTabProps) {
         setIsModalOpen(true);
     };
 
+    const openReviewModal = () => {
+        setReviewModalOpen(true);
+    };
+
+    const closeReviewModal = () => {
+        setReviewModalOpen(false);
+    };
+
     useEffect(() => {
         const { userId } = user;
         const status: string = activeTab.toUpperCase();
         if (userId !== 0) {
             getCouponList(userId, status, page).then((result) => {
-                if (result.length > 0) {
+                if (result.statusCode === 200) {
                     const isLastPage: boolean = result.data.last;
                     const couponList: CouponType[] = result.data.couponResponseDtos || [];
-
                     if (page === 0) {
                         setCouponData(couponList);
                         setHasMorePage(!isLastPage);
@@ -252,7 +261,30 @@ function CouponsTab(props: CouponsTabProps) {
                     isOpen={isModalOpen}
                     setIsOpen={setIsModalOpen}
                     childComponent={<BuyersCouponsModal coupon={selectedCoupon} />}
-                    buttonType="close"
+                    onSubmit={() => openReviewModal()}
+                    buttonType={
+                        selectedCoupon.couponStatus === "USED" && !selectedCoupon.writeCouponReview
+                            ? "review"
+                            : "close"
+                    }
+                    buttonWidth="150px"
+                />
+            )}
+            {selectedCoupon && (
+                <Modal
+                    width="auto"
+                    height="auto"
+                    isOpen={reviewModalOpen}
+                    setIsOpen={setReviewModalOpen}
+                    childComponent={
+                        <CouponReviewModal
+                            closeReviewModal={closeReviewModal}
+                            couponId={selectedCoupon.couponId}
+                            setCouponData={setCouponData}
+                            setSelectedCoupon={setSelectedCoupon}
+                        />
+                    }
+                    buttonType="none"
                     buttonWidth="150px"
                 />
             )}

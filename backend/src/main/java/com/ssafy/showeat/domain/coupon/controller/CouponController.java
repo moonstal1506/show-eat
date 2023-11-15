@@ -1,5 +1,7 @@
 package com.ssafy.showeat.domain.coupon.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponPriceRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
 import com.ssafy.showeat.domain.coupon.service.CouponService;
+import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ResponseResult;
 import com.ssafy.showeat.global.response.SingleResponseResult;
 
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CouponController {
 
 	private final CouponService couponService;
+	private final UserService userService;
 
 	@ApiOperation(value = "상태별 쿠폰 리스트 조회", notes = "유저의 상태별 쿠폰 리스트를 조회합니다.")
 	@ApiResponses(value = {
@@ -55,8 +59,24 @@ public class CouponController {
 		@ApiResponse(code = 400, message = "쿠폰 상태 변경 실패"),
 	})
 	@PatchMapping("/update/status")
-	public ResponseResult updateCouponStatus(@RequestBody UpdateCouponStatusRequestDto updateCouponStatusRequestDto) {
+	public ResponseResult updateCouponStatus(
+		@RequestBody UpdateCouponStatusRequestDto updateCouponStatusRequestDto) {
 		couponService.updateCouponStatus(updateCouponStatusRequestDto);
+		return ResponseResult.successResponse;
+	}
+
+	@ApiOperation(value = "업주가 쿠폰 사용 처리", notes = "업주가 쿠폰을 사용처리 합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(code = 200, message = "쿠폰 사용 처리 성공"),
+		@ApiResponse(code = 400, message = "쿠폰 사용 처리 실패"),
+		@ApiResponse(code = 463, message = "쿠폰 사용 처리는 업주만 가능"),
+	})
+	@PatchMapping("/update/status/{couponId}")
+	public ResponseResult updateCouponStatusByOwner(
+		@PathVariable Long couponId,
+		HttpServletRequest request
+	) {
+		couponService.updateCouponStatusByOwner(couponId,userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}
 

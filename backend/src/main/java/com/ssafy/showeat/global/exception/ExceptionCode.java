@@ -25,6 +25,7 @@ public enum ExceptionCode {
 	NOT_EXIST_COUPON_EXCEPTION(460, "해당 쿠폰이 존재하지 않습니다."),
 	INVALID_COUPON_TYPE_EXCEPTION(461,"유효하지 않은 쿠폰 타입입니다."),
 	INVALID_COUPON_PRICE_EXCEPTION(462,"차감 가격이 유효하지 않습니다."),
+	IMPOSSIBLE_COUPON_USE_EXCEPTION(463,"쿠폰 사용처리는 업주만 가능합니다. 당신은 쿠폰을 발행한 업주가 아닙니다."),
 	INACTIVE_FUNDING_EXCEPTION(481,"이미 종료된 펀딩입니다."),
 	IMPOSSIBLE_APPLY_FUNDING_EXCEPTION(482,"펀딩 참여 가능한 자리가 없습니다."),
 	DUPLICATION_APPLY_FUNDING_EXCEPTION(483,"펀딩 중복 참여는 불가능합니다."),
