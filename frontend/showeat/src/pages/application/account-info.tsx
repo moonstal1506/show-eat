@@ -9,11 +9,19 @@ import { TextInput } from "@components/common/input";
 import TextButton from "@components/common/button/TextButton";
 import useUserState from "@/hooks/useUserState";
 import useSellerState from "@/hooks/useSellerState";
+import Head from "next/head";
+import Modal from "@/components/composite/modal";
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Type */
 interface StepBoxProps {
     backgroundColor: string;
 }
 
+// ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const AccountInfoContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -112,6 +120,67 @@ const ButtonWrapper = styled("div")`
     justify-content: center;
 `;
 
+const MultiModalContainer = styled("div")`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+`;
+
+const MultiModalTitleWrapper = styled("span")`
+    font-size: 30px;
+    font-weight: 700;
+
+    padding: 0.5em;
+`;
+
+const MultiModalDescriptionWrapper = styled("span")`
+    font-size: 18px;
+
+    padding: 2em 0;
+
+    @media (max-width: 767px) {
+        font-size: 14px;
+    }
+`;
+
+// ----------------------------------------------------------------------------------------------------
+
+/* Multi Modal Component */
+function MultiModal(isStatus: string) {
+    const renderText = [
+        {
+            status: "SUCCESS",
+            title: "등록 완료",
+            description: "정산 정보를 등록 완료했습니다.",
+        },
+        {
+            status: "UNKNOWN",
+            title: "알 수 없는 오류",
+            description: "개발진에게 문의 해주세요.",
+        },
+        {
+            status: "FAILED",
+            title: "요청 실패",
+            description: "등록 요청이 실패했습니다.",
+        },
+    ];
+    return (
+        <MultiModalContainer>
+            <MultiModalTitleWrapper>
+                {renderText.find((text) => text.status === isStatus)?.title}
+            </MultiModalTitleWrapper>
+            <MultiModalDescriptionWrapper>
+                {renderText.find((text) => text.status === isStatus)?.description}
+            </MultiModalDescriptionWrapper>
+        </MultiModalContainer>
+    );
+}
+
+/* Account Info Page */
 function AccountInfo() {
     // States and Variables
     const router = useRouter();
@@ -122,6 +191,8 @@ function AccountInfo() {
     const [accountNumber, setAccountNumber] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
     const [formData, setFormData] = useState<FormData>(new FormData());
+    const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
+    const [isStatus, setIsStatus] = useState("");
 
     const handleAccountHolderChange = (event: ChangeEvent<HTMLInputElement>) => {
         setAccountHolder(event.target.value.trim());
@@ -158,24 +229,39 @@ function AccountInfo() {
         postAccountInfo(accountHolder, accountBank, accountNumber, formData).then((res) => {
             console.log(res);
             if (res.statusCode === 200) {
-                // 유저의 userbusiness랑 셀러 정보 업데이트
                 setUser((prev) => ({
                     ...prev,
                     userBusiness: true,
                     userBusinessId: res.data.businessId,
                 }));
-                setSeller({ ...prev });
-                router.replace("/application/result");
+                setSeller((prev) => ({
+                    ...prev,
+                    sellerId: res.data.businessId,
+                    sellerName: res.data.businessName,
+                    sellerImgUrl: res.databusinessImgUrl,
+                }));
+                setIsStatus("SUCCESS");
+                setIsMultiModalOpen(true);
+                setTimeout(() => {
+                    router.replace("/application/result");
+                }, 2000);
             } else if (res === 520) {
-                alert("등록 실패");
+                setIsStatus("UNKNOWN");
+                setIsMultiModalOpen(true);
             } else {
-                alert("요청이 실패했습니다.");
+                setIsStatus("FAILED");
+                setIsMultiModalOpen(true);
             }
         });
     };
 
     return (
         <>
+            <Head>
+                <title>정산 정보 입력</title>
+                <meta name="description" content="정산받을 계좌 정보를 입력해주세요." />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Head>
             <HeaderContainer>
                 <HeaderWrapper>셀러 계정 신청</HeaderWrapper>
                 <ProgressBox>
@@ -241,6 +327,17 @@ function AccountInfo() {
                     <TextButton type="submit" width="200px" text="다음" onClick={handleSubmit} />
                 </ButtonWrapper>
             </AccountInfoContainer>
+            <Modal
+                childComponent={MultiModal(isStatus)}
+                width="500px"
+                height="300px"
+                isOpen={isMultiModalOpen}
+                setIsOpen={setIsMultiModalOpen}
+                buttonType="close"
+                buttonWidth="200px"
+                buttonHeight="50px"
+                buttonFontSize={20}
+            />
         </>
     );
 }
