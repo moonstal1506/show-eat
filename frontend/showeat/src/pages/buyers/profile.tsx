@@ -1,20 +1,21 @@
 /* Import */
+import addressList from "@configs/addressList";
 import BuyerLayout from "@layouts/BuyerLayout";
-import withAuth from "@libs/withAuth";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { patchNickname, patchPhone, patchAddress } from "@apis/users";
-import useUserState from "@/hooks/useUserState";
+import { FileInput, TextInput } from "@components/common/input";
+import { formatPhoneNumber } from "@utils/format";
+import { patchAddress, patchDeleteUserProfile, patchNickname, patchPhone } from "@apis/users";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { TextButton } from "@components/common/button";
-import { TextInput } from "@components/common/input";
 import { InputDropdown } from "@components/common/dropdown";
-import addressList from "@configs/addressList";
-import { formatPhoneNumber } from "@utils/format";
+import useUserState from "@hooks/useUserState";
+import withAuth from "@libs/withAuth";
 import Head from "next/head";
-// import FileInput from "@components/common/input/FileInput";
 
 // ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const UserInfoContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -26,12 +27,8 @@ const UserInfoContainer = styled("div")`
 `;
 
 const MyInfoContainer = styled("div")`
-    color: #000;
-    font-family: Pretendard;
     font-size: 30px;
-    font-style: normal;
     font-weight: 900;
-    line-height: normal;
 `;
 
 const MyImageContainer = styled("div")`
@@ -60,23 +57,24 @@ const NickNameContainer = styled("div")`
 const AddressContainer = styled("div")`
     color: #000;
 `;
+
 const PhoneContainer = styled("div")`
     color: #000;
 `;
+
 const MenuContainer = styled("div")`
-    color: #000;
-    font-family: Pretendard;
     font-size: 20px;
-    font-style: normal;
     font-weight: 700;
-    line-height: normal;
     padding-bottom: 20px;
     text-align: left;
 `;
+
 const MenuWrapper = styled("div")`
     display: flex;
     gap: 10px;
 `;
+
+// ----------------------------------------------------------------------------------------------------
 
 /* Buyer Profile Page */
 function BuyerProfile() {
@@ -85,7 +83,8 @@ function BuyerProfile() {
     const [nickname, setNickname] = useState<string>(userNickname);
     const [phone, setPhone] = useState<string>(userPhone);
     const [address, setAddress] = useState<string>(userAddress);
-    // const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
+    const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
+
     // Function for Handling Nickname Change
     const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setNickname(event.target.value.trim());
@@ -137,10 +136,21 @@ function BuyerProfile() {
         });
     };
 
+    const handleDeleteProfile = () => {
+        patchDeleteUserProfile(user.userId).then(() => {
+            setUser((prevState) => ({
+                ...prevState,
+                userImgUrl:
+                    "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
+            }));
+        });
+    };
+
     return (
         <>
             <Head>
                 <title>내 정보</title>
+                <meta name="description" content="바이어님의 정보 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <UserInfoContainer>
@@ -156,32 +166,26 @@ function BuyerProfile() {
                             priority
                         />
                         <ButtonContainer>
-                            <TextButton
-                                text="수정"
-                                width="100px"
-                                height="40px"
-                                fontSize={20}
-                                colorType="primary"
-                                onClick={() => {}}
+                            <FileInput
+                                count={1}
+                                color="primary"
+                                id="menuImage"
+                                buttonWidth="140px"
+                                buttonHeight="40px"
+                                buttonDescription="수정"
+                                uploadedFiles={uploadedProfileFiles}
+                                setUploadedFiles={setUploadedProfileFiles}
+                                modifyProfile
+                                profileType="BUYER"
+                                userId={user.userId}
                             />
-                            {/* <FileInput
-                            count={1}
-                            color="primary"
-                            id="menuImage"
-                            buttonWidth="140px"
-                            buttonHeight="40px"
-                            buttonDescription="수정"
-                            uploadedFiles={uploadedProfileFiles}
-                            setUploadedFiles={setUploadedProfileFiles}
-                            modifyProfile
-                        /> */}
                             <TextButton
                                 text="삭제"
                                 width="100px"
                                 height="40px"
                                 fontSize={20}
                                 colorType="primary"
-                                onClick={() => {}}
+                                onClick={handleDeleteProfile}
                             />
                         </ButtonContainer>
                     </ImageContainer>
