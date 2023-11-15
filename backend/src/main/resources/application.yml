@@ -45,7 +45,7 @@ logging:
     # hibernate 가 남기는 모든 로그가 debug모드로 설정
     # jpa hibernate가 생성하는 sql이 로거를 통해서 찍히도록 하는 설정
     org.hibernate.SQL: debug
-    org.hibernate.type: trace
+#    org.hibernate.type: trace
 
     org.hibernate.orm.jdbc.bind: trace
     org.springframework.web.socket: trace
@@ -84,6 +84,11 @@ clova:
 business:
   url: "https://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey="
   secretKey: "4SlBHvxNa576fRWhPJN31xw3YYDXDhysrpBFU8sDMMgR9oZJi%2FVsGSsqvkhiJP5%2FCLueZqxvPobQMMVPQMzxIA%3D%3D"
+
+sms:
+  key: "NCSLC4FNKZ8P694C"
+  secretKey: "Z4QQIAQPPITWUUW1DEZK6GJ0CDGRKLUB"
+  sender: "01064731506"
 
 management:
   endpoints:

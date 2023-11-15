@@ -155,7 +155,7 @@ function AccountInfo() {
                 alert("등록 실패");
                 return;
             }
-
+            console.log("seller info", res);
             router.replace("/application/result");
         });
     };
