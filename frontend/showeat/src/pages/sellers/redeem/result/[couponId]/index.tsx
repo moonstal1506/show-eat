@@ -334,16 +334,14 @@ function MultiModal(isStatus: string) {
 }
 
 function SuccessModal() {
-    // setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>
     const router = useRouter();
     const goRedeem = () => {
         router.replace("/sellers/redeem");
     };
     const closeWindow = () => {
-        if (typeof window !== "undefined") {
-            window.close();
-        }
+        router.replace("/");
     };
+
     return (
         <MultiModalContainer>
             <SuccessModalDescriptionWrapper>
@@ -352,7 +350,7 @@ function SuccessModal() {
             <SuccessModalButtonContainer>
                 <TextButton text="QR 페이지로" width="180px" height="40px" onClick={goRedeem} />
                 <TextButton
-                    text="페이지 나가기"
+                    text="메인으로"
                     width="180px"
                     height="40px"
                     onClick={() => closeWindow()}
@@ -368,7 +366,7 @@ function RedeemResult() {
     const [couponData, setCouponData] = useState<CouponType | null>(null);
     const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
     const [isStatus, setIsStatus] = useState<string>("UNKNOWN");
     const [isUseMoney, setIsUseMoney] = useState("");
     const [user] = useUserState();
@@ -475,6 +473,7 @@ function RedeemResult() {
         <>
             <Head>
                 <title>쿠폰 결제</title>
+                <meta name="description" content="쿠폰 결제 처리 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <RedeemResultContainer>

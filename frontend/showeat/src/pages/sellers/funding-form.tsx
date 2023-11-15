@@ -610,6 +610,7 @@ function FundingForm() {
         <>
             <Head>
                 <title>펀딩 생성</title>
+                <meta name="description" content="셀러님께서 펀딩을 생성하는 페이지입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <FundingFormContainer>

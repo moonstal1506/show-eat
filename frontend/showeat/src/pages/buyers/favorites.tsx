@@ -104,10 +104,10 @@ function Favorites() {
                     if (page === 0) {
                         setFundingData(fundingList);
                         setHasMorePage(!isLastPage);
+                    } else {
+                        setFundingData([...fundingData, ...fundingList]);
+                        setHasMorePage(!isLastPage);
                     }
-                } else {
-                    setFundingData([...fundingData, ...fundingList]);
-                    setHasMorePage(!isLastPage);
                 }
             } else {
                 setFundingData([]);
@@ -123,7 +123,8 @@ function Favorites() {
     return (
         <>
             <Head>
-                <title>내가 좋아요한 펀딛</title>
+                <title>내가 좋아요한 펀딩</title>
+                <meta name="description" content="바이어님께서 좋아요하신 펀딩 목록입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <FavoritesContainer>
