@@ -143,7 +143,7 @@ function MyFundings() {
         <>
             <Head>
                 <title>내가 참여한 펀딩</title>
-                <meta name="description" content="바이어님께서 참가하신 펀딩 목록입니다." />
+                <meta name="description" content="바이어 님께서 참여하신 펀딩 목록입니다." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <MyFundingsContainer>
