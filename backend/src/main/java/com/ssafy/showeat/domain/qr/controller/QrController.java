@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 public class QrController {
 
 	private final QrService qrService;
-
-	@GetMapping("/{couponId}")
-	public ResponseResult qrToCoupon(@PathVariable Long couponId) throws WriterException, IOException {
-		qrService.qrToCoupon(couponId);
-		return ResponseResult.successResponse;
-	}
+	//
+	// @GetMapping("/{couponId}")
+	// public ResponseResult qrToCoupon(@PathVariable Long couponId) throws WriterException, IOException {
+	// 	qrService.qrToCoupon(couponId);
+	// 	return ResponseResult.successResponse;
+	// }
 }

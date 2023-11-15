@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.zxing.WriterException;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
 import com.ssafy.showeat.domain.funding.entity.FundingIsActive;
@@ -95,7 +96,9 @@ public class FundingController {
 		@ApiResponse(code = 484, message = "해당 펀딩에 참여할 포인트 부족"),
 	})
 	@PostMapping("/user/{fundingId}")
-	public ResponseResult applyFunding(@PathVariable Long fundingId , HttpServletRequest request){
+	public ResponseResult applyFunding(@PathVariable Long fundingId , HttpServletRequest request) throws
+		IOException,
+		WriterException {
 		fundingService.applyFunding(fundingId,userService.getUserFromRequest(request));
 		return ResponseResult.successResponse;
 	}

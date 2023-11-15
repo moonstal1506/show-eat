@@ -36,6 +36,7 @@ public class NotificationController {
 	})
 	@GetMapping
 	public ResponseResult getNotificationListByIsChecked(HttpServletRequest request) {
+		log.info("getNotificationListByIsChecked");
 		return new SingleResponseResult<>(
 			notificationService.getNotificationListByIsChecked(userService.getUserFromRequest(request)));
 	}
@@ -47,12 +48,14 @@ public class NotificationController {
 	})
 	@GetMapping("/exist")
 	public ResponseResult getNotificationExist(HttpServletRequest request) {
+		log.info("getNotificationExist");
 		return new SingleResponseResult<>(
 			notificationService.getNotificationExist(userService.getUserFromRequest(request)));
 	}
 
 	@GetMapping(value = "/subscribe")
 	public SseEmitter subscribe(HttpServletRequest request) {
+		log.info("subscribe");
 		return sseService.connectNotification(userService.getUserFromRequest(request).getUserId());
 	}
 }

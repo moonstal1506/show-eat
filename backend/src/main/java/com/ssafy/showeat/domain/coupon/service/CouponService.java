@@ -1,9 +1,12 @@
 package com.ssafy.showeat.domain.coupon.service;
 
+import java.util.List;
+
 import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponPriceRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.request.UpdateCouponStatusRequestDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponPageResponseDto;
 import com.ssafy.showeat.domain.coupon.dto.response.CouponResponseDto;
+import com.ssafy.showeat.domain.coupon.entity.Coupon;
 import com.ssafy.showeat.domain.coupon.entity.CouponStatus;
 import com.ssafy.showeat.domain.funding.entity.Funding;
 import com.ssafy.showeat.domain.user.entity.User;
@@ -17,5 +20,5 @@ public interface CouponService {
 
 	void updateCouponPrice(UpdateCouponPriceRequestDto updateCouponPriceRequestDto);
 	void updateCouponStatusByOwner(Long couponId , User user);
-	void createCoupon(Funding funding);
+	List<Coupon> createCoupon(Funding funding);
 }

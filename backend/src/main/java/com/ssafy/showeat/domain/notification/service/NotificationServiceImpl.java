@@ -1,11 +1,13 @@
 package com.ssafy.showeat.domain.notification.service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.showeat.domain.coupon.entity.Coupon;
 import com.ssafy.showeat.domain.notification.dto.response.NotificationListResponseDto;
 import com.ssafy.showeat.domain.notification.dto.response.NotificationResponseDto;
 import com.ssafy.showeat.domain.notification.entity.Notification;
@@ -20,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class NotificationServiceImpl implements NotificationService {
+
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
 
 	private final NotificationRepository notificationRepository;
 
@@ -52,6 +56,20 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public boolean getNotificationExist(User user) {
 		return notificationRepository.existsByUserAndNotificationIsChecked(user, false);
+	}
+
+	@Override
+	@Transactional
+	public void createNotification(List<Coupon> coupons) {
+		List<Notification> notifications = new ArrayList<>();
+		for (Coupon coupon : coupons) {
+
+			String message = coupon.getFunding().getFundingTitle() + NotificationType.COUPON_CREATE.getMessage()
+				+ dateFormat.format(coupon.getCouponExpirationDate());
+
+			notifications.add(Notification.createMms(coupon.getUser(), coupon.getFunding(), message,
+				NotificationType.COUPON_CREATE, coupon));
+		}
 	}
 
 }

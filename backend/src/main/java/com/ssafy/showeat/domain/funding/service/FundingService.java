@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.zxing.WriterException;
 import com.ssafy.showeat.domain.funding.dto.request.CreateFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.request.SearchFundingRequestDto;
 import com.ssafy.showeat.domain.funding.dto.response.FundingIsZzimAndIsParticipate;
@@ -18,7 +19,7 @@ import com.ssafy.showeat.domain.user.entity.User;
 
 public interface FundingService {
 	Long createFunding(CreateFundingRequestDto createFundingRequestDto , User user);
-	void applyFunding(Long fundingId , User user);
+	void applyFunding(Long fundingId , User user) throws IOException, WriterException;
 	void cancelFunding(Long fundingId , User user);
 	FundingResponseDto getFunding(Long fundingId);
 	Page<FundingListResponseDto> getFundingList(FundingIsActive state, int pageable , User user);
