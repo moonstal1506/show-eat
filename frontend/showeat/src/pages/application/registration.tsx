@@ -151,7 +151,7 @@ function Registration() {
     const handleButtonClick = () => {
         setIsLoading(true);
         console.log(fileName);
-        const newBusinessAddress = `${zonecode} ${businessAddress} ${businessAddressDetail}`;
+        const newBusinessAddress = `(${zonecode}) ${businessAddress} ${businessAddressDetail}`;
         postBusinessInfo(
             ceo,
             email,
