@@ -74,6 +74,8 @@ const ResultBox = styled("div")`
     flex-direction: column;
     align-items: center;
     gap: 80px;
+
+    padding-bottom: 2em;
 `;
 
 const ButtonWrapper = styled("div")`

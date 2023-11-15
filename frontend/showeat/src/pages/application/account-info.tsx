@@ -17,6 +17,8 @@ const AccountInfoContainer = styled("div")`
     flex-direction: column;
     align-items: center;
     gap: 80px;
+
+    padding-bottom: 4em;
 `;
 
 const HeaderContainer = styled("div")`
@@ -145,18 +147,20 @@ function AccountInfo() {
             const newFormData = new FormData();
             newFormData.append("bankBook", selectedFile);
             setFormData(newFormData);
-            console.log(formData);
         }
     };
 
     const handleSubmit = () => {
         postAccountInfo(accountHolder, accountBank, accountNumber, formData).then((res) => {
-            if (res === 520) {
+            console.log(res);
+
+            if (res.statusCode === 200) {
+                router.replace("/application/result");
+            } else if (res === 520) {
                 alert("등록 실패");
-                return;
+            } else {
+                alert("요청이 실패했습니다.");
             }
-            console.log("seller info", res);
-            router.replace("/application/result");
         });
     };
 

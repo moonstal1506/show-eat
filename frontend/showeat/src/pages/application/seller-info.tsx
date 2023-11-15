@@ -125,15 +125,15 @@ function SellerInfo({
     };
 
     const handleBusinessAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim();
-        setBusinessAddress(value);
-        onBusinessAddressChange(value);
+        const newValue = event.target.value;
+        setBusinessAddress(newValue);
+        onBusinessAddressChange(newValue);
     };
 
     const handleBusinessAddressDetailChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.trim();
-        setBusinessAddressDetail(value);
-        onBusinessAddressDetailChange(value);
+        const newValue = event.target.value;
+        setBusinessAddressDetail(newValue);
+        onBusinessAddressDetailChange(newValue);
     };
 
     const handleBusinessPhoneChange = (event: ChangeEvent<HTMLInputElement>) => {
