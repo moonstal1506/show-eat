@@ -58,6 +58,23 @@ public class Notification extends BaseTimeEntity {
 	@JoinColumn(name = "coupon_id")
 	private Coupon coupon;
 
+	public static Notification createMms(
+		User user,
+		Funding funding,
+		String message,
+		NotificationType notificationType,
+		Coupon coupon
+	) {
+		return Notification.builder()
+			.notificationIsChecked(false)
+			.notificationType(notificationType)
+			.notificationMessage(message)
+			.coupon(coupon)
+			.funding(funding)
+			.user(user)
+			.build();
+	}
+
 	public NotificationResponseDto toNotificationListResponseDto() {
 		return NotificationResponseDto.builder()
 			.notificationId(notificationId)
