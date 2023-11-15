@@ -259,7 +259,6 @@ function CardCarousel(props: CardCarouselProps) {
                                     onBookmark={() => {
                                         handleBookmark(cardData.fundingId);
                                     }}
-                                    inCarousel
                                 />
                             </CardWrapper>
                         ))
