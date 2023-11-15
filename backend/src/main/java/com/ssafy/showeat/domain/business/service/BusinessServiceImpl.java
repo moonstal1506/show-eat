@@ -51,13 +51,14 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Override
 	@Transactional
-	public void registerAccount(
+	public SellerResponseDto registerAccount(
 		AccountInfoRequestDto accountInfoRequestDto,
 		MultipartFile bankBook,
 		User user
 	) throws IOException {
 		String bankBookUrl = s3Service.uploadBusinessImageToS3(bankBook);
 		user.getBusiness().updateAccountInfo(bankBookUrl,accountInfoRequestDto, user);
+		return user.getBusiness().toSellerResponseDto();
 	}
 
 	@Override

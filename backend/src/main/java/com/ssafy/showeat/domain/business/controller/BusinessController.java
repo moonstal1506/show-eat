@@ -22,6 +22,7 @@ import com.ssafy.showeat.domain.business.dto.request.AccountInfoRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistMenuRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.RegistrationRequestDto;
 import com.ssafy.showeat.domain.business.dto.request.UpdateSellerInfoRequestDto;
+import com.ssafy.showeat.domain.business.dto.response.SellerResponseDto;
 import com.ssafy.showeat.domain.business.service.BusinessService;
 import com.ssafy.showeat.domain.user.entity.User;
 import com.ssafy.showeat.domain.user.service.UserService;
@@ -87,7 +88,7 @@ public class BusinessController {
 		@RequestPart("bankBook") MultipartFile bankBook,
 		HttpServletRequest request
 	) throws IOException {
-		businessService.registerAccount(
+		SellerResponseDto sellerResponseDto = businessService.registerAccount(
 			AccountInfoRequestDto.builder()
 				.accountHolder(accountHolder)
 				.accountBank(accountBank)
@@ -95,7 +96,7 @@ public class BusinessController {
 				.build(),
 			bankBook,
 			userService.getUserFromRequest(request));
-		return ResponseResult.successResponse;
+		return new SingleResponseResult<>(sellerResponseDto);
 	}
 
 	@ApiOperation(value = "셀러 정보 조회", notes = "셀러 정보를 조회합니다.")
