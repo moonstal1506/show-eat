@@ -172,6 +172,10 @@ function FundingStoreTab(props: FundingStoreTabProps) {
         });
     }, []);
 
+    useEffect(() => {
+        setFundingList(filteredFundingList);
+    }, [props]);
+
     return (
         <StoreContainer>
             <TitleWrapper>{businessName}</TitleWrapper>
