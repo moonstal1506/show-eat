@@ -6,11 +6,11 @@ const adData = [
     },
     {
         businessName: "Service-Sub1",
-        imgUrl: "/assets/images/ad/home-banner-sub1.jpeg",
+        imgUrl: "/assets/images/ad/home-banner-sub1.png",
     },
     {
         businessName: "Service-Sub2",
-        imgUrl: "/assets/images/ad/home-banner-sub2.jpg",
+        imgUrl: "/assets/images/ad/home-banner-sub2.png",
     },
 ];
 const carouselAlwaysData = [
