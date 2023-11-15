@@ -124,7 +124,7 @@ const DeleteIconWrapper = styled(Image)`
 /* Profile Seller Information Tab Component */
 function ProfileSellerInfoTab() {
     // States and Variables
-    const [seller, setSeller] = useSellerState();
+    const [seller] = useSellerState();
     const [isBioEditing, setIsBioEditing] = useState(false);
     const [isOperatingTimeEditing, setIsOperatingTimeEditing] = useState(false);
     const [isClosedDaysEditing, setIsClosedDaysEditing] = useState(false);
@@ -274,6 +274,7 @@ function ProfileSellerInfoTab() {
                         uploadedFiles={uploadedProfileFiles}
                         setUploadedFiles={setUploadedProfileFiles}
                         modifyProfile
+                        profileType="SELLER"
                     />
                 </ChangeSellerProfileImageWrapper>
             </SellerProfileImageChangeContainer>

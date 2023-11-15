@@ -1,16 +1,16 @@
 /* Import */
+import addressList from "@configs/addressList";
 import BuyerLayout from "@layouts/BuyerLayout";
-import withAuth from "@libs/withAuth";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { patchNickname, patchPhone, patchAddress } from "@apis/users";
-import useUserState from "@hooks/useUserState";
+import { FileInput, TextInput } from "@components/common/input";
+import { formatPhoneNumber } from "@utils/format";
+import { patchAddress, patchDeleteUserProfile, patchNickname, patchPhone } from "@apis/users";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { TextButton } from "@components/common/button";
-import { FileInput, TextInput } from "@components/common/input";
 import { InputDropdown } from "@components/common/dropdown";
-import addressList from "@configs/addressList";
-import { formatPhoneNumber } from "@utils/format";
+import useUserState from "@hooks/useUserState";
+import withAuth from "@libs/withAuth";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -62,7 +62,6 @@ const PhoneContainer = styled("div")`
 `;
 
 const MenuContainer = styled("div")`
-    color: #000;
     font-size: 20px;
     font-weight: 700;
     padding-bottom: 20px;
@@ -136,6 +135,10 @@ function BuyerProfile() {
         });
     };
 
+    const handleDeleteProfile = () => {
+        patchDeleteUserProfile;
+    };
+
     return (
         <UserInfoContainer>
             <MyInfoContainer>나의 정보</MyInfoContainer>
@@ -150,14 +153,6 @@ function BuyerProfile() {
                         priority
                     />
                     <ButtonContainer>
-                        <TextButton
-                            text="수정"
-                            width="100px"
-                            height="40px"
-                            fontSize={20}
-                            colorType="primary"
-                            onClick={() => {}}
-                        />
                         <FileInput
                             count={1}
                             color="primary"
@@ -168,6 +163,8 @@ function BuyerProfile() {
                             uploadedFiles={uploadedProfileFiles}
                             setUploadedFiles={setUploadedProfileFiles}
                             modifyProfile
+                            profileType="BUYER"
+                            userId={user.userId}
                         />
                         <TextButton
                             text="삭제"

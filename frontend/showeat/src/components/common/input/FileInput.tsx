@@ -1,11 +1,12 @@
 /* Import */
 import { changeFontWeight } from "@utils/format";
 import Image from "next/image";
+import { patchSellerProfile } from "@apis/seller";
+import { patchUpdateUserProfile } from "@apis/users";
 import styled from "@emotion/styled";
 import { SetStateAction, useRef } from "react";
-import { patchSellerImg } from "@apis/seller";
-import { patchUpdateUserProfile } from "@apis/users";
 import { TextButton } from "@components/common/button";
+import useSellerState from "@hooks/useSellerState";
 import useUserState from "@hooks/useUserState";
 
 // ----------------------------------------------------------------------------------------------------
@@ -25,6 +26,7 @@ interface FileInputProps {
     setUploadedFiles: React.Dispatch<SetStateAction<File[]>>;
     modifyProfile?: boolean;
     profileType?: "" | "BUYER" | "SELLER";
+    userId?: number;
     fundingForm?: boolean;
 }
 
@@ -38,7 +40,6 @@ interface FilesListContainerTypes {
 // ----------------------------------------------------------------------------------------------------
 
 /* Style */
-
 const FileInputContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -171,10 +172,12 @@ function FileInput({
     setUploadedFiles,
     modifyProfile = false,
     profileType = "",
+    userId = 0,
     fundingForm = false,
 }: FileInputProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [user, setUser] = useUserState();
+    const [, setUser] = useUserState();
+    const [, setSeller] = useSellerState();
 
     const handleInputButton = () => {
         if (inputRef.current) {
@@ -184,22 +187,22 @@ function FileInput({
 
     const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = e.target;
-        console.log("handleUploadFiles");
         if (files) {
             const fileList = Array.from(files);
 
             if (fileList.length + uploadedFiles.length <= count) {
                 setUploadedFiles([...uploadedFiles, ...fileList]);
                 if (modifyProfile) {
-                    if (profileType === "SELLER") {
-                        patchSellerImg(fileList).then((result) => {
+                    if (profileType === "BUYER") {
+                        patchUpdateUserProfile(userId, fileList).then((result) => {
                             console.log(result);
                             setUploadedFiles([]);
                         });
                     } else {
-                        patchUpdateUserProfile(fileList).then((result) => {
-                            console.log(result);
+                        patchSellerProfile(fileList).then((result) => {
+                            const newSellerProfile: string = result.data;
                             setUploadedFiles([]);
+                            setSeller((prev) => ({ ...prev, sellerImgUrl: newSellerProfile }));
                         });
                     }
                 }
@@ -207,7 +210,7 @@ function FileInput({
             } else {
                 // 다른거로 표시해줘야 할 듯
                 console.log(`이미지는 ${count}개까지만 올릴 수 있습니다.`);
-        
+            }
         }
     };
 

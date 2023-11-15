@@ -34,23 +34,29 @@ const patchSettingInfo = async (
     return result;
 };
 
-/* Function for Modifying User Profile Image */
-const patchUpdateUserProfile = async (userId: number, imageFile: File[]) => {
-    const formData = new FormData();
-
-    const props: FetchProps = {
-        url: `users/update-profile-image/${userId}`,
-        method: "PATCH",
-        isAuth: true,
-    };
-    const result = await fetchModify(props);
-};
-
+/* Function for Deleting User Profile Image */
 const patchDeleteUserProfile = async (userId: number) => {
     const props: FetchProps = {
         url: `users/delete-profile-image/${userId}`,
         method: "PATCH",
         isAuth: true,
+    };
+    const result = await fetchModify(props);
+
+    return result;
+};
+
+/* Function for Modifying User Profile Image */
+const patchUpdateUserProfile = async (userId: number, imageFile: File[]) => {
+    const formData = new FormData();
+    formData.append("files", imageFile[0]);
+
+    const props: FetchProps = {
+        url: `users/update-profile-image/${userId}`,
+        method: "PATCH",
+        data: formData,
+        isAuth: true,
+        contentType: "file",
     };
     const result = await fetchModify(props);
 
