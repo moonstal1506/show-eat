@@ -34,13 +34,26 @@ const patchSettingInfo = async (
     return result;
 };
 
-const DeleteImgUrl = async (userId: number) => {
+/* Function for Modifying User Profile Image */
+const patchUpdateUserProfile = async (userId: number, imageFile: File[]) => {
+    const formData = new FormData();
+
     const props: FetchProps = {
-        url: `/users/delete-profile-image/${userId}`,
-        method: "DELETE",
+        url: `users/update-profile-image/${userId}`,
+        method: "PATCH",
         isAuth: true,
     };
     const result = await fetchModify(props);
+};
+
+const patchDeleteUserProfile = async (userId: number) => {
+    const props: FetchProps = {
+        url: `users/delete-profile-image/${userId}`,
+        method: "PATCH",
+        isAuth: true,
+    };
+    const result = await fetchModify(props);
+
     return result;
 };
 
@@ -79,4 +92,12 @@ const patchAddress = async (userId: number, userAddress: string) => {
 // ----------------------------------------------------------------------------------------------------
 
 /* Export */
-export { getUserInfo, patchSettingInfo, patchNickname, patchPhone, patchAddress, DeleteImgUrl };
+export {
+    getUserInfo,
+    patchAddress,
+    patchNickname,
+    patchPhone,
+    patchSettingInfo,
+    patchDeleteUserProfile,
+    patchUpdateUserProfile,
+};

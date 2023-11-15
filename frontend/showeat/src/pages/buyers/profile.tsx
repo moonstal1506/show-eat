@@ -3,17 +3,18 @@ import BuyerLayout from "@layouts/BuyerLayout";
 import withAuth from "@libs/withAuth";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { patchNickname, patchPhone, patchAddress } from "@apis/users";
-import useUserState from "@/hooks/useUserState";
+import useUserState from "@hooks/useUserState";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { TextButton } from "@components/common/button";
-import { TextInput } from "@components/common/input";
+import { FileInput, TextInput } from "@components/common/input";
 import { InputDropdown } from "@components/common/dropdown";
 import addressList from "@configs/addressList";
 import { formatPhoneNumber } from "@utils/format";
-// import FileInput from "@components/common/input/FileInput";
 
 // ----------------------------------------------------------------------------------------------------
+
+/* Style */
 const UserInfoContainer = styled("div")`
     display: flex;
     flex-direction: column;
@@ -25,12 +26,8 @@ const UserInfoContainer = styled("div")`
 `;
 
 const MyInfoContainer = styled("div")`
-    color: #000;
-    font-family: Pretendard;
     font-size: 30px;
-    font-style: normal;
     font-weight: 900;
-    line-height: normal;
 `;
 
 const MyImageContainer = styled("div")`
@@ -59,23 +56,25 @@ const NickNameContainer = styled("div")`
 const AddressContainer = styled("div")`
     color: #000;
 `;
+
 const PhoneContainer = styled("div")`
     color: #000;
 `;
+
 const MenuContainer = styled("div")`
     color: #000;
-    font-family: Pretendard;
     font-size: 20px;
-    font-style: normal;
     font-weight: 700;
-    line-height: normal;
     padding-bottom: 20px;
     text-align: left;
 `;
+
 const MenuWrapper = styled("div")`
     display: flex;
     gap: 10px;
 `;
+
+// ----------------------------------------------------------------------------------------------------
 
 /* Buyer Profile Page */
 function BuyerProfile() {
@@ -84,7 +83,8 @@ function BuyerProfile() {
     const [nickname, setNickname] = useState<string>(userNickname);
     const [phone, setPhone] = useState<string>(userPhone);
     const [address, setAddress] = useState<string>(userAddress);
-    // const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
+    const [uploadedProfileFiles, setUploadedProfileFiles] = useState<File[]>([]);
+
     // Function for Handling Nickname Change
     const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setNickname(event.target.value.trim());
@@ -158,7 +158,7 @@ function BuyerProfile() {
                             colorType="primary"
                             onClick={() => {}}
                         />
-                        {/* <FileInput
+                        <FileInput
                             count={1}
                             color="primary"
                             id="menuImage"
@@ -168,7 +168,7 @@ function BuyerProfile() {
                             uploadedFiles={uploadedProfileFiles}
                             setUploadedFiles={setUploadedProfileFiles}
                             modifyProfile
-                        /> */}
+                        />
                         <TextButton
                             text="삭제"
                             width="100px"

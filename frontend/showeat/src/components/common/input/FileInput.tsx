@@ -4,7 +4,9 @@ import Image from "next/image";
 import styled from "@emotion/styled";
 import { SetStateAction, useRef } from "react";
 import { patchSellerImg } from "@apis/seller";
-import { TextButton } from "../button";
+import { patchUpdateUserProfile } from "@apis/users";
+import { TextButton } from "@components/common/button";
+import useUserState from "@hooks/useUserState";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -22,6 +24,7 @@ interface FileInputProps {
     uploadedFiles: File[];
     setUploadedFiles: React.Dispatch<SetStateAction<File[]>>;
     modifyProfile?: boolean;
+    profileType?: "" | "BUYER" | "SELLER";
     fundingForm?: boolean;
 }
 
@@ -167,9 +170,11 @@ function FileInput({
     uploadedFiles,
     setUploadedFiles,
     modifyProfile = false,
+    profileType = "",
     fundingForm = false,
 }: FileInputProps) {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const [user, setUser] = useUserState();
 
     const handleInputButton = () => {
         if (inputRef.current) {
@@ -186,16 +191,23 @@ function FileInput({
             if (fileList.length + uploadedFiles.length <= count) {
                 setUploadedFiles([...uploadedFiles, ...fileList]);
                 if (modifyProfile) {
-                    patchSellerImg(fileList).then((result) => {
-                        console.log(result);
-                        setUploadedFiles([]);
-                    });
+                    if (profileType === "SELLER") {
+                        patchSellerImg(fileList).then((result) => {
+                            console.log(result);
+                            setUploadedFiles([]);
+                        });
+                    } else {
+                        patchUpdateUserProfile(fileList).then((result) => {
+                            console.log(result);
+                            setUploadedFiles([]);
+                        });
+                    }
                 }
                 setUploadedFiles([...uploadedFiles, ...Array.from(fileList)]);
             } else {
                 // 다른거로 표시해줘야 할 듯
                 console.log(`이미지는 ${count}개까지만 올릴 수 있습니다.`);
-            }
+        
         }
     };
 
