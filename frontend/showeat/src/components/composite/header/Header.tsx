@@ -235,12 +235,14 @@ function Header() {
 
     useEffect(() => {
         getNotificationExist().then((res) => {
+            console.log(res);
             if (res.data) {
                 setIsNotificationExist(true);
             } else {
                 setIsNotificationExist(false);
             }
         });
+        console.log("getNotificationExist");
     }, []);
 
     useEffect(() => {
