@@ -227,4 +227,31 @@ public class Funding extends BaseTimeEntity {
 			)
 			.build();
 	}
+
+	public FundingListResponseDto toFundingListResponseDtoForZzim() {
+		return FundingListResponseDto.builder()
+			.fundingId(fundingId)
+			.title(fundingTitle)
+			.businessName(fundingBusinessName)
+			.category(fundingCategory.name())
+			.maxLimit(fundingMaxLimit)
+			.minLimit(fundingMinLimit)
+			.curCount(fundingCurCount)
+			.menu(fundingMenu)
+			.price(fundingPrice)
+			.discountPrice(fundingDiscountPrice)
+			.discountRate(fundingDiscountRate)
+			.startDate(LocalDate.from(this.getCreatedDate()))
+			.endDate(fundingEndDate)
+			.fundingIsActive(fundingIsActive)
+			.fundingIsSuccess(fundingIsSuccess)
+			.fundingIsBookmark(true)
+			.fundingImageResponseDtos(
+				this.fundingImages
+					.stream()
+					.map(fundingImage -> fundingImage.toFundingImageResponseDto())
+					.collect(Collectors.toList())
+			)
+			.build();
+	}
 }
