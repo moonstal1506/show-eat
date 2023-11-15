@@ -86,8 +86,8 @@ public class CouponController {
 		@ApiResponse(code = 400, message = "쿠폰 금액 차감 실패"),
 	})
 	@PatchMapping("/update/price")
-	public ResponseResult updateCouponPrice(@RequestBody UpdateCouponPriceRequestDto updateCouponPriceRequestDto) {
-		couponService.updateCouponPrice(updateCouponPriceRequestDto);
+	public ResponseResult updateCouponPrice(@RequestBody UpdateCouponPriceRequestDto updateCouponPriceRequestDto , HttpServletRequest request) {
+		couponService.updateCouponPrice(updateCouponPriceRequestDto),userService.getUserFromRequest(request);
 		return ResponseResult.successResponse;
 	}
 }
