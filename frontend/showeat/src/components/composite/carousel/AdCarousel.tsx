@@ -61,7 +61,7 @@ const CarouselAdWrapper = styled("div")<Partial<CarouselProps>>`
 `;
 
 const CarouselAdBox = styled(Image)`
-    object-fit: contain;
+    object-fit: cover;
 `;
 
 const LeftArrowWrapper = styled("div")<{ height: number }>`
@@ -70,8 +70,6 @@ const LeftArrowWrapper = styled("div")<{ height: number }>`
 
     position: absolute;
     left: 0;
-
-    border-radius: 20px 0px 0px 20px;
 
     display: inline-flex;
     justify-content: center;
@@ -108,15 +106,13 @@ const RightArrowWrapper = styled("div")<{ height: number }>`
     position: absolute;
     right: 0;
 
-    border-radius: 0px 20px 20px 0px;
-
     display: inline-flex;
     justify-content: center;
     align-items: center;
 
     cursor: pointer;
 
-    transform: translateY(-100%);
+    transform: translateY(-101%);
     opacity: 0.2;
     z-index: 100;
 
