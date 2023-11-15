@@ -7,7 +7,7 @@ import { FetchProps } from "@customTypes/apiProps";
 /* Function for Getting Funding Detail Data */
 const getNotification = async () => {
     const props: FetchProps = {
-        url: `notification`,
+        url: "notification",
         method: "GET",
         isAuth: true,
     };
@@ -18,7 +18,7 @@ const getNotification = async () => {
 
 const getNotificationExist = async () => {
     const props: FetchProps = {
-        url: `notification/exist`,
+        url: "notification/exist",
         method: "GET",
         isAuth: true,
     };
