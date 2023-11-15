@@ -366,7 +366,7 @@ function RedeemResult() {
     const [couponData, setCouponData] = useState<CouponType | null>(null);
     const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isStatus, setIsStatus] = useState<string>("UNKNOWN");
     const [isUseMoney, setIsUseMoney] = useState("");
     const [user] = useUserState();
@@ -422,7 +422,7 @@ function RedeemResult() {
                     patchUseCoupon(couponData.couponId).then((res) => {
                         if (res.statusCode === 200) {
                             setIsSuccessModalOpen(true);
-                        } else if (res.statusCode === 463) {
+                        } else if (res === 463) {
                             setIsStatus("NONEBUSINESS");
                             setIsMultiModalOpen(true);
                         } else {
@@ -437,7 +437,7 @@ function RedeemResult() {
                     }).then((res) => {
                         if (res.statusCode === 200) {
                             setIsSuccessModalOpen(true);
-                        } else if (res.statusCode === 463) {
+                        } else if (res === 463) {
                             setIsStatus("NONEBUSINESS");
                             setIsMultiModalOpen(true);
                         } else {
