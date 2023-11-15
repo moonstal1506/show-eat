@@ -8,6 +8,7 @@ import com.ssafy.showeat.domain.user.dto.response.UserResponseDto;
 import com.ssafy.showeat.domain.user.service.UserService;
 import com.ssafy.showeat.global.response.ResponseResult;
 import com.ssafy.showeat.global.response.SingleResponseResult;
+import com.ssafy.showeat.global.s3.dto.S3FileDto;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -72,8 +73,9 @@ public class UserController {
     @PatchMapping("/update-profile-image/{userId}")
     public ResponseResult updateImage(@RequestParam("files") List<MultipartFile> multipartFiles, @PathVariable Long userId) {
         log.info("UserController_updateImage -> 사용자 프로필 사진 수정");
-        userService.updateuserImgUrl(multipartFiles, userId);
-        return ResponseResult.successResponse;
+        List<S3FileDto> files = userService.updateuserImgUrl(multipartFiles, userId);
+        String imgUrl = files.get(0).getUploadFileUrl();
+        return new SingleResponseResult<>(imgUrl);
     }
 
     @ApiOperation(value = "프로필사진 삭제", notes = "사용자가 프로필사진을 삭제합니다.")
