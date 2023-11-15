@@ -196,7 +196,9 @@ function FileInput({
                     if (profileType === "BUYER") {
                         patchUpdateUserProfile(userId, fileList).then((result) => {
                             console.log(result);
+                            const newBuyerProfile: string = result.data;
                             setUploadedFiles([]);
+                            setUser((prev) => ({ ...prev, userImgUrl: newBuyerProfile }));
                         });
                     } else {
                         patchSellerProfile(fileList).then((result) => {

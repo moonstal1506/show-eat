@@ -136,7 +136,13 @@ function BuyerProfile() {
     };
 
     const handleDeleteProfile = () => {
-        patchDeleteUserProfile;
+        patchDeleteUserProfile(user.userId).then(() => {
+            setUser((prevState) => ({
+                ...prevState,
+                userImgUrl:
+                    "https://showeatbucket.s3.ap-northeast-2.amazonaws.com/user/basic-profile.png",
+            }));
+        });
     };
 
     return (
@@ -172,7 +178,7 @@ function BuyerProfile() {
                             height="40px"
                             fontSize={20}
                             colorType="primary"
-                            onClick={() => {}}
+                            onClick={handleDeleteProfile}
                         />
                     </ButtonContainer>
                 </ImageContainer>
