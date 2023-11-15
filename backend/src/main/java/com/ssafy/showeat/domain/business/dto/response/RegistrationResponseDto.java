@@ -21,7 +21,7 @@ public class RegistrationResponseDto {
 	private String businessName;
 
 	@ApiModelProperty(value = "사업자등록번호", example = "12341211234")
-	private int businessNumber;
+	private String businessNumber;
 
 	@ApiModelProperty(value = "주소", example = "서울시 강남구 역삼동")
 	private String businessAddress;
