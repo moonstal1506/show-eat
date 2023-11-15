@@ -1,5 +1,6 @@
 package com.ssafy.showeat.domain.notification.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.ssafy.showeat.domain.coupon.entity.Coupon;
@@ -11,5 +12,5 @@ public interface NotificationService {
 
 	boolean getNotificationExist(User user);
 
-	void createNotification(List<Coupon> coupons);
+	void createNotification(List<Coupon> coupons) throws IOException;
 }

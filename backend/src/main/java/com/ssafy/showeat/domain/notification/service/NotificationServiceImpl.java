@@ -1,5 +1,6 @@
 package com.ssafy.showeat.domain.notification.service;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
 	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
 
 	private final NotificationRepository notificationRepository;
+	private final MessageService messageService;
 
 	@Override
 	@Transactional
@@ -60,16 +62,20 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	@Transactional
-	public void createNotification(List<Coupon> coupons) {
+	public void createNotification(List<Coupon> coupons) throws IOException {
 		List<Notification> notifications = new ArrayList<>();
 		for (Coupon coupon : coupons) {
 
 			String message = coupon.getFunding().getFundingTitle() + NotificationType.COUPON_CREATE.getMessage()
 				+ dateFormat.format(coupon.getCouponExpirationDate());
 
-			notifications.add(Notification.createMms(coupon.getUser(), coupon.getFunding(), message,
-				NotificationType.COUPON_CREATE, coupon));
+			Notification notification = Notification.createMms(coupon.getUser(), coupon.getFunding(), message,
+				NotificationType.COUPON_CREATE, coupon);
+			notifications.add(notification);
+
+			messageService.sendMmsQR(notification);
 		}
+		notificationRepository.saveAll(notifications);
 	}
 
 }
