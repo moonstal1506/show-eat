@@ -384,8 +384,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               });
 
     const searchResultData = (result.data && result.data.content) || [];
-    // eslint-disable-next-line no-unneeded-ternary
-    const isLast = result.data && result.data.last && result.data.last === false ? false : true;
+
+    let isLast = false;
+    if (result && result.data) {
+        if (result.data.last !== undefined && result.data.last === false) {
+            isLast = false;
+        } else {
+            isLast = true;
+        }
+    } else {
+        isLast = false;
+    }
 
     return {
         props: {
@@ -432,12 +441,17 @@ function Search({
         { type: "LOW_PRICE", text: "💸 저렴한 가격" },
         { type: "HIGH_DISCOUNT_RATE", text: "📈 높은 할인율" },
     ];
-    // const errorMessages = [
-    //     { status: 410, message: "검색 조건 설정을 다시 해주세요." },
-    //     { status: 411, message: "카테고리 설정을 다시 해주세요." },
-    //     { status: 412, message: "지역 설정을 다시 해주세요." },
-    //     { status: 413, message: "검색어가 필요합니다." },
-    // ];
+    const errorMessages = [
+        { status: "요청이 실패했습니다.", message: "검색 요청이 실패했습니다." },
+        { status: 410, message: "검색 조건 설정을 다시 해주세요." },
+        { status: 411, message: "정렬 설정을 다시 해주세요." },
+        { status: 412, message: "카테고리 설정을 다시 해주세요." },
+        { status: 413, message: "검색어가 필요합니다." },
+        {
+            status: "해당 페이지는 데이터가 없기에 조회할 수 없습니다.",
+            message: "검색 결과가 없습니다.",
+        },
+    ];
     const [filterTypes, setFilterTypes] = useState(
         [
             { value: "BUSINESS_NAME", text: "상호명", isChecked: false },
@@ -499,7 +513,8 @@ function Search({
         setMinMoney(min);
         setMaxMoney(max);
         setPageNum(0);
-    }, [searchResultData, keyword, category, address, min, max, searchType, sortType]);
+        setIsLastPage(isLast);
+    }, [searchResultData, keyword, category, address, min, max, searchType, sortType, isLast]);
 
     const handleSort = (type: string) => {
         if (keyword && keyword !== "") {
@@ -522,8 +537,12 @@ function Search({
                     setPageNum(1);
                 } else if (res === 520) {
                     setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                    setIsMultiModalOpen(true);
                 } else {
-                    setErrorMessage(res);
+                    setErrorMessage(
+                        errorMessages.find((e) => e.status === res)?.message ||
+                            "알 수 없는 오류가 발생했습니다.",
+                    );
                     setIsMultiModalOpen(true);
                 }
             });
@@ -542,8 +561,12 @@ function Search({
                     setPageNum(1);
                 } else if (res === 520) {
                     setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                    setIsMultiModalOpen(true);
                 } else {
-                    setErrorMessage(res);
+                    setErrorMessage(
+                        errorMessages.find((e) => e.status === res)?.message ||
+                            "알 수 없는 오류가 발생했습니다.",
+                    );
                     setIsMultiModalOpen(true);
                 }
             });
@@ -567,8 +590,9 @@ function Search({
                 setFundingDatas(updatedFundingDatas);
             } else if (res === 520) {
                 setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                setIsMultiModalOpen(true);
             } else {
-                setErrorMessage(res);
+                setErrorMessage("요청이 실패했습니다.");
                 setIsMultiModalOpen(true);
             }
         });
@@ -612,8 +636,12 @@ function Search({
                         setPageNum((prev) => prev + 1);
                     } else if (res === 520) {
                         setErrorMessage("알 수 없는 오류가 발생했습니다.");
+                        setIsMultiModalOpen(true);
                     } else {
-                        setErrorMessage(res);
+                        setErrorMessage(
+                            errorMessages.find((e) => e.status === res)?.message ||
+                                "알 수 없는 오류가 발생했습니다.",
+                        );
                         setIsMultiModalOpen(true);
                     }
                 });
@@ -658,7 +686,10 @@ function Search({
                     setErrorMessage("알 수 없는 오류가 발생했습니다.");
                     setIsMultiModalOpen(true);
                 } else {
-                    setErrorMessage(res);
+                    setErrorMessage(
+                        errorMessages.find((e) => e.status === res)?.message ||
+                            "알 수 없는 오류가 발생했습니다.",
+                    );
                     setIsMultiModalOpen(true);
                 }
             });
@@ -682,6 +713,10 @@ function Search({
                               return null;
                           })}
                 </title>
+                <meta
+                    name="description"
+                    content="찾으시는 조건에 따른 펀딩 검색 결과 페이지입니다."
+                />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <SearchPageWrapper>
@@ -724,7 +759,11 @@ function Search({
                                     />
                                 ) : (
                                     <TextButton
-                                        text={keyword && keyword !== "" ? "필터링" : "검색어 필요"}
+                                        text={
+                                            keyword && keyword !== ""
+                                                ? "필터링 해제"
+                                                : "검색어 필요"
+                                        }
                                         width="150px"
                                         fill={keyword && keyword !== "" ? "positive" : "negative"}
                                         colorType="secondary"
