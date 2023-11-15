@@ -241,7 +241,7 @@ function Header() {
                 setIsNotificationExist(false);
             }
         });
-    }, [isNotificationExist]);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
