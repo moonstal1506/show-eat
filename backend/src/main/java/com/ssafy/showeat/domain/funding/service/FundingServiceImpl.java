@@ -192,7 +192,7 @@ public class FundingServiceImpl implements FundingService {
 			.stream()
 			.map(bookmark -> {
 				Funding funding = bookmark.getFunding();
-				return funding.toFundingListResponseDto();
+				return funding.toFundingListResponseDtoForZzim();
 			}).collect(Collectors.toList());
 
 		if (userBookmarkFundingList.getTotalPages() <= page)

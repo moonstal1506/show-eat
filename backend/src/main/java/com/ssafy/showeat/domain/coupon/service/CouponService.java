@@ -18,7 +18,7 @@ public interface CouponService {
 
 	void updateCouponStatus(UpdateCouponStatusRequestDto updateCouponStatusRequestDto);
 
-	void updateCouponPrice(UpdateCouponPriceRequestDto updateCouponPriceRequestDto);
+	void updateCouponPrice(UpdateCouponPriceRequestDto updateCouponPriceRequestDto , User user);
 	void updateCouponStatusByOwner(Long couponId , User user);
 	List<Coupon> createCoupon(Funding funding);
 }
