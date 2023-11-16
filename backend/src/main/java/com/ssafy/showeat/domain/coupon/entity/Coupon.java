@@ -114,7 +114,7 @@ public class Coupon extends BaseTimeEntity {
 			.couponPrice(funding.getFundingDiscountPrice())
 			.couponStatus(CouponStatus.ACTIVE)
 			.couponType(funding.getFundingType() == FundingType.MENU ? CouponType.SINGLE : CouponType.GIFTCARD)
-			.couponExpirationDate(LocalDate.now().plusDays(1))
+			.couponExpirationDate(LocalDate.now().plusDays(180))
 			.user(user)
 			.funding(funding)
 			.build();

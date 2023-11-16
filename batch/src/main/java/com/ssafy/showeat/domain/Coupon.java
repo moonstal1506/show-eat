@@ -59,7 +59,7 @@ public class Coupon extends BaseTimeEntity {
 			.couponPrice(funding.getFundingDiscountPrice())
 			.couponStatus(CouponStatus.NONE)
 			.couponType(CouponType.SINGLE)
-			.couponExpirationDate(LocalDate.now().plusDays(1))
+			.couponExpirationDate(LocalDate.now().plusDays(180))
 			.couponType(CouponType.SINGLE)
 			.couponQrCodeImgUrl("")
 			.user(user)
