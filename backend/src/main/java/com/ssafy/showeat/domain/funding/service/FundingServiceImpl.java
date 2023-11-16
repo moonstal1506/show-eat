@@ -109,6 +109,7 @@ public class FundingServiceImpl implements FundingService {
 			return;
 
 		funding.changeFundingStatusByMaxApply();
+		loginUser.addMoneyByFundingSuccess(funding.getFundingTotalAmount());
 
 		//쿠폰생성
 		List<Coupon> coupons = couponService.createCoupon(funding);
@@ -173,7 +174,7 @@ public class FundingServiceImpl implements FundingService {
 				.stream()
 				.map(userFunding -> {
 					Funding funding = userFunding.getFunding();
-					return funding.toFundingListResponseDto();
+					return funding.toFundingListResponseDtoForZzim(bookmarkService.isBookmark(user.getUserId(),funding.getFundingId()));
 				}).collect(Collectors.toList());
 
 		if (userFundings.getTotalPages() <= page)
@@ -192,7 +193,7 @@ public class FundingServiceImpl implements FundingService {
 			.stream()
 			.map(bookmark -> {
 				Funding funding = bookmark.getFunding();
-				return funding.toFundingListResponseDtoForZzim();
+				return funding.toFundingListResponseDtoForZzim(true);
 			}).collect(Collectors.toList());
 
 		if (userBookmarkFundingList.getTotalPages() <= page)

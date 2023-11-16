@@ -228,7 +228,7 @@ public class Funding extends BaseTimeEntity {
 			.build();
 	}
 
-	public FundingListResponseDto toFundingListResponseDtoForZzim() {
+	public FundingListResponseDto toFundingListResponseDtoForZzim(boolean isBookMark) {
 		return FundingListResponseDto.builder()
 			.fundingId(fundingId)
 			.title(fundingTitle)
@@ -245,7 +245,7 @@ public class Funding extends BaseTimeEntity {
 			.endDate(fundingEndDate)
 			.fundingIsActive(fundingIsActive)
 			.fundingIsSuccess(fundingIsSuccess)
-			.fundingIsBookmark(true)
+			.fundingIsBookmark(isBookMark)
 			.fundingImageResponseDtos(
 				this.fundingImages
 					.stream()
