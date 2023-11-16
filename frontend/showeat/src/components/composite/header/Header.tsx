@@ -250,14 +250,12 @@ function Header() {
     useEffect(() => {
         if (user.userId !== 0) {
             getNotificationExist().then((res) => {
-                console.log("getNotificationExist", res);
                 if (res.data) {
                     setIsNotificationExist(true);
                 } else {
                     setIsNotificationExist(false);
                 }
             });
-            console.log("getNotificationExist");
         }
     }, [user.userId]);
 

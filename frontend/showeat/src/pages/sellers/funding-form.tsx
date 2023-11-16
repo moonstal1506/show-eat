@@ -472,7 +472,7 @@ function FundingForm() {
             price: number;
             businessMenuImageResponseDtos: [];
         }[]
-    >([]); // API로 메뉴 목록 받아와야함
+    >([]);
     const [menuData, setMenuData] = useState({
         type: "menuRequestDtos",
         text: "메뉴 정보",
@@ -504,8 +504,8 @@ function FundingForm() {
     function getToday() {
         const todayDate = new Date();
         const year = todayDate.getFullYear();
-        const month = (todayDate.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 2자리로 포맷팅
-        const day = todayDate.getDate().toString().padStart(2, "0"); // 일도 2자리로 포맷팅
+        const month = (todayDate.getMonth() + 1).toString().padStart(2, "0");
+        const day = todayDate.getDate().toString().padStart(2, "0");
 
         return `${year}-${month}-${day}`;
     }
@@ -1028,7 +1028,7 @@ function FundingForm() {
 /* Middleware */
 const FundingFormWithAuth = withAuth({
     WrappedComponent: FundingForm,
-    // guardType: "USER_ONLY",
+    guardType: "USER_ONLY",
 });
 
 // ----------------------------------------------------------------------------------------------------
