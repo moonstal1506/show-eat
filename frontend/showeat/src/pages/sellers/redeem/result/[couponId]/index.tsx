@@ -255,9 +255,14 @@ function LoginModal() {
     // States and Variables
     const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
     const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+    const [, setSeller] = useSellerState();
 
     // Function for Redirecting to Kakao Login Page
     const handleKakaoLogin = () => {
+        setSeller((prev) => ({
+            ...prev,
+            isLoginTry: true,
+        }));
         const KAKAO_BASE_URL: string = "https://kauth.kakao.com/oauth/authorize";
         window.location.href = `${KAKAO_BASE_URL}?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
     };
