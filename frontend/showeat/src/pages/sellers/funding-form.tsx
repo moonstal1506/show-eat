@@ -441,7 +441,7 @@ function FundingForm() {
     const [isFundingType, setIsFundingType] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(true);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isStatus, setIsStatus] = useState("");
     const [textFormData, setTextFormData] = useState([
         {
