@@ -66,9 +66,9 @@ public class NotificationServiceImpl implements NotificationService {
 		List<Notification> notifications = new ArrayList<>();
 		for (Coupon coupon : coupons) {
 
-			String message =coupon.getUser().getUserNickname()+"고객님, 구매하신 쑈잇 쿠폰이 도착했습니다. \n■가게명 : "+
+			String message =coupon.getUser().getUserNickname()+"고객님, 구매하신 쑈잇 쿠폰이 도착했습니다.\n \n■가게명 : "+
 				coupon.getFunding().getBusiness().getBusinessName()
-				+"\n■쿠폰명 : "+ coupon.getFunding().getFundingTitle()
+				+"\n■메뉴명 : "+ coupon.getFunding().getFundingTitle()
 				+"\n■사용기한 : "+ dateFormat.format(coupon.getCouponExpirationDate());
 
 			Notification notification = Notification.createMms(coupon.getUser(), coupon.getFunding(), message,
