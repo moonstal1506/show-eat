@@ -127,4 +127,8 @@ public class User extends BaseTimeEntity {
     public void updateBusiness(Business business) {
         this.business = business;
     }
+
+    public void addMoneyByFundingSuccess(int money){
+        this.userMoney += money;
+    }
 }
