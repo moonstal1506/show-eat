@@ -70,6 +70,7 @@ public class Coupon extends BaseTimeEntity {
 
 		return CouponResponseDto.builder()
 			.couponId(couponId)
+			.fundingId(funding.getFundingId())
 			.couponStatus(couponStatus)
 			.couponType(couponType)
 			.couponPrice(couponPrice)

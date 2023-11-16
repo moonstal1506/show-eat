@@ -175,7 +175,9 @@ public class FundingServiceImpl implements FundingService {
 				.map(userFunding -> {
 					Funding funding = userFunding.getFunding();
 					return funding.toFundingListResponseDtoForZzim(bookmarkService.isBookmark(user.getUserId(),funding.getFundingId()));
-				}).collect(Collectors.toList());
+				})
+				.filter(fundingListResponseDto -> fundingListResponseDto.getFundingIsActive().equals(FundingIsActive.ACTIVE))
+				.collect(Collectors.toList());
 
 		if (userFundings.getTotalPages() <= page)
 			throw new NotExistPageFundingException();
