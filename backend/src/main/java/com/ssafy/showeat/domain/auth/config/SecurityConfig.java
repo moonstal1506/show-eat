@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/api/auth/reissue").permitAll()
                 .antMatchers("/api/auth/login/**").permitAll()
+                .antMatchers("/api/auth/logout").permitAll()
                 .antMatchers("/api/payments/**").permitAll()
                 .antMatchers("/api/funding").permitAll()
                 .regexMatchers("/api/funding/\\d+").permitAll()
