@@ -19,6 +19,7 @@ import lombok.Setter;
 public class CouponResponseDto {
 
 	private Long couponId;
+	private Long fundingId;
 	private CouponStatus couponStatus;
 	private CouponType couponType;
 	private int couponPrice;
