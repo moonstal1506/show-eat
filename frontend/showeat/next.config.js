@@ -1,6 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
+    swcMinify: true,
+    async rewrites() {
+        return [
+            {
+                source: ":/path*",
+                destination: "https://developers.kakao.com/:path*",
+            },
+            {
+                source: ":/path*",
+                destination: "https://dapi.kakao.com/:path*",
+            },
+        ];
+    },
     images: {
         domains: [
             "localhost",
