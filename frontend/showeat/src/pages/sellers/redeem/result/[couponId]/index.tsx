@@ -9,11 +9,12 @@ import { CouponType } from "@customTypes/apiProps";
 import { LoginButton, TextButton } from "@components/common/button";
 import { useRouter } from "next/router";
 import Modal from "@components/composite/modal";
-import { formatMoney } from "@/utils/format";
-import { TextInput } from "@/components/common/input";
-import useUserState from "@/hooks/useUserState";
+import { formatMoney } from "@utils/format";
+import { TextInput } from "@components/common/input";
+import useUserState from "@hooks/useUserState";
 import Head from "next/head";
-import useSellerState from "@/hooks/useSellerState";
+import useSellerState from "@hooks/useSellerState";
+import { deleteCookie } from "cookies-next";
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -387,8 +388,6 @@ function RedeemResult() {
                     setIsMultiModalOpen(true);
                 } else {
                     setCouponData(res.data);
-                    console.log(res);
-                    console.log(couponData);
                 }
             });
         }
@@ -458,8 +457,6 @@ function RedeemResult() {
                         couponId: couponData.couponId,
                         couponAmount: parseFloat(isUseMoney),
                     }).then((res) => {
-                        console.log(res);
-
                         if (res.statusCode === 200) {
                             setIsSuccessModalOpen(true);
                         } else if (res === 463) {
@@ -491,6 +488,8 @@ function RedeemResult() {
     };
 
     const handleLogin = () => {
+        deleteCookie("access-token");
+        deleteCookie("refresh-token");
         setIsLoginModalOpen(true);
     };
 
