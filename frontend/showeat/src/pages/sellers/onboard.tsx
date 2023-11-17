@@ -139,7 +139,7 @@ function OnBoardingFunding() {
                             alt="crying-cook-cow"
                             priority
                         />
-                        <TextWrapper>종료된 펀딩이 존재하지 않소!</TextWrapper>
+                        <TextWrapper>진행 중인 펀딩이 존재하지 않소!</TextWrapper>
                     </BlankWrapper>
                 ) : (
                     <CardsContainer>
