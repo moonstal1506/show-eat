@@ -60,6 +60,8 @@ const ProfileImageWrapper = styled("div")`
 
 const ProfileImage = styled(Image)`
     border-radius: 50%;
+
+    object-fit: cover;
 `;
 
 const ProfileNickname = styled("span")`
@@ -221,7 +223,9 @@ function NavigationBar({ isBuyer }: NavigationBarProps) {
                     <ProfileImage
                         src={isBuyer ? user.userImgUrl : seller.sellerImgUrl}
                         alt="profile-img"
-                        fill
+                        width={120}
+                        height={120}
+                        priority
                     />
                 </ProfileImageWrapper>
                 <ProfileNickname>
