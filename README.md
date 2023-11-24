@@ -560,8 +560,6 @@
     ![image](/uploads/5d43e95ad7299c7605f1c05e5c7e15af/image.png)
 </div>
 </details>
-<details>
-
 
 
 ---
@@ -569,20 +567,17 @@
     
 
 ### UCC
-
+https://www.youtube.com/watch?v=4qqfbgUPDNE&t=6s
 
 ### 시연 영상
-
-
-### PPT
-
+https://youtu.be/s2JSZ5LAmCs?si=W-nynO6U6YPOTYGU
     
 ### 포팅메뉴얼
 [포팅메뉴얼 참조](./exec/showeat_포팅매뉴얼.pdf)
 
 ---
 ## ❤ 팀 소개
-![팀로고](/uploads/e2e203bd7d967041a9eabd3f45b57b0f/팀로고.png)
+![Frame_1](/uploads/3141f2b6eae0c0b249ab9569286214b9/Frame_1.png)
 
 
 ### 팀명
@@ -593,9 +588,9 @@
 프로젝트 팀명은 유명한 개발 커뮤니티 사이트 ‘스택 오버플로(Stack Overflow)’에서 착안하였습니다. 스택(Stack)은 프로젝트를 통해 학습할 기술 스택과 쌓여갈 개발 능력을 의미하고, 플로(Flow)는 프로젝트를 통해 얻게 될 성과와 성취를 의미합니다. 즉, 프로젝트를 통해 성장하면서 각자 원하는 성과를 달성하고자 하는 바람을 담았습니다.
 
 ### Frontend
-|![](https://hackmd.io/_uploads/SJJgizo3h.png)|![]()|
+|![](https://hackmd.io/_uploads/SJJgizo3h.png)|![image](/uploads/5b6f2c2e5bab7008db80cc6e0c06b5f5/image.png)|
 |:---------:|:--------:|
-| [고건](https://github.com/Crassula1994)| [구본웅]()|
+| [고건](https://github.com/Crassula1994)| [구본웅](https://github.com/Narn99)|
 
 ### Backend
     
