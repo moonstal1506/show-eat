@@ -59,15 +59,44 @@
 ---
 ## 🖥 서비스 화면
 
-<details>
-<summary>홈 페이지</summary>
-<div markdown="1">       
-    <img src="" alt="홈페이지"/>
+# 메인 페이지
+![메인-페이지](/uploads/399038a06999079e4b7d0d3d3dd3b40b/메인-페이지.gif)
 
-</div>
-</details>
+# 로그인 
+![카카오-로그인](/uploads/a0643d3587fca4f66db364eb74d1c4d1/카카오-로그인.gif)
 
+# 펀딩 검색/필터링/정렬
+![펀딩-검색](/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif)
+![펀딩-검색-필터링](/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif)
+![펀딩-조건별-정렬](/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif)
+![카테고리별-펀딩-조회](/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif)
 
+# 펀딩/리뷰 조회
+![펀딩-상세-조회](/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif)
+![펀딩-참여_-알림_-문자](/uploads/18f87db0aa85e142993db5f5914a1b74/펀딩-참여_-알림_-문자.gif)
+![업체-정보_-리뷰-조회_1](/uploads/c80ef4b94042f6014597e24c0975fbfe/업체-정보_-리뷰-조회_1.gif)
+![쿠폰-조회_-리뷰-작성_1](/uploads/c605ab5abc35e7e6a6449cbe631e2096/쿠폰-조회_-리뷰-작성_1.gif)
+
+# 내 정보 및 캐시카우 충전
+![자신의참여펀딩_관심펀딩조회_2](/uploads/e1f45cf0dac4e58bfa4b368e3265627c/자신의참여펀딩_관심펀딩조회_2.gif)
+![내정보조회_수정_2](/uploads/38ae7bdcc35923c97c8741bb14504995/내정보조회_수정_2.gif)
+![캐시카우충전](/uploads/aa2e7bb8b5c98d5e7979c1f7a7bb0c9d/캐시카우충전.gif)
+
+# 셀러 신청 및 조회
+![쑈잇-UCC-풀영상-셀러-계정-신청](/uploads/e6dfc0eb1272f7b966d3a6368f84c2f2/쑈잇-UCC-풀영상-셀러-계정-신청.gif)
+![쑈잇-UCC-풀영상-사업자-등록-정보-조회](/uploads/b9cbf8b1a0e22d86cda194ed5afb4b1e/쑈잇-UCC-풀영상-사업자-등록-정보-조회.gif)
+![쑈잇-UCC-풀영상-셀러-정보-페이지](/uploads/d6e2fe1923b3f84d5661194ef1daded7/쑈잇-UCC-풀영상-셀러-정보-페이지.gif)
+![진행중_종료된펀딩](/uploads/4c41b8245eb88b570ed8ffb3cc446a3d/진행중_종료된펀딩.gif)
+![월별_누적매출통계](/uploads/3e458374cd0468abb99daca0ac5fbc2a/월별_누적매출통계.gif)
+![쑈잇-UCC-풀영상-메뉴-추가](/uploads/8a4d2b0aab2a828d680fd06afb502229/쑈잇-UCC-풀영상-메뉴-추가.gif)
+
+# 펀딩 생성
+![펀딩생성단일메뉴](/uploads/9de7a7f57b8eec5364c9bdc3e3254fec/펀딩생성단일메뉴.gif)
+![펀딩생성금액권](/uploads/68b395fa3cf0257b1c4b780a5d102958/펀딩생성금액권.gif)
+
+# 쿠폰 사용
+![셀러-쿠폰-사용-단일메뉴](/uploads/6a8061370ef70f0af26316f1c1709020/셀러-쿠폰-사용-단일메뉴.gif)
+![셀러-쿠폰사용-금액권](/uploads/d30553c84076de0b3dd8dd0fcf2afa4f/셀러-쿠폰사용-금액권.gif)
 
 
 ---
@@ -577,7 +606,8 @@ https://youtu.be/s2JSZ5LAmCs?si=W-nynO6U6YPOTYGU
 
 ---
 ## ❤ 팀 소개
-![Frame_1](/uploads/3141f2b6eae0c0b249ab9569286214b9/Frame_1.png)
+<img src="/uploads/3141f2b6eae0c0b249ab9569286214b9/Frame_1.png" width="300px" height="300px" />
+
 
 
 ### 팀명
