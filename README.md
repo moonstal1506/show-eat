@@ -68,10 +68,10 @@
 
 # 펀딩 검색/필터링/정렬
 <div>
-<img src="/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif" width="600px" height="400px" />
-<img src="/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif" width="600px" height="400px" />
-<img src="/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif" width="600px" height="400px" />
-<img src="/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif" width="600px" height="400px" />
+<img src="/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif" width="500px" height="400px" />
+<img src="/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif" width="500px" height="400px" />
+<img src="/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif" width="500px" height="400px" />
+<img src="/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif" width="500px" height="400px" />
 </div>
 
 
