@@ -77,38 +77,46 @@
 
 # 펀딩/리뷰 조회
 <div>
-<img src="/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif" width="600px" height="400px" />
-<img src="/uploads/18f87db0aa85e142993db5f5914a1b74/펀딩-참여_-알림_-문자.gif" width="600px" height="400px" />
-<img src="/uploads/c80ef4b94042f6014597e24c0975fbfe/업체-정보_-리뷰-조회_1.gif" width="600px" height="400px" />
-<img src="/uploads/c605ab5abc35e7e6a6449cbe631e2096/쿠폰-조회_-리뷰-작성_1.gif" width="600px" height="400px" />
+<img src="/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif" width="500px" height="400px" />
+<img src="/uploads/18f87db0aa85e142993db5f5914a1b74/펀딩-참여_-알림_-문자.gif" width="500px" height="400px" />
+<img src="/uploads/c80ef4b94042f6014597e24c0975fbfe/업체-정보_-리뷰-조회_1.gif" width="500px" height="400px" />
+<img src="/uploads/c605ab5abc35e7e6a6449cbe631e2096/쿠폰-조회_-리뷰-작성_1.gif" width="500px" height="400px" />
 </div>
 
 # 내 정보 및 캐시카우 충전
-![자신의참여펀딩_관심펀딩조회_2](/uploads/e1f45cf0dac4e58bfa4b368e3265627c/자신의참여펀딩_관심펀딩조회_2.gif)
-![내정보조회_수정_2](/uploads/38ae7bdcc35923c97c8741bb14504995/내정보조회_수정_2.gif)
-![캐시카우충전](/uploads/aa2e7bb8b5c98d5e7979c1f7a7bb0c9d/캐시카우충전.gif)
+<div>
+<img src="/uploads/e1f45cf0dac4e58bfa4b368e3265627c/자신의참여펀딩_관심펀딩조회_2.gif" width="500px" height="400px" />
+<img src="/uploads/38ae7bdcc35923c97c8741bb14504995/내정보조회_수정_2.gif" width="500px" height="400px" />
+<img src="/uploads/aa2e7bb8b5c98d5e7979c1f7a7bb0c9d/캐시카우충전.gif" width="500px" height="400px" />
+</div>
 
 # 셀러 신청 및 조회
-![쑈잇-UCC-풀영상-셀러-계정-신청](/uploads/e6dfc0eb1272f7b966d3a6368f84c2f2/쑈잇-UCC-풀영상-셀러-계정-신청.gif)
-![쑈잇-UCC-풀영상-사업자-등록-정보-조회](/uploads/b9cbf8b1a0e22d86cda194ed5afb4b1e/쑈잇-UCC-풀영상-사업자-등록-정보-조회.gif)
-![쑈잇-UCC-풀영상-셀러-정보-페이지](/uploads/d6e2fe1923b3f84d5661194ef1daded7/쑈잇-UCC-풀영상-셀러-정보-페이지.gif)
-![진행중_종료된펀딩](/uploads/4c41b8245eb88b570ed8ffb3cc446a3d/진행중_종료된펀딩.gif)
-![월별_누적매출통계](/uploads/3e458374cd0468abb99daca0ac5fbc2a/월별_누적매출통계.gif)
-![쑈잇-UCC-풀영상-메뉴-추가](/uploads/8a4d2b0aab2a828d680fd06afb502229/쑈잇-UCC-풀영상-메뉴-추가.gif)
+<div>
+<img src="/uploads/e6dfc0eb1272f7b966d3a6368f84c2f2/쑈잇-UCC-풀영상-셀러-계정-신청.gif" width="500px" height="400px" />
+<img src="/uploads/b9cbf8b1a0e22d86cda194ed5afb4b1e/쑈잇-UCC-풀영상-사업자-등록-정보-조회.gif" width="500px" height="400px" />
+<img src="/uploads/d6e2fe1923b3f84d5661194ef1daded7/쑈잇-UCC-풀영상-셀러-정보-페이지.gif" width="500px" height="400px" />
+<img src="/uploads/4c41b8245eb88b570ed8ffb3cc446a3d/진행중_종료된펀딩.gif" width="500px" height="400px" />
+<img src="/uploads/3e458374cd0468abb99daca0ac5fbc2a/월별_누적매출통계.gif" width="500px" height="400px" />
+<img src="/uploads/8a4d2b0aab2a828d680fd06afb502229/쑈잇-UCC-풀영상-메뉴-추가.gif" width="500px" height="400px" />
+</div>
+
 
 # 펀딩 생성
-![펀딩생성단일메뉴](/uploads/9de7a7f57b8eec5364c9bdc3e3254fec/펀딩생성단일메뉴.gif)
-![펀딩생성금액권](/uploads/68b395fa3cf0257b1c4b780a5d102958/펀딩생성금액권.gif)
+<div>
+<img src="/uploads/9de7a7f57b8eec5364c9bdc3e3254fec/펀딩생성단일메뉴.gif" width="500px" height="400px" />
+<img src="/uploads/68b395fa3cf0257b1c4b780a5d102958/펀딩생성금액권.gif" width="500px" height="400px" />
+</div>
 
 # 쿠폰 사용
-![셀러-쿠폰-사용-단일메뉴](/uploads/6a8061370ef70f0af26316f1c1709020/셀러-쿠폰-사용-단일메뉴.gif)
-![셀러-쿠폰사용-금액권](/uploads/d30553c84076de0b3dd8dd0fcf2afa4f/셀러-쿠폰사용-금액권.gif)
+<div>
+<img src="/uploads/6a8061370ef70f0af26316f1c1709020/셀러-쿠폰-사용-단일메뉴.gif" width="500px" height="400px" />
+<img src="/uploads/d30553c84076de0b3dd8dd0fcf2afa4f/셀러-쿠폰사용-금액권.gif" width="500px" height="400px" />
+</div>
 
 
 ---
 ## 🏗️ 아키텍쳐
 ![아키텍처1](/uploads/fa5e4e4f2b7ea08ed870fb173c3d7a8d/아키텍처1.png)
-
 
 
 ---
