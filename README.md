@@ -6,7 +6,8 @@
 	- [🗓프로젝트 진행 기간](#-프로젝트-진행-기간)
 	- [📑주제](#-주제)
 	- [🎉프로젝트 기획](#-프로젝트-기획)
-	- [🔑 주요 기능](#-주요-기능)
+	- [🔑 핵심 기능](#-핵심-기능)
+    - [🔑 주요 기능](#-주요-기능)
 	- [🖥 서비스 화면](#-서비스-화면)
 	- [🏗️ 아키텍쳐](#-아키텍쳐)
 	- [🛠 기술 스택](#-기술-스택)
@@ -52,7 +53,15 @@
 <img src="/uploads/0a248a1ff23ef2af62958cd9c8d62006/image.png" width="500px" height="400px" />
 
 ---
+## 🔑 핵심 기능
+<img src="/uploads/850491a330a43456aea9b52fc6ff4f9e/image.png" width="500px" height="400px" />
+<img src="/uploads/137e40b2b40a28d09359ae4b5ddda347/image.png" width="500px" height="400px" />
+
+
 ## 🔑 주요 기능
+<img src="/uploads/0ec81232fb78eeecb9e5b28e89ee398a/image.png" width="500px" height="400px" />
+<img src="/uploads/bba888159baa721c89c6c01cc87e2373/image.png" width="500px" height="400px" />
+<img src="/uploads/8149e9d989e9768274f426af86da1a1b/image.png" width="500px" height="400px" />
 
 
 ---
