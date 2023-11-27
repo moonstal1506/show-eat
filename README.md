@@ -60,16 +60,20 @@
 ## 🖥 서비스 화면
 
 # 메인 페이지
-![메인-페이지](/uploads/399038a06999079e4b7d0d3d3dd3b40b/메인-페이지.gif)
+<img src="/uploads/399038a06999079e4b7d0d3d3dd3b40b/메인-페이지.gif" width="400px" height="400px" />
+
 
 # 로그인 
 ![카카오-로그인](/uploads/a0643d3587fca4f66db364eb74d1c4d1/카카오-로그인.gif)
 
 # 펀딩 검색/필터링/정렬
-![펀딩-검색](/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif)
-![펀딩-검색-필터링](/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif)
-![펀딩-조건별-정렬](/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif)
-![카테고리별-펀딩-조회](/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif)
+<div>
+<img src="/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif" width="400px" height="400px" />
+<img src="/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif" width="400px" height="400px" />
+<img src="/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif" width="400px" height="400px" />
+<img src="/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif" width="400px" height="400px" />
+</div>
+
 
 # 펀딩/리뷰 조회
 ![펀딩-상세-조회](/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif)
@@ -364,7 +368,7 @@
 <details>
 <summary>Response</summary>
 <div markdown="1">       
-    <img     src="https://hackmd.io/_uploads/H1J86Gjh3.png" alt="Response 페이지"/>
+    <img src="https://hackmd.io/_uploads/H1J86Gjh3.png" alt="Response 페이지"/>
 </div>
 </details> 
 
