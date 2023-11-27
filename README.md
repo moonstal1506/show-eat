@@ -60,26 +60,28 @@
 ## 🖥 서비스 화면
 
 # 메인 페이지
-<img src="/uploads/399038a06999079e4b7d0d3d3dd3b40b/메인-페이지.gif" width="400px" height="400px" />
+<img src="/uploads/399038a06999079e4b7d0d3d3dd3b40b/메인-페이지.gif" width="600px" height="400px" />
 
 
 # 로그인 
-![카카오-로그인](/uploads/a0643d3587fca4f66db364eb74d1c4d1/카카오-로그인.gif)
+<img src="/uploads/a0643d3587fca4f66db364eb74d1c4d1/카카오-로그인.gif" width="600px" height="400px" />
 
 # 펀딩 검색/필터링/정렬
 <div>
-<img src="/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif" width="400px" height="400px" />
-<img src="/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif" width="400px" height="400px" />
-<img src="/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif" width="400px" height="400px" />
-<img src="/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif" width="400px" height="400px" />
+<img src="/uploads/11a069de19a2054e5f6f32e2143a8560/펀딩-검색.gif" width="600px" height="400px" />
+<img src="/uploads/d4cf83bb4cdee48d9b68a80b0e381db5/펀딩-검색-필터링.gif" width="600px" height="400px" />
+<img src="/uploads/5836a26846a70275d4138f40fe0d6ccd/펀딩-조건별-정렬.gif" width="600px" height="400px" />
+<img src="/uploads/1ce2102676dce851de35bb3b738b8dd5/카테고리별-펀딩-조회.gif" width="600px" height="400px" />
 </div>
 
 
 # 펀딩/리뷰 조회
-![펀딩-상세-조회](/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif)
-![펀딩-참여_-알림_-문자](/uploads/18f87db0aa85e142993db5f5914a1b74/펀딩-참여_-알림_-문자.gif)
-![업체-정보_-리뷰-조회_1](/uploads/c80ef4b94042f6014597e24c0975fbfe/업체-정보_-리뷰-조회_1.gif)
-![쿠폰-조회_-리뷰-작성_1](/uploads/c605ab5abc35e7e6a6449cbe631e2096/쿠폰-조회_-리뷰-작성_1.gif)
+<div>
+<img src="/uploads/687679f2e491686cdd91b9a35cdb2966/펀딩-상세-조회.gif" width="600px" height="400px" />
+<img src="/uploads/18f87db0aa85e142993db5f5914a1b74/펀딩-참여_-알림_-문자.gif" width="600px" height="400px" />
+<img src="/uploads/c80ef4b94042f6014597e24c0975fbfe/업체-정보_-리뷰-조회_1.gif" width="600px" height="400px" />
+<img src="/uploads/c605ab5abc35e7e6a6449cbe631e2096/쿠폰-조회_-리뷰-작성_1.gif" width="600px" height="400px" />
+</div>
 
 # 내 정보 및 캐시카우 충전
 ![자신의참여펀딩_관심펀딩조회_2](/uploads/e1f45cf0dac4e58bfa4b368e3265627c/자신의참여펀딩_관심펀딩조회_2.gif)
