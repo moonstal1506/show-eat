@@ -47,10 +47,9 @@
 
 ---
 ## 🎉 프로젝트 기획
-![기획1](/uploads/a4a32f306d7a667a1c6959bbdf92bb81/기획1.png)
-![기획2](/uploads/1aa71554839c2e88b25c97b55837a151/기획2.png)
-![기획3](/uploads/fe5e079cc1c8c52d76d1ee1d13069e80/기획3.png)
-
+<img src="/uploads/f4ba0c982142360fca23d05341347d28/image.png" width="500px" height="400px" />
+<img src="/uploads/4988edc20a35eb5337e56faa7b5c5299/image.png" width="500px" height="400px" />
+<img src="/uploads/0a248a1ff23ef2af62958cd9c8d62006/image.png" width="500px" height="400px" />
 
 ---
 ## 🔑 주요 기능
